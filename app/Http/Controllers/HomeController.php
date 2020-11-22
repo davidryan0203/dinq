@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactUs;
+use Auth;
+use App\User;
 
 class HomeController extends Controller
 {
@@ -39,5 +41,14 @@ class HomeController extends Controller
         // });
         $data = array('name'=> "Ryan David", "body" => "A test mail");
         Mail::to('davidryan0203@gmail.com')->send(new ContactUs($data));
+    }
+
+    public function getUserDetails(){
+        return Auth::user();
+    }
+
+    public function getCustomers(){
+        $users = User::where('user_type', 3)->get();
+        return collect($users)->isNotEmpty() ? $users : [];
     }
 }

@@ -20,9 +20,10 @@
     <body class="nav-fixed">
         <span id="app">
             <nav class="topnav navbar navbar-expand shadow navbar-light bg-white" id="sidenavAccordion">
-                <a class="navbar-brand d-none d-sm-block" href="/">
-                    {{-- config('app.name', 'Xero Project') --}}
-                    <img src="/img/logo.png" style="height: 2.8rem">
+                <a class="navbar-brand d-none d-sm-block container" href="/">
+                    <div class="row">
+                        <img class="col-sm-4 row" src="/img/welcome-page/logo-4.png" style="height: 3.8rem"><h1 class="col-sm-6 row" style="padding-top:2.5%;color:#eb5a54">dinq</h1>
+                    </div>
                 </a>
 
                 <ul class="navbar-nav align-items-center ml-auto">

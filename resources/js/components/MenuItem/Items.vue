@@ -37,7 +37,7 @@
 
 				        </stack-modal> -->
 				        <div class="modal fade" id="addNewMenuItemModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					  	<div class="modal-dialog modal-lg" role="document">
+					  	<div class="modal-dialog" role="document">
 						    <div class="modal-content">
 						      	<div class="modal-header">
 						        	<h5 class="modal-title" id="exampleModalLabel">Menu Item</h5>
@@ -49,25 +49,25 @@
 							      	<div class="modal-body">
 
 								        <div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-				                          	<label for="description" class="col-md-4 col-form-label text-md-right">Product Name</label>
-				                            <div class="col-sm-6">
+				                          	<label for="description" class="col-md-4 col-form-label">Product Name</label>
+				                            <div class="col-sm-12">
 				                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="form.name">
 				                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
 				                            </div>
 				                       	</div>
 
 				                        <div class="form-group row">
-				                            <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
+				                            <label for="description" class="col-md-4 col-form-label">Description</label>
 
-				                            <div class="col-md-6">
+				                            <div class="col-md-12">
 				                                <textarea class="form-control" v-model="form.description" required=""></textarea>
 				                            </div>
 				                        </div>
 
 				                        <div class="form-group row">
-				                            <label for="access_roles" class="col-md-4 col-form-label text-md-right">Choose User Type</label>
+				                            <label for="access_roles" class="col-md-4 col-form-label">Choose User Type</label>
 
-				                            <div class="col-md-6">
+				                            <div class="col-md-12">
 				                            	<div style="background-color: rgb(246, 246, 246);padding-left:1rem">
 				                                	<div class="form-check">
 													  	<label class="form-check-label">
@@ -93,8 +93,8 @@
 				                            </div>
 				                       	</div>
 				                       	<div class="form-group row">
-							    			<label for="access_roles" class="col-md-4 col-form-label text-md-right">Choose Category</label>
-							    			<div class="col-md-6">
+							    			<label for="access_roles" class="col-md-4 col-form-label">Choose Category</label>
+							    			<div class="col-md-12">
 							    				<div class="row">
 				                                    <multiselect class="col-md-7" v-model="form.categories" :options="menuItemCategories" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id">
 													    <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
@@ -114,8 +114,8 @@
 							    		</div>
 
 							    		<div class="form-group row">
-							    			<label for="access_roles" class="col-md-4 col-form-label text-md-right">Choose Mixer</label>
-							    			<div class="col-md-6">
+							    			<label for="access_roles" class="col-md-4 col-form-label">Choose Mixer</label>
+							    			<div class="col-md-12">
 				                                    <multiselect class="" v-model="form.mixers" :options="mixerItems" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id">
 													    <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
 													</multiselect>
@@ -131,36 +131,36 @@
 							    		</div>
 
 							    		<div :class="['form-group row', allerros.vendor_price ? 'has-error' : '']" >
-				                          	<label for="description" class="col-md-4 col-form-label text-md-right">Vendor Price</label>
-				                            <div class="col-sm-6">
+				                          	<label for="description" class="col-md-4 col-form-label">Vendor Price</label>
+				                            <div class="col-sm-12">
 				                                <input id="vendor_price" name="number" value="" autofocus="autofocus" class="form-control" type="text" v-model="form.vendor_price">
 				                            </div>
 				                       </div>
 				                       <span style="display: none">{{calculateSlingPrice}}</span>
 				                       <div :class="['form-group row', allerros.sling_price ? 'has-error' : '']" >
-				                          	<label for="description" class="col-md-4 col-form-label text-md-right">Sling Price</label>
-				                            <div class="col-sm-6">
+				                          	<label for="description" class="col-md-4 col-form-label">Sling Price</label>
+				                            <div class="col-sm-12">
 
 				                                <input id="sling_price" name="number" autofocus="autofocus" class="form-control" type="text" v-model="form.sling_price">
 				                            </div>
 				                       </div>
 				                       <div :class="['form-group row', allerros.quantity ? 'has-error' : '']" >
-				                          	<label for="description" class="col-md-4 col-form-label text-md-right">Quantity</label>
-				                            <div class="col-sm-6">
+				                          	<label for="description" class="col-md-4 col-form-label">Quantity</label>
+				                            <div class="col-sm-12">
 				                                <input id="quantity" name="number" min="1" value="" autofocus="autofocus" class="form-control" type="text" v-model="form.quantity">
 				                            </div>
 				                       </div>
 
 				                       <div :class="['form-group row', allerros.min_quantity ? 'has-error' : '']" >
-				                          	<label for="description" class="col-md-4 col-form-label text-md-right">Minimum Purchase Quantity</label>
-				                            <div class="col-sm-6">
+				                          	<label for="description" class="col-md-4 col-form-label">Minimum Purchase Quantity</label>
+				                            <div class="col-sm-12">
 				                                <input id="min_quantity" name="number" min="1" value="" autofocus="autofocus" class="form-control" type="text" v-model="form.min_quantity">
 				                            </div>
 				                       </div>
 
 				                       <div :class="['form-group row', allerros.min_quantity ? 'has-error' : '']" >
-				                          	<label for="description" class="col-md-4 col-form-label text-md-right">Subtract From Quantity</label>
-				                            <div class="col-sm-6">
+				                          	<label for="description" class="col-md-4 col-form-label">Subtract From Quantity</label>
+				                            <div class="col-sm-12">
 				                                <select class="form-control" v-model="form.is_unlimited">
 				                                	<option :selected="(form.is_unlimited == '1')" value="1">Yes</option>
 				                                	<option :selected="form.is_unlimited == '0'" value="0">No</option>
@@ -169,23 +169,23 @@
 				                       </div>
 
 				                       <div :class="['form-group row']" >
-				                       		<label for="mixerImage" class="col-md-4 col-form-label text-md-right">&nbsp;</label>
-				                            <div class="col-sm-6">
+				                       		<label for="mixerImage" class="col-md-4 col-form-label">&nbsp;</label>
+				                            <div class="col-sm-12">
 
 				                				<img :src="form.img_url" class="responsive">
 											</div>
 				                       	</div>
 
 				                       <div :class="['form-group row']" >
-				                       		<label for="mixerImage" class="col-md-4 col-form-label text-md-right">Item Image</label>
-				                            <div class="col-sm-6">
+				                       		<label for="mixerImage" class="col-md-4 col-form-label">Item Image</label>
+				                            <div class="col-sm-12">
 				                				<vue-dropzone ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
 											</div>
 				                       	</div>
 
 				                       <div :class="['form-group row', allerros.min_quantity ? 'has-error' : '']" >
-				                          	<label for="description" class="col-md-4 col-form-label text-md-right">Tax Type</label>
-				                          	<div class="col-sm-6">
+				                          	<label for="description" class="col-md-4 col-form-label">Tax Type</label>
+				                          	<div class="col-sm-12">
 				                           		<select v-model="form.tax_type" class="form-control">
 				                        			<option value="none"> --- None --- </option>
 				                                	<option value="taxable_goods">Taxable Goods</option>
@@ -200,15 +200,15 @@
 				                      </div>
 
 				                       <div :class="['form-group row', allerros.measure ? 'has-error' : '']" >
-				                          	<label for="description" class="col-md-4 col-form-label text-md-right">Measure</label>
-				                            <div class="col-sm-6">
+				                          	<label for="description" class="col-md-4 col-form-label">Measure</label>
+				                            <div class="col-sm-12">
 				                                <input id="measure" name="text" min="1" value="" placeholder="Weight" autofocus="autofocus" class="form-control" type="text" v-model="form.measure">
 				                            </div>
 				                       </div>
 
 				                       <div :class="['form-group row', allerros.uom ? 'has-error' : '']" >
-				                          	<label for="description" class="col-md-4 col-form-label text-md-right">Unit Of Measure</label>
-				                            <div class="col-sm-6">
+				                          	<label for="description" class="col-md-4 col-form-label">Unit Of Measure</label>
+				                            <div class="col-sm-12">
 				                                <select class="form-control" v-model="form.uom">
 				                                	<option value="liter">Liter</option>
 				                                	<option value="milliliter">Milliliter</option>
@@ -227,7 +227,7 @@
 							</div>
 						</div>
 
-				        <stack-modal
+				        <!-- <stack-modal
 				                :show="show"
 				                title="Create new Category"
 				                @close="show=false"
@@ -236,17 +236,17 @@
 				        >
 				        	<form class="form">
 					            <div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-	                              	<label for="description" class="col-md-4 col-form-label text-md-right">Name</label>
-		                            <div class="col-sm-6">
+	                              	<label for="description" class="col-md-4 col-form-label">Name</label>
+		                            <div class="col-sm-12">
 		                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="category.name">
 		                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
 		                            </div>
 	                           </div>
 
 	                            <div class="form-group row">
-	                                <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
+	                                <label for="description" class="col-md-4 col-form-label">Description</label>
 
-	                                <div class="col-md-6">
+	                                <div class="col-md-12">
 	                                    <textarea class="form-control" :class="allerros.description ? 'is-invalid' : ''" v-model="category.description" required=""></textarea>
 	                                    <span v-if="allerros.description" :class="['label label-danger']">{{ allerros.description[0] }}</span>
 	                                </div>
@@ -271,7 +271,57 @@
 								    </div>
 								</slot>
 	                        </form>
-				        </stack-modal>
+				        </stack-modal> -->
+				    <div class="modal" id="menuCategoryModal" data-backdrop="static">
+			            <div class="modal-dialog modal-lg">
+			                <div class="modal-content">
+			                    <div class="modal-header">
+			                    <h4 class="modal-title">Bills</h4>
+			                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+			                </div><div class="container"></div>
+				                <div class="modal-body">
+				                	<form class="form">
+							            <div :class="['form-group row', allerros.name ? 'has-error' : '']" >
+			                              	<label for="description" class="col-md-4 col-form-label">Name</label>
+				                            <div class="col-sm-12">
+				                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="category.name">
+				                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
+				                            </div>
+			                           </div>
+
+			                            <div class="form-group row">
+			                                <label for="description" class="col-md-4 col-form-label">Description</label>
+
+			                                <div class="col-md-12">
+			                                    <textarea class="form-control" :class="allerros.description ? 'is-invalid' : ''" v-model="category.description" required=""></textarea>
+			                                    <span v-if="allerros.description" :class="['label label-danger']">{{ allerros.description[0] }}</span>
+			                                </div>
+			                            </div>
+
+			                            <div slot="modal-footer"></div>
+				                        <slot name="modal-footer">
+										    <div class="modal-footer">
+										        <button
+										                type="button"
+										                @click.prevent="saveMenuItemCategory()"
+										                class="btn btn-primary"
+										        >Save
+										        </button>
+										        <button
+										                type="button"
+										                class="btn btn-secondary"
+										                data-dismiss="modal"
+										                @click.prevent="show=false"
+										        >Cancel
+										        </button>
+										    </div>
+										</slot>
+			                        </form>
+				                </div>
+			            	</div>
+			            </div>
+			        </div>
+
 
 					<v-client-table v-if="menuItems" :data="menuItems" :columns="['name','description','date_created','actions']" :options="options">
 						<template slot="actions" slot-scope="props" >
@@ -397,7 +447,8 @@
 				})
 			},
 			addNewCategory(){
-				this.show = true
+				//this.show = true
+				$('#menuCategoryModal').modal('show')
 			},
 			addNewItem(){
 				this.form.id = ''
@@ -464,7 +515,7 @@
      				this.show = false;
 					$('#categoryModal').modal('hide')
 					this.getMenuItems()
-				    this.$toastr.s("Success! Category has been saved.");
+				    this.$toastr.s("Success! Menu Item has been saved.");
 					this.form.name = ''
 					this.form.description = ''
 					this.form.access_roles = []

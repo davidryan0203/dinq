@@ -12,7 +12,7 @@
 		                </div>
 	                </div>
 
-	                <div class="card-body text-center">
+	                <div class="card-body">
 					<v-client-table v-if="menuItemCategories" :data="menuItemCategories" :columns="['name','description','date_created','actions']" :options="options">
 						<template slot="actions" slot-scope="props" >
                             <div class="table-button-container text-center">
@@ -44,17 +44,17 @@
 		                                    </div>
 		                                </div> -->
 		                                <div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-			                              	<label for="description" class="col-md-4 col-form-label text-md-right">Name</label>
-				                            <div class="col-sm-6">
+			                              	<label for="username" class="col-md-3 pull-left col-form-label">Name</label>
+				                            <div class="col-md-12">
 				                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="category.name">
 				                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
 				                            </div>
 			                           </div>
 
 		                                <div class="form-group row">
-		                                    <label for="description" class="col-md-4 col-form-label text-md-right">Description</label>
+		                                    <label for="username" class="col-md-3 pull-left col-form-label">Description</label>
 
-		                                    <div class="col-md-6">
+		                                    <div class="col-md-12">
 		                                        <textarea class="form-control" :class="allerros.description ? 'is-invalid' : ''" v-model="category.description" required=""></textarea>
 		                                        <span v-if="allerros.description" :class="['label label-danger']">{{ allerros.description[0] }}</span>
 		                                    </div>
@@ -216,5 +216,9 @@
 	h3{
 		padding-top:10px;
 		color: #A5413D;
+	}
+
+	.pull-left{
+		float:left;
 	}
 </style>

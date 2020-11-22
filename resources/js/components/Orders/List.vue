@@ -7,13 +7,13 @@
 	                	<div class="container-fluid row">
 		                	<span class="col-6 pull-left"><h3>Orders</h3></span>
 		                	<span class="col-6">
-			                	<button class="btn btn-danger pull-right" @click.prevent="addNewCategory()"><i class="fa fa-plus"></i> Add New Order</button>
+			                	<button class="btn btn-danger pull-right" @click.prevent="addNewOrder()"><i class="fa fa-plus"></i> Add New Order</button>
 			                </span>
 		                </div>
 	                </div>
 
-	                <div class="card-body text-center">
-					<v-client-table v-if="orders" :data="orders" :columns="['name','description','date_created','actions']" :options="options">
+	                <div class="card-body">
+					<!-- <v-client-table v-if="orders" :data="orders" :columns="['name','description','date_created','actions']" :options="options">
 						<template slot="actions" slot-scope="props" >
                             <div class="table-button-container text-center">
                                 <span class="edit-record" @click.prevent="edit(props.row.id, props.row.name, props.row.description)" data-function="Edit" title="Edit"><i class="fa fa-edit" data-toggle="tooltip" data-placement="top" :id="props.row.id"></i>Edit</span>
@@ -23,9 +23,9 @@
                         <template slot="date_created" slot-scope="props" >
                         	{{props.row.created_at | formatDate}}
                         </template>
-					</v-client-table>
+					</v-client-table> -->
 
-					<div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+					<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 					  	<div class="modal-dialog modal-lg" role="document">
 						    <div class="modal-content">
 						      	<div class="modal-header">
@@ -36,52 +36,107 @@
 						      	</div>
 						      	<form class="form">
 							      	<div class="modal-body">
-		                                <!-- div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-			                              	<label for="description" class="col-md-4 col-form-label text-md-right">Name</label>
-				                            <div class="col-sm-6">
-				                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="category.name">
-				                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
-				                            </div>
-			                           </div> -->
+		                                <form-wizard @on-complete="onComplete" 
+								                      shape="circle"
+								                      color="red">
+								            <tab-content title="Venue" v-if="userDetails.user_type == '0'">
+								            	
+								            </tab-content>
+								            <tab-content title="Items" :before-change="beforeTabSwitch">
+								            	<label class="radio-inline">
+											      	<input type="radio" name="optradio" :checked="form.isCredit == '0'" value="0" v-model="form.isCredit">Dinq
+											    </label>
+											    <label class="radio-inline">
+											      	<input type="radio" name="optradio" value="1" v-model="form.isCredit">Credit
+											    </label>
 
-		                                <form-wizard @on-complete="onComplete"
-							                     color="gray"
-							                     error-color="#a94442"
-							                     >
-							            <tab-content title="Personal details"
-							                         icon="ti-user" :before-change="validateFirstTab">
-							               <vue-form-generator :model="model" 
-							                                   :schema="firstTabSchema"
-							                                   :options="formOptions"
-							                                   ref="firstTabForm"
-							                                   >
-							                                     
-							               </vue-form-generator>
-							            </tab-content>
-							            <tab-content title="Additional Info"
-							                         icon="ti-settings" :before-change="validateSecondTab">
-							             <vue-form-generator :model="model" 
-							                                   :schema="secondTabSchema"
-							                                   :options="formOptions"
-							                                   ref="secondTabForm"
-							                                   >                                
-							               </vue-form-generator>
-							               
-							            </tab-content>
-							            <tab-content title="Last step"
-							                         icon="ti-check">
-							              <h4>Your json is ready!</h4>
-							              <div class="panel-body">
-							                <pre v-if="model" v-html="prettyJSON(model)"></pre>
-							              </div>
-							            </tab-content>
-							        </form-wizard>
+											    <v-client-table v-if="menuItems" :data="menuItems" :columns="['name','vendor_price','stock_quantity','actions']" :options="options">
+											    	<template slot="stock_quantity" slot-scope="props">
+											    		<span v-if="props.row.is_unlimited == '1'">
+											    			Unlimited
+											    		</span>
+											    		<span v-else>
+											    			{{props.row.stock_quantity}}
+											    		</span>
+											    	</template>
+											    	<template slot="actions" slot-scope="props">
+											    		<button class="btn btn-primary">Add To Cart</button>
+											    	</template>
+											    </v-client-table>
+								            </tab-content>
+								            <tab-content title="Customer Details">
+								             	<h2>Add Customer</h2>
+								             	<v-client-table v-if="customers" :data="customers" :columns="['name','age','gender','select']" :options="options">
+								             		<template slot="age" slot-scope="props">
+								             			{{props.row.date_of_birth | getAge}}
+								             		</template>
+								             		<template slot="select" slot-scope="props">
+								             			<input type="checkbox">
+								             		</template>
+											    </v-client-table>
+								            </tab-content>
+
+								            <tab-content title="Payment Details">
+								            	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
+						                          	<label for="description" class="col-md-4 col-form-label">Card Name</label>
+						                            <div class="col-sm-12">
+						                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="form.name">
+						                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
+						                            </div>
+						                       	</div>
+
+						                       	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
+						                          	<label for="description" class="col-md-4 col-form-label">Card Number</label>
+						                            <div class="col-sm-12">
+						                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="form.name">
+						                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
+						                            </div>
+						                       	</div>
+
+						                       	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
+						                          	<label for="description" class="col-md-4 col-form-label">Exp Month</label>
+						                            <div class="col-sm-12">
+						                                <select class="form-control">
+						                                	<option value="January">January</option>
+						                                	<option value="February">February</option>
+						                                	<option value="March">March</option>
+						                                	<option value="April">April</option>
+						                                	<option value="May">May</option>
+						                                	<option value="June">June</option>
+						                                	<option value="July">July</option>
+						                                	<option value="August">August</option>
+						                                	<option value="September">September</option>
+						                                	<option value="October">October</option>
+						                                	<option value="November">November</option>
+						                                	<option value="December">December</option>
+						                                </select>
+						                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
+						                            </div>
+						                       	</div>
+
+						                       	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
+						                          	<label for="description" class="col-md-4 col-form-label">Exp Year</label>
+						                            <div class="col-sm-12">
+						                                <select class="form-control" v-model="form.paymentInfo.expYear">
+						                                	<option v-for="year in years" :value="year">{{ year }}</option>
+						                                </select>
+						                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
+						                            </div>
+						                       	</div>
+
+						                       	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
+						                          	<label for="description" class="col-md-4 col-form-label">CVS</label>
+						                            <div class="col-sm-12">
+						                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="form.name">
+						                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
+						                            </div>
+						                       	</div>
+								            </tab-content>
+								            <tab-content title="Order Details">
+								            	
+								            </tab-content>
+								        </form-wizard>
 							     	</div>
-							      	<!-- <div class="modal-footer">
-								        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-								        <button type="button" class="btn btn-primary" @click.prevent="saveMenuItemCategory">Save changes</button>
-								        <input type="submit" class="btn btn-primary" value="Save" @click.prevent="save()">
-							      	</div> -->
 						      	</form>
 						    </div>
 					  	</div>
@@ -106,6 +161,12 @@
         }
     })
 
+    Vue.filter('getAge', function(value) {
+        if (value) {
+            return moment().diff(String(value), 'years');
+        }
+    })
+
     import {FormWizard, TabContent} from 'vue-form-wizard'
 	import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 
@@ -113,7 +174,9 @@
 	import 'vue-form-generator/dist/vfg.css'
 
 	Vue.use(VueFormGenerator)
-
+	import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+	import ElementUI from 'element-ui';
+	import 'element-ui/lib/theme-chalk/index.css';
 	export default{
 		components: {
 		  FormWizard,
@@ -121,100 +184,13 @@
 		},
 		data(){
 			return{
-				model:{
-				    firstName:'',
-				    lastName:'',
-				    email:'',
-				    streetName:'',
-				    streetNumber:'',
-				    city:'',
-				    country:''
-			   	},
-				formOptions: {
-				    validationErrorClass: "has-error",
-				    validationSuccessClass: "has-success",
-				    validateAfterChanged: true
-				},
-				firstTabSchema:{
-				    fields:[
-				      	{
-					        type: "select",
-					        label: "Menu",
-					        model: "menu",
-					        required:true,
-					        validator:VueFormGenerator.validators.string,
-					        values:['United Kingdom','Romania','Germany'],
-					        styleClasses:'col-xs-6'
-				      	},
-				    	{
-				        	type: "input",
-							inputType: "text",
-				        	label: "First name",
-				        	model: "firstName",
-				        	required:true,
-				        	validator:VueFormGenerator.validators.string,
-				        	styleClasses:'col-xs-6'
-				     	},
-				     	{
-				        	type: "input",
-							inputType: "text",
-					        label: "Last name",
-					        model: "lastName",
-					        required:true,
-					        validator:VueFormGenerator.validators.string,
-					        styleClasses:'col-xs-6'
-				     	},
-				      	{
-				        	type: "input",
-							inputType: "text",
-					        label: "Email",
-					        model: "email",
-					        required:true,
-					        validator:VueFormGenerator.validators.email,
-					        styleClasses:'col-xs-12'
-				     	},
-				    ]
-				},
-			   	secondTabSchema:{
-			     	fields:[
-				     	{
-				        	type: "input",
-							inputType: "text",
-					        label: "Street name",
-					        model: "streetName",
-					        required:true,
-					        validator:VueFormGenerator.validators.string,
-					        styleClasses:'col-xs-9'
-				     	},
-				      	{
-				        	type: "input",
-							inputType: "text",
-					        label: "Street number",
-					        model: "streetNumber",
-					        required:true,
-					        validator:VueFormGenerator.validators.string,
-					        styleClasses:'col-xs-3'
-				      	},
-				      	{
-				        	type: "input",
-							inputType: "text",
-					        label: "City",
-					        model: "city",
-					        required:true,
-					        validator:VueFormGenerator.validators.string,
-					        styleClasses:'col-xs-6'
-				      	},
-				      	{
-					        type: "select",
-					        label: "Country",
-					        model: "country",
-					        required:true,
-					        validator:VueFormGenerator.validators.string,
-					        values:['United Kingdom','Romania','Germany'],
-					        styleClasses:'col-xs-6'
-				      	},
-				    ]
-			   	},
+        		form: {
+           			venue: '',
+           			isCredit: 0,
+           			orderItem: [],
+           			customers: [],
+           			paymentInfo: {}
+         		},
 				orders: [],
                 options: {
                     perPage: 10,
@@ -227,14 +203,33 @@
                 },
                	allerros: [],
                	menuItems: [],
-           		success : false, 
+           		success : false,
+           		userDetails: {},
+           		customers: [],
+           		currentYear : Number(moment().year())
 			}
 		},
 		mounted(){
 			this.getOrders()
 			this.getMenuItems()
+			this.getUserDetail()
+			this.getCustomers()
 		},
+	  	computed : {
+		    years () {
+		      const year = new Date().getFullYear() + 30
+		      console.log(year)
+		      return Array.from({length: year - Number(moment().year())}, (value, index) => Number(moment().year()) + index)
+		    }
+	  	},
 		methods:{
+         	onComplete: function(){
+		      alert('Yay. Done!');
+		   	},
+		   	beforeTabSwitch: function(){
+		     	alert("This is called before switchind tabs")
+		     	return true;
+		   	},
 			getMenuItems(){
 				axios.get('/menu-items/get').then((response) => {
 					this.menuItems = response.data
@@ -248,43 +243,19 @@
 					this.orders = response.data
 				})
 			},
-			addNewCategory(){
-				// this.category.id = ''
-				// this.category.name = ''
-				// this.category.description = ''
-				$('#categoryModal').modal('show')
+			addNewOrder(){
+				$('#orderModal').modal('show')
 			},
-			onComplete: function(){
-		      alert('Yay. Done!');
-		   },
-		   validateFirstTab: function(){
-		     return this.$refs.firstTabForm.validate();
-		   },
-		   validateSecondTab: function(){
-		     return this.$refs.secondTabForm.validate();
-		   },
-		   
-		   prettyJSON: function(json) {
-	            if (json) {
-	                json = JSON.stringify(json, undefined, 4);
-	                json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
-	                return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
-	                    var cls = 'number';
-	                    if (/^"/.test(match)) {
-	                        if (/:$/.test(match)) {
-	                            cls = 'key';
-	                        } else {
-	                            cls = 'string';
-	                        }
-	                    } else if (/true|false/.test(match)) {
-	                        cls = 'boolean';
-	                    } else if (/null/.test(match)) {
-	                        cls = 'null';
-	                    }
-	                    return '<span class="' + cls + '">' + match + '</span>';
-	                });
-	            }
-	        }
+			getUserDetail(){
+				axios.get('/get-user-details').then((response) => {
+					this.userDetails = response.data
+				})
+			},
+			getCustomers(){
+				axios.get('/get-customers').then((response) => {
+					this.customers = response.data
+				})
+			}
 		}
 	}
 </script>

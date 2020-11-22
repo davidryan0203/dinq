@@ -93,7 +93,7 @@
                                     <div class="col-md-6">
                                         <input type="hidden" name="user_type" value="1">
                                         <!-- <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus> -->
-                                        <select class="form-control" name="venue_type" >
+                                        <select class="form-control" name="venue_type" required="required">
                                             <option value="">Select Venue Type</option>
                                             <option>Bar</option>
                                             <option>Bar and Restaurant</option>
@@ -171,7 +171,7 @@
                                         <input id="description" type="text" class="form-control @error('description') is-invalid @enderror" name="description" value="{{ old('description') }}" autocomplete="description" autofocus>
                                         <input type="hidden" id="longitude" name="longitude">
                                         <input type="hidden" id="latitude" name="latitude">
-                                        <input type="hidden" value="1" name="latitude">
+                                        <!-- <input type="hidden" value="1" name="latitude"> -->
                                         @error('description')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>

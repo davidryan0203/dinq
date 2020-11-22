@@ -25,7 +25,9 @@ Route::get('/test-email', 'HomeController@testEmail')->name('home');
 //Venue
 Route::get('/venue', 'VenueController@index');
 Route::post('/venue/edit', 'VenueController@edit');
-
+Route::get('/get-venue', 'VenueController@getVenues');
+Route::get('/get-user-details', 'HomeController@getUserDetails');
+Route::get('/get-customers', 'HomeController@getCustomers');
 
 Route::get('/menu/category', 'MenuItemController@index');
 Route::get('/menu-category-item/get', 'MenuItemController@getMenuCategoryItems');

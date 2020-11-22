@@ -30,6 +30,8 @@ class VenueController extends Controller
     public function index()
     {
         $info = Venue::with('user')->where('user_id',Auth::user()->id)->first();
+        dd(Auth::user()->id);
+        dd($info);
         return view('venue.index')->with('info', $info);;
     }
 
@@ -55,5 +57,11 @@ class VenueController extends Controller
         $venue->save();
 
         return redirect('venue')->with('status', 'Venue Profile updated!');
+    }
+
+    public function getVenues(){
+        // if(Auth::user()->user_type != 0){
+        //     $venue = Venue::where()
+        // }
     }
 }

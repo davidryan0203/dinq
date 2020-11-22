@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>Slingtheworld</title>
+        <title>Dinq</title>
         <!-- Favicon-->
         <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
         <!-- Font Awesome icons (free version)-->
@@ -26,8 +26,8 @@
         <!-- Navigation-->
         <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
             <div class="container">
-                <!-- <a class="navbar-brand js-scroll-trigger" href="#page-top">SLING</a> -->
-                <h1 class="site-title"><a href="#" title="// Parallel" rel="home"><img style="width: 132px;" src="/img/welcome-page/sling-logo-gray.png"> </a></h1>
+                <!-- <a class="navbar-brand js-scroll-trigger" href="#page-top">Dinq</a> -->
+                <h1 class="site-title"><a href="#" title="// Parallel" rel="home"><img style="height: 62px;" src="/img/welcome-page/logo-3.png"> </a></h1>
                 <button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="fas fa-bars"></i>
@@ -54,8 +54,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-6 text-justify">
-                        <h2 class="slidertitle">Sling someone today</h2>
-                        <p class="slidertext">Sling gives you the ability to share a moment with<br/>someone by buying them a drink when you can’t be in<br/>the same place.
+                        <h2 class="slidertitle">Dinq someone today</h2>
+                        <p class="slidertext">Dinq gives you the ability to share a moment with<br/>someone by buying them a drink when you can’t be in<br/>the same place.
                         <a class="ajax-popup-link text-white" href="terms.html"> <strong> Terms & Conditions  </strong> </a></p>
                         <a id="upload" href="#"><span class="button-home"><i class="fa fa-apple-alt"></i> App Store</span></a>
 
@@ -79,7 +79,7 @@
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
-                <p class="subtitle text-center">The Sling platform lets you replicate the age-old tradition of buying someone a drink - when you can’t be in the same place!
+                <p class="subtitle text-center">The Dinq platform lets you replicate the age-old tradition of buying someone a drink - when you can’t be in the same place!
                 </p>
                 <!-- Portfolio Grid Items-->
                 <div class="row">
@@ -90,23 +90,23 @@
                     <!-- Portfolio Item 2-->
                     <div class="col-md-6 col-lg-4 mb-5">
                         <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal2">
-                            <h3 class="widget-title" style="text-align:center"><strong>How Sling works</strong></h3>
+                            <h3 class="widget-title" style="text-align:center"><strong>How Dinq works</strong></h3>
                             <div class="details">
                                     <p>
                                         Choose: 
                                         <span>
-                                            a friend you would like to Sling a drink to – from within the app, from your Facebook friends or from your phone contacts
+                                            a friend you would like to Dinq a drink to – from within the app, from your Facebook friends or from your phone contacts
                                         </span>
                                     </p>
                                     <p>Select: 
                                         <span>
-                                            the venue you want to Sling from.
+                                            the venue you want to Dinq from.
                                         </span>
                                     </p>
                                     <p>
                                         Pick: 
                                         <span>
-                                            from the list of drinks and <strong>Voila!</strong> Your friend receives a notification and Sling QR code and the bartender hands over their drink!
+                                            from the list of drinks and <strong>Voila!</strong> Your friend receives a notification and Dinq QR code and the bartender hands over their drink!
                                         </span>
                                     </p>
                                     <p><a class="ajax-popup-link" href="faq-QA.html">FAQs &#8594;</a></p>
@@ -136,12 +136,12 @@
                 </div>
                 <!-- About Section Content-->
                 <div class="row">
-                    <div class="col-lg-6 ml-auto"><p class="lead">The Sling team is made up of a group of friends who live in different cities around the world and probably like many others, found it impossible to buy a friend a drink because they were not in the same place.</p></div>
-                    <div class="col-lg-6 mr-auto"><p class="lead">Sling uses technology to support the age-old tradition of buying someone a drink, when not in the same place. Allowing anyone, anywhere, anytime to buy a drink for a friend from carefully curated establishments.</p></div>
+                    <div class="col-lg-6 ml-auto"><p class="lead">The Dinq team is made up of a group of friends who live in different cities around the world and probably like many others, found it impossible to buy a friend a drink because they were not in the same place.</p></div>
+                    <div class="col-lg-6 mr-auto"><p class="lead">Dinq uses technology to support the age-old tradition of buying someone a drink, when not in the same place. Allowing anyone, anywhere, anytime to buy a drink for a friend from carefully curated establishments.</p></div>
 
-                    <div class="col-lg-6 mr-auto"><p class="lead">Distance is no longer an obstacle when you want to buy a friend a drink. Sling lets you virtually share a moment with a friend. The app lets you buy them drink, all while supporting local businesses.</p></div>
+                    <div class="col-lg-6 mr-auto"><p class="lead">Distance is no longer an obstacle when you want to buy a friend a drink. Dinq lets you virtually share a moment with a friend. The app lets you buy them drink, all while supporting local businesses.</p></div>
 
-                    <div class="col-lg-6 mr-auto"><p class="lead">It’s not a gift voucher. Sling embodies the personal nature of actually buying a friend a drink, sharing in the experience and joy.</p></div>
+                    <div class="col-lg-6 mr-auto"><p class="lead">It’s not a gift voucher. Dinq embodies the personal nature of actually buying a friend a drink, sharing in the experience and joy.</p></div>
                 </div>
                
             </div>
@@ -157,15 +157,15 @@
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
-                <p class="lead text-center">Everyone can make a difference. However small, it all adds up. With Sling, <strong> YOU </strong> are making a difference!</p>
+                <p class="lead text-center">Everyone can make a difference. However small, it all adds up. With Dinq, <strong> YOU </strong> are making a difference!</p>
                 <!-- About Section Content-->
                 <div class="row">
                     <div class="col-lg-6 ml-auto">
                         <p class="lead">
-                            Sling is dedicated to giving back, supporting underprivileged children though education, nourishment and shelter. Sling believes that education is the key to a better life. Education opens doors and opportunities. Opportunities that otherwise would not arise.
+                            Dinq is dedicated to giving back, supporting underprivileged children though education, nourishment and shelter. Dinq believes that education is the key to a better life. Education opens doors and opportunities. Opportunities that otherwise would not arise.
                         </p>
                         <p class="lead">
-                            In practical terms, a portion of all profits go towards carefully selected local organisations that partner with Sling to provide educational opportunities, a safe environment to live and a nutritious, balanced diet, to children all over the world.
+                            In practical terms, a portion of all profits go towards carefully selected local organisations that partner with Dinq to provide educational opportunities, a safe environment to live and a nutritious, balanced diet, to children all over the world.
                         </p>
 
                     </div>
@@ -261,7 +261,7 @@
         </footer>
         <!-- Copyright Section-->
         <div class="copyright py-4 text-center text-white">
-            <div class="container"><small>Copyright © Sling the world {{date('Y')}}</small></div>
+            <div class="container"><small>Copyright © Dinq {{date('Y')}}</small></div>
         </div>
         <!-- Scroll to Top Button (Only visible on small and extra-small screen sizes)-->
         <div class="scroll-to-top d-lg-none position-fixed">

@@ -67,12 +67,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data){
         $userId = 0;
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'civil_status' => 'single',
+            'user_type' => $data['user_type'],
+            'is_active' => 1,
+            'username' => $data['username']
+        ]);
 
-        if(User::latest()->first() == null){
-            $userId = 1;
-        }else{
-            $userId = (User::latest()->first()->id + 1);
-        }
         //dd((User::latest()->first()->id + 1));
         if($data['user_type'] == 1){
             $venue = new Venue;
@@ -80,20 +84,12 @@ class RegisterController extends Controller
             $venue->contact_number = $data['contact_number'];
             $venue->longitude = $data['longitude'];
             $venue->latitude = $data['latitude'];
-            $venue->user_id = $userId;  
+            $venue->user_id = $user->id;  
             $venue->venue_type = $data['venue_type'];
             $venue->address = $data['address'];
             $venue->save();
 
-            return User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'civil_status' => 'single',
-                'user_type' => $data['user_type'],
-                'is_active' => 1,
-                'username' => $data['username']
-            ]);
+            return $user;
         }
 
         if($data['user_type'] == 2){
@@ -101,18 +97,10 @@ class RegisterController extends Controller
             $supplier = new Supplier;
             $supplier->contact_name = $data['contact_name'];
             $supplier->contact_number = $data['contact_number'];
-            $supplier->user_id = $userId;
+            $supplier->user_id = $user->id;
             $supplier->save();
 
-            return User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-                'civil_status' => 'single',
-                'user_type' => $data['user_type'],
-                'is_active' => 1,
-                'username' => $data['username']
-            ]);
+            return $user;
         }
     }
 }

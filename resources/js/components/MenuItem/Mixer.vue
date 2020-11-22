@@ -12,12 +12,17 @@
 		                </div>
 	                </div>
 
-	                <div class="card-body text-center">
+	                <div class="card-body">
 					<v-client-table v-if="mixerItems" :data="mixerItems" :columns="['name','is_unlimited','date_created','actions']" :options="options">
 						<template slot="actions" slot-scope="props" >
                             <div class="table-button-container text-center">
                                 <span class="edit-record" @click.prevent="edit(props.row.id, props.row.name,props.row.stock_quantity,props.row.is_unlimited,props.row.img_url,props.row.sling_price)" data-function="Edit" title="Edit"><i class="fa fa-edit" data-toggle="tooltip" data-placement="top" :id="props.row.id"></i>Edit</span>
                             </div>
+                        </template>
+
+                        <template slot="is_unlimited" slot-scope="props">
+                        	<span v-if="props.row.is_unlimited == '0'">Yes</span>
+                        	<span v-if="props.row.is_unlimited == '1'">No</span>
                         </template>
 
                         <template slot="date_created" slot-scope="props" >
@@ -37,42 +42,42 @@
 						      	<form class="form">
 							      	<div class="modal-body">
 		                                <div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-			                              	<label for="description" class="col-md-4 col-form-label text-md-right">Name</label>
-				                            <div class="col-sm-6">
+			                              	<label for="description" class="col-md-3 col-form-label text-md-left">Name</label>
+				                            <div class="col-sm-12">
 				                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="form.name">
 				                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
 				                            </div>
 			                           	</div>
 
 			                           	<div :class="['form-group row', allerros.quantity ? 'has-error' : '']" >
-			                              	<label for="quantity" class="col-md-4 col-form-label text-md-right">Quantity</label>
-				                            <div class="col-sm-6">
+			                              	<label for="quantity" class="col-md-3 col-form-label text-md-left">Quantity</label>
+				                            <div class="col-sm-12">
 				                                <input id="quantity" name="quantity" value="" :class="allerros.quantity ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="number" v-model="form.quantity">
 				                                <span v-if="allerros.quantity" :class="['label label-danger']">{{ allerros.quantity[0] }}</span>
 				                            </div>
 			                           	</div>
 
 							    		<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-			                              	<label for="isUnlimited" class="col-md-4 col-form-label text-md-right">Subtract from quantity</label>
-				                            <div class="col-sm-6">
+			                              	<label for="isUnlimited" class="col-md-3 col-form-label text-md-left">Subtract from quantity</label>
+				                            <div class="col-sm-12">
 				                               <select class="form-control" v-model="form.is_unlimited">
-				                                	<option :selected="(form.is_unlimited == '1')" value="1">Yes</option>
-				                                	<option :selected="form.is_unlimited == '0'" value="0">No</option>
+				                                	<option :selected="(form.is_unlimited == '0')" value="0">Yes</option>
+				                                	<option :selected="form.is_unlimited == '1'" value="1">No</option>
 				                                </select>
 				                            </div>
 			                           	</div>
 
 			                           	<div :class="['form-group row', allerros.sling_price ? 'has-error' : '']" >
-			                              	<label for="slingPrice" class="col-md-4 col-form-label text-md-right">Sling Price</label>
-				                            <div class="col-sm-6">
+			                              	<label for="slingPrice" class="col-md-3 col-form-label text-md-left">Sling Price</label>
+				                            <div class="col-sm-12">
 
 				                                <input id="sling_price" name="number" autofocus="autofocus" class="form-control" type="number" v-model="form.sling_price">
 				                            </div>
 			                           	</div>
 
 			                           	<div :class="['form-group row']" >
-			                           		<label for="mixerImage" class="col-md-4 col-form-label text-md-right">Mixer Image</label>
-				                            <div class="col-sm-6">
+			                           		<label for="mixerImage" class="col-md-3 col-form-label text-md-left">Mixer Image</label>
+				                            <div class="col-sm-12">
 				                            	<vue-dropzone @vdropzone-file-added="test" ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
 											</div>
 			                           	</div>
@@ -161,10 +166,12 @@
 					this.form.sling_price = 0
 					this.form.is_unlimited = 0
 					this.form.quantity = 1
+					this.getMixerItems()
 				}).catch((error) => {
                     this.allerros = error.response.data.errors;
                     this.success = false;
                });
+               this.getMixerItems()
 			},
 			getMixerItems(){
 				axios.get('/menu/mixer/get').then((response) => {
@@ -236,6 +243,10 @@
 
 	.VueTables__child-row-toggler--open::before {
 	  content: "-";
+	}
+
+	.VueTables__search-field{
+		float: right
 	}
 
 	[v-cloak] {
