@@ -13,7 +13,7 @@
 	                </div>
 
 	                <div class="card-body">
-					<v-client-table v-if="mixerItems" :data="mixerItems" :columns="['name','is_unlimited','date_created','actions']" :options="options">
+					<v-client-table v-if="mixerItems" :data="mixerItems" :columns="['name','venue_name','sling_price','is_unlimited','date_created','actions']" :options="options">
 						<template slot="actions" slot-scope="props" >
                             <div class="table-button-container text-center">
                                 <span class="edit-record" @click.prevent="edit(props.row.id, props.row.name,props.row.stock_quantity,props.row.is_unlimited,props.row.img_url,props.row.sling_price)" data-function="Edit" title="Edit"><i class="fa fa-edit" data-toggle="tooltip" data-placement="top" :id="props.row.id"></i>Edit</span>
@@ -21,13 +21,19 @@
                         </template>
 
                         <template slot="is_unlimited" slot-scope="props">
-                        	<span v-if="props.row.is_unlimited == '0'">Yes</span>
-                        	<span v-if="props.row.is_unlimited == '1'">No</span>
+                        	<span v-if="props.row.is_unlimited == '1'">Yes</span>
+                        	<span v-if="props.row.is_unlimited == '0'">No</span>
                         </template>
 
                         <template slot="date_created" slot-scope="props" >
                         	{{props.row.created_at | formatDate}}
                         </template>
+
+                        <template slot="venue_name" slot-scope="props">
+                        	<span v-if="userDetails.user_type == '0'">{{props.row.venue.user.name}}</span>
+                        	<span v-else>{{props.row.venue.user.name}}</span>
+                        </template>
+
 					</v-client-table>
 
 					<div class="modal fade" id="mixerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -41,6 +47,15 @@
 						      	</div>
 						      	<form class="form">
 							      	<div class="modal-body">
+							      		<div class="form-group row" v-if="userDetails.user_type == '0'">
+				                            <label for="description" class="col-md-4 col-form-label">Select Venue</label>
+
+				                            <div class="col-md-12">
+				                                <select class="form-control" v-model="form.venue">
+				                                	<option v-for="venue in venues" :value="venue">{{venue.name}}</option>
+				                                </select>
+				                            </div>
+				                        </div>
 		                                <div :class="['form-group row', allerros.name ? 'has-error' : '']" >
 			                              	<label for="description" class="col-md-3 col-form-label text-md-left">Name</label>
 				                            <div class="col-sm-12">
@@ -67,13 +82,28 @@
 				                            </div>
 			                           	</div>
 
-			                           	<div :class="['form-group row', allerros.sling_price ? 'has-error' : '']" >
-			                              	<label for="slingPrice" class="col-md-3 col-form-label text-md-left">Sling Price</label>
+			                           	<div :class="['form-group row', allerros.vendor_price ? 'has-error' : '']" >
+				                          	<label for="description" class="col-md-4 col-form-label">Vendor Price</label>
+				                            <div class="col-sm-12">
+				                                <input id="vendor_price" name="number" value="" autofocus="autofocus" class="form-control" type="text" v-model="form.vendor_price">
+				                            </div>
+				                       </div>
+				                       <span style="display: none">{{calculateSlingPrice}}</span>
+				                       <div :class="['form-group row', allerros.sling_price ? 'has-error' : '']" >
+				                          	<label for="description" class="col-md-4 col-form-label">Sling Price</label>
 				                            <div class="col-sm-12">
 
-				                                <input id="sling_price" name="number" autofocus="autofocus" class="form-control" type="number" v-model="form.sling_price">
+				                                <input id="sling_price" name="number" autofocus="autofocus" class="form-control" type="text" v-model="form.sling_price">
 				                            </div>
-			                           	</div>
+				                       </div>
+
+			                           	<div v-if="form.img_url" :class="['form-group row']" >
+				                       		<label for="mixerImage" class="col-md-4 col-form-label">&nbsp;</label>
+				                            <div class="col-sm-12">
+
+				                				<img :src="form.img_url" class="responsive">
+											</div>
+				                       	</div>
 
 			                           	<div :class="['form-group row']" >
 			                           		<label for="mixerImage" class="col-md-3 col-form-label text-md-left">Mixer Image</label>
@@ -121,7 +151,7 @@
 		data(){
 			var self = this
 			return{
-				form: {'id':'','name': '', 'is_unlimited' : 0, 'quantity':1,'img_url':'','sling_price': 0},
+				form: {'id':'','name': '', 'is_unlimited' : 0, 'quantity':1,'img_url':'','sling_price': 0,'vendor_price': 0},
 				mixerItems: [],
                 options: {
                     perPage: 10,
@@ -145,11 +175,27 @@
 		            	console.log(file)
 		            	self.form.img_url = file.dataURL
 		            }
-			    }
+			    },
+			    userDetails : {},
+			    venue: {},
+			    venues: []
+			}
+		},
+		computed:{
+			calculateSlingPrice(){
+				this.form.sling_price = (Number(this.form.vendor_price) + Number(this.form.vendor_price * 10 / 100)).toFixed(2)
+				return (Number(this.form.vendor_price) + Number(this.form.vendor_price * 10 / 100)).toFixed(2)
 			}
 		},
 		mounted(){
 			this.getMixerItems()
+			axios.get('/get-user-details').then((response) => {
+				console.log(response.data)
+				this.userDetails = response.data
+			})
+			axios.get('/get-all-venues').then((response) => {
+				this.venues = response.data
+			})
 		},
 		methods:{
 			saveMixerDetails(){
@@ -187,11 +233,12 @@
 			edit(id,name,stockQuantity,isUnlimited,imgURL,slingPrice){
 				console.log(imgURL)
 				this.form.name = name
+				this.form.img_url = imgURL
 				this.form.quantity = stockQuantity
 				this.form.is_unlimited = isUnlimited
 				var file = { size: 123, name: "Icon", type: "image/png" };
 				var url = "https://dummyimage.com/600x400/000/fff";
-				this.$refs.myVueDropzone.manuallyAddFile(file, url);
+				//this.$refs.myVueDropzone.manuallyAddFile(file, url);
 
 				this.form.sling_price = slingPrice
 				this.form.id = id

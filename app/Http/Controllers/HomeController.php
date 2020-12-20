@@ -7,6 +7,11 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\ContactUs;
 use Auth;
 use App\User;
+use App\Rates;
+use App\Orders;
+use App\Feeds;
+use App\Country;
+use App\Currency;
 
 class HomeController extends Controller
 {
@@ -30,6 +35,16 @@ class HomeController extends Controller
         return view('home');
     }
 
+    public function waiter()
+    {
+        return view('waiter');
+    }
+
+    public function customers()
+    {
+        return view('customers');
+    }
+
     public function testEmail(){
         // $to_name = 'Ryan David';
         // $to_email = 'davdiryan0203@gmail.com';
@@ -44,11 +59,102 @@ class HomeController extends Controller
     }
 
     public function getUserDetails(){
-        return Auth::user();
+        if(Auth::user()->user_type == 1){
+            return User::with('venue','venue.tax_rate','venue.currency')->where('id',Auth::user()->id)->first();
+        }elseif(Auth::user()->user_type == 2){
+            return User::with('supplier','supplier.tax_rate','supplier.currency')->where('id',Auth::user()->id)->first();
+        }else{
+            return User::with('venue','venue.tax_rate','venue.currency')->where('id',Auth::user()->id)->first();
+        }
     }
 
     public function getCustomers(){
-        $users = User::where('user_type', 3)->get();
+        if(Auth::user()->user_type == 2){
+            $countriesArray = explode(',', Auth::user()->supplier->available_countries);
+            $array = implode("','",$countriesArray);
+            
+            $countryIds = Country::whereIn('iso', $countriesArray)->get()->pluck('id');
+            //dd($countryIds);
+            $users = User::with('country')->where('user_type', 3)->whereIn('country_id', $countryIds)->get();
+            //dd($users);
+        }else{
+            $users = User::with('country')->where('user_type', 3)->get();
+        }
         return collect($users)->isNotEmpty() ? $users : [];
+    }
+
+    public function getExchangeRates(){
+        $rates = Rates::first();
+        return $rates;
+    }
+
+    public function getRevenue(){
+        if(Auth::user()->user_type == 0){
+            $revenue = Orders::all()->pluck('venue_total')->sum();
+        }
+
+        if(Auth::user()->user_type == 1){            
+            $revenue = Orders::where('venue_id', '=', Auth::user()->venue->id)->pluck('venue_total')->sum();
+        }
+
+        if(Auth::user()->user_type == 2){            
+            $revenue = Orders::where('supplier_id', '=', Auth::user()->supplier->id)->pluck('venue_total')->sum();
+        }
+
+        if(Auth::user()->user_type == 2){
+            $currencyCode = Currency::where('id', Auth::user()->supplier['default_currency'])->first();
+        }else{
+            $currencyCode = Currency::where('id', Auth::user()->venue['default_currency'])->first();
+        }
+
+        return $currencyCode['symbol_left'].number_format($revenue,2).$currencyCode['symbol_right'];
+    }
+    public function getRedeemed(){
+        $redeemed = 0;
+        if(Auth::user()->user_type == 0){
+            $redeemed = Orders::where('order_status','=','redeemed')->count();
+        }
+
+        if(Auth::user()->user_type == 1){            
+            $redeemed = Orders::where(['venue_id' => Auth::user()->venue->id, 'order_status' => 'redeemed'])->count();
+        }
+
+        if(Auth::user()->user_type == 2){            
+            $redeemed = Orders::where(['supplier_id' => Auth::user()->supplier->id, 'order_status' => 'redeemed'])->count();
+        }
+        return $redeemed;
+    }
+    public function getPendingOrders(){
+        if(Auth::user()->user_type == 0){
+            $pending = Orders::where('order_status','=','pending')->count();
+        }
+
+        if(Auth::user()->user_type == 1){            
+            $pending = Orders::where(['venue_id' => Auth::user()->venue->id, 'order_status' => 'pending'])->count();
+        }
+
+        if(Auth::user()->user_type == 2){            
+            $pending = Orders::where(['supplier_id' => Auth::user()->supplier->id, 'order_status' => 'pending'])->count();
+        }
+        return $pending;
+    }
+    public function getTodaysCheckins(){       
+        if(Auth::user()->user_type == 0){
+            $feeds = Feeds::where('feed_type', '=', 'checkin')->count();
+        }
+
+        if(Auth::user()->user_type == 1){            
+            $feeds = Feeds::where(['venue_id' => Auth::user()->venue->id, 'feed_type' => 'checkin'])->count();
+        }
+
+        if(Auth::user()->user_type == 2){            
+            $feeds = 0;
+        }
+        return $feeds;
+    }
+
+    public function getCountries(){
+        $countries = Country::all();
+        return $countries;
     }
 }

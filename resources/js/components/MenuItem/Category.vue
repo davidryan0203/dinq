@@ -13,11 +13,15 @@
 	                </div>
 
 	                <div class="card-body">
-					<v-client-table v-if="menuItemCategories" :data="menuItemCategories" :columns="['name','description','date_created','actions']" :options="options">
+					<v-client-table v-if="menuItemCategories" :data="menuItemCategories" :columns="['name','venue_name','description','date_created','actions']" :options="options">
 						<template slot="actions" slot-scope="props" >
                             <div class="table-button-container text-center">
                                 <span class="edit-record" @click.prevent="edit(props.row.id, props.row.name, props.row.description)" data-function="Edit" title="Edit"><i class="fa fa-edit" data-toggle="tooltip" data-placement="top" :id="props.row.id"></i>Edit</span>
                             </div>
+                        </template>
+
+                        <template slot="venue_name" slot-scope="props">
+                        	{{props.row.venue.user.name}}
                         </template>
 
                         <template slot="date_created" slot-scope="props" >
@@ -36,13 +40,15 @@
 						      	</div>
 						      	<form class="form">
 							      	<div class="modal-body">
-							    		<!-- <div class="form-group row">
-		                                    <label for="description" class="col-md-4 col-form-label text-md-right">Name</label>
+							      		<div :class="['form-group row', allerros.name ? 'has-error' : '']" v-if="userDetails.user_type == '0'">
+			                              	<label for="username" class="col-md-3 pull-left col-form-label">Venue</label>
+				                            <div class="col-md-12">
+				                            	<select class="form-control" v-model="category.venue">
+				                            		<option v-for="venue in venues" :value="venue">{{venue.name}}</option>
+				                            	</select>
+				                            </div>
+			                           </div>
 
-		                                    <div class="col-md-6">
-		                                        <input required="" id="contact_number" v-model="category.name" type="text" class="form-control" name="name" value="" autofocus>
-		                                    </div>
-		                                </div> -->
 		                                <div :class="['form-group row', allerros.name ? 'has-error' : '']" >
 			                              	<label for="username" class="col-md-3 pull-left col-form-label">Name</label>
 				                            <div class="col-md-12">
@@ -93,7 +99,7 @@
 	export default{
 		data(){
 			return{
-				category: {'id':'','name': '', 'description' : ''},
+				category: {'id':'','name': '', 'description' : '', 'venue' : {}},
 				menuItemCategories: [],
                 options: {
                     perPage: 10,
@@ -106,12 +112,13 @@
                 },
                	allerros: [],
            		success : false, 
+           		userDetails: {},
+           		venues : []
 			}
 		},
 		mounted(){
 			this.getMenuItemCategories()
-
-
+			this.getUserDetail()
 		},
 		methods:{
 			saveMenuItemCategory(){
@@ -127,6 +134,17 @@
                     this.allerros = error.response.data.errors;
                     this.success = false;
                });
+			},
+			getUserDetail(){
+				axios.get('/get-user-details').then((response) => {
+					this.userDetails = response.data
+
+					if(this.userDetails.user_type == 0){
+						axios.get('/get-all-venues').then((response) => {
+							this.venues = response.data
+						})
+					}
+				})
 			},
 			getMenuItemCategories(){
 				axios.get('/menu-category-item/get').then((response) => {

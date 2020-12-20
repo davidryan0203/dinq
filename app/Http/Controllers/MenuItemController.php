@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Auth;
+use App\Supplier;
 use App\User;
 use App\Mixer;
 use App\Venue;
@@ -35,6 +36,11 @@ class MenuItemController extends Controller
         return view('menu-item.index');
     }
 
+    public function adminMenuItems()
+    {
+        return view('admin.admin-menu');
+    }
+
     public function menuItem()
     {
         return view('menu-item.items');
@@ -48,7 +54,12 @@ class MenuItemController extends Controller
         //For Venue Specific
         $user = Auth::user();
         if($user->user_type != 0){
-            $menuItems = MenuCategory::where('venue_id',$user->venues->first()->id)->get();
+            $menuItems = MenuCategory::with('venue.user')->where('venue_id',$user->venues->first()->id)->get();
+            return $menuItems;
+        }
+
+        if($user->user_type == 0){
+            $menuItems = MenuCategory::with('venue.user')->get();
             return $menuItems;
         }
     }
@@ -58,7 +69,6 @@ class MenuItemController extends Controller
            'name' => 'required',
            'description' => 'required'
         ]);
-
         $input = $request->all();
         $user = Auth::user();
 
@@ -69,28 +79,177 @@ class MenuItemController extends Controller
         }
 
         $category->name = $input['name'];
-        $category->venue_id = $user->venues->first()->id;
+        if(Auth::user()->user_type == 0){
+            $category->venue_id = $input['venue']['venue']['id'];
+        }else{
+            $category->venue_id = $user->venues->first()->id;
+        }
         $category->description = $input['description'];
         $category->save();
+    }
+
+    public function getAdminMenuItems($id){
+        $results = [];
+        $mixerStocks = [];
+        $menuItems = MenuItem::with('taxRate')->where('stock_quantity', '!=', 0)->where(['venue_id' => $id, 'is_active' => 1])->where('supplier_id', '=', 0)->get();
+        foreach ($menuItems as $key => $item) {
+            $item['orderQuantity'] = 0;
+            if($item['mixers']){
+                //dd($item['mixers']);
+                $mixers = collect($item['mixers'])->toArray();
+                //dd($mixers);
+                foreach($mixers as $key => $mixer) {
+                    //dd($mixer->id);
+                    $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
+                }
+               $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
+            }
+            $item['sling_item_price'] = $item['sling_price'];
+            $item['mixerStocks'] = ($mixerStocks);
+            // unset($item['mixers']);
+            $results[] = $item;
+        }
+        return $results;
+    }
+
+    public function getAdminMenuCategory($id){
+        //For Venue Specific
+        $menuItems = MenuCategory::with('venue.user')->where('venue_id',$id)->get();
+        return $menuItems;
+    }
+
+    public function getAdminMenuMixers($id){
+        //for Venue specific
+        $menuItems = Mixer::where('venue_id',$id)->get();
+        return $menuItems;
+    }
+
+    public function filterMenuItems(Request $request){
+        $user = Auth::user();
+        $results = [];
+        $mixerStocks = [];
+        $input = $request->all();
+        if(Auth::user()->user_type == 2){
+            if(($input['venue']) == 0){
+                $menuItems = MenuItem::with('venue.user','taxRate')->where('supplier_id' , '!=', 0)->where('stock_quantity', '!=', 0)->where(['is_active' => 1])->get();
+            }else{            
+                $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where(['venue_id' => $input['venue']['id'],'is_active' => 1])->where('supplier_id' , '!=', 0)->get();                
+            }
+        }else{
+            if(isset($input['venue']['venue'])){            
+                $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where(['venue_id' => $input['venue']['venue']['id'],'is_active' => 1])->get();
+            }else{
+                $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where(['is_active' => 1])->get();
+            }
+        }
+        
+        foreach ($menuItems as $key => $item) {
+            $item['orderQuantity'] = 0;
+            if(collect($item['mixers'])->isNotEmpty()){
+                //dd($item['mixers']);
+                $mixers = collect($item['mixers'])->toArray();
+                //dd($mixers);
+               //  foreach($mixers as $key => $mixer) {
+               //      //dd($mixer->id);
+               //      $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
+               //  }
+               // $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
+            }
+            $item['sling_item_price'] = $item['sling_price'];
+            $item['mixerStocks'] = $item['mixers'];
+            // unset($item['mixers']);
+            $results[] = $item;
+        }
+        return $results;
     }
 
     public function getMenuItems(Request $request){
         //For Venue Specific
         $user = Auth::user();
-        if($user->user_type != 0){
-            $menuItems = MenuItem::where(['venue_id' => $user->venues->first()->id, 'is_active' => 1])->get();
-            return $menuItems;
+        $results = [];
+        $mixerStocks = [];
+        if($user->user_type == 0){
+            $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where(['is_active' => 1])->get();
+            foreach ($menuItems as $key => $item) {
+                $item['orderQuantity'] = 0;
+                if(collect($item['mixers'])->isNotEmpty()){
+                    //dd($item['mixers']);
+                    $mixers = collect($item['mixers'])->toArray();
+                    //dd($mixers);
+                   //  foreach($mixers as $key => $mixer) {
+                   //      //dd($mixer->id);
+                   //      $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
+                   //  }
+                   // $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
+                }
+                $item['sling_item_price'] = $item['sling_price'];
+                $item['mixerStocks'] = $item['mixers'];
+                // unset($item['mixers']);
+                if($item['venue']['user']['is_active'] == 1){
+                    $results[] = $item;
+                }
+            }
+            return $results;
+        }
+
+        if($user->user_type == 1){
+            $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where(['venue_id' => $user->venues->first()->id, 'is_active' => 1])->get();
+            foreach ($menuItems as $key => $item) {
+                $item['orderQuantity'] = 0;
+                if($item['mixers']){
+                    //dd($item['mixers']);
+                    $mixers = collect($item['mixers'])->toArray();
+                    //dd($mixers);
+                    foreach($mixers as $key => $mixer) {
+                        //dd($mixer->id);
+                        $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
+                    }
+                   $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
+                }
+                $item['sling_item_price'] = $item['sling_price'];
+                $item['mixerStocks'] = $item['mixers'];
+                // unset($item['mixers']);
+                $results[] = $item;
+            }
+            return $results;
+        }
+
+        if($user->user_type == 2){
+            $supplier = Supplier::where('user_id', '=', Auth::user()->id)->first();
+            $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where('supplier_id', '=', $supplier['id'])->get();
+            foreach ($menuItems as $key => $item) {
+                $item['orderQuantity'] = 0;
+                if($item['mixers']){
+                    //dd($item['mixers']);
+                    $mixers = collect($item['mixers'])->toArray();
+                    //dd($mixers);
+                    foreach($mixers as $key => $mixer) {
+                        //dd($mixer->id);
+                        $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
+                    }
+                   $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
+                }
+                $item['sling_item_price'] = $item['sling_price'];
+                $item['mixerStocks'] = $item['mixers'];
+                // unset($item['mixers']);
+                $results[] = $item;
+            }
+            //dd(collect($results)->toArray());
+            return $results;
         }
     }
 
     public function saveMenuItem(Request $request){
         $input = $request->all();
         $user = Auth::user();
-        
+
         if(!empty($input['id'])){
             $menuItem = MenuItem::where('id', $input['id'])->first();
         }else{
             $menuItem = new MenuItem;
+        }
+        if($input['supplierId'] != 0){
+            $menuItem->supplier_id = $input['supplierId']['id'];
         }
         $menuItem->name = $input['name'];
         $menuItem->description = $input['description'];
@@ -100,8 +259,12 @@ class MenuItemController extends Controller
         $menuItem->sling_price = $input['sling_price'];
         $menuItem->vendor_price = $input['vendor_price'];
         $menuItem->stock_quantity = $input['quantity'];
-        $menuItem->venue_id = $user->venues->first()->id;
-        $menuItem->tax_code = '';
+        if(Auth::user()->user_type != 0){
+            $menuItem->venue_id = $user->venues->first()->id;
+        }else{
+            $menuItem->venue_id = $input['venue']['venue']['id'];
+        }
+        $menuItem->tax_rate_id = $input['tax_type'];
         $menuItem->minimum_purchase_quantity = $input['min_quantity'];
         $menuItem->is_unlimited = $input['is_unlimited'];
         $menuItem->is_active = 1;
@@ -132,6 +295,7 @@ class MenuItemController extends Controller
         }
 
         $menuItem->save();
+        return 'success';
     }
 
     public function mixerUpload(Request $request){
@@ -157,8 +321,18 @@ class MenuItemController extends Controller
     public function getMenuMixer(){
         //for Venue specific
         $user = Auth::user();
-        if($user->user_type != 0){
-            $menuItems = Mixer::where('venue_id',$user->venues->first()->id)->get();
+        if(Auth::user()->user_type == 0){
+            $menuItems = Mixer::with('venue.user')->get();
+            return $menuItems;
+        }
+
+        if(Auth::user()->user_type == 1){
+            $menuItems = Mixer::with('venue.user')->where('venue_id',$user->venues->first()->id)->get();
+            return $menuItems;
+        }
+
+        if(Auth::user()->user_type == 2){
+            $menuItems = Mixer::where('supplier_id',$user->supplier->first()->id)->get();
             return $menuItems;
         }
     }
@@ -181,15 +355,21 @@ class MenuItemController extends Controller
             $name = sha1(date('YmdHis') . $this->generateRandomString());
             $img_name = $name . $extension;
 
-            $path = public_path('images/menu/mixer/' . $img_name);
+            $path = public_path('/images/menu/mixer/' . $img_name);
             $img->save($path);
         }
         $mixer = new Mixer;
-        $mixer->venue_id = $user->venues->first()->id;
-        $mixer->img_url = ($input['img_url']) ? $path : '';
+        
+        $mixer->img_url = ($input['img_url']) ? '/images/menu/mixer/' . $img_name : '';
         $mixer->name = $input['name'];
         $mixer->stock_quantity = intval($input['quantity']);
         $mixer->is_unlimited = $input['is_unlimited'];
+        if(Auth::user()->user_type == 0){
+            $mixer->venue_id = $input['venue']['venue']['id'];
+        }else{
+            $mixer->venue_id = $user->venues->first()->id;
+        }
+        $mixer->venue_price = $input['vendor_price'];
         $mixer->sling_price = $input['sling_price'];
         $mixer->save();
 

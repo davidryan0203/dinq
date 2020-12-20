@@ -13,4 +13,14 @@ class Venue extends Model {
     {
   		return $this->belongsTo('App\User');
   	}
+
+  	public function tax_rate()
+    {
+  		return $this->belongsTo('App\TaxRates', 'default_tax_rate','id');
+  	}
+
+  	public function currency()
+    {
+  		return $this->belongsTo('App\Currency', 'default_currency','id');
+  	}
 }

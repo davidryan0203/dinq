@@ -34,7 +34,36 @@ class OrdersController extends Controller
     }
 
     public function getOrders(){
-        $orders = Orders::all();
-        return $orders;
+        $orders = [];
+        if(Auth::user()->user_type == 0){
+            $orders = Orders::with('receiver','sender','menu_item')->get();
+            return $orders;
+        }else{
+            if(Auth::user()->user_type == 1){
+                $orders = Orders::with('receiver','sender','menu_item','venue')->where('venue_id' , Auth::user()->venue->id)->get();
+            }
+
+            if(Auth::user()->user_type == 2){
+                $orders = Orders::with('receiver','sender','menu_item','venue')->where('supplier_id' , Auth::user()->supplier->id)->get();
+            }
+            return $orders;
+        }
+    }
+
+    public function redeemCoupon(Request $request){
+        $input = $request->all();
+
+        $order = Orders::where('coupon_code',$input['coupon_code'])->first();
+        if($order){
+            if($order->order_status == 'pending'){
+                $order->order_status = 'redeemed';
+                $order->save();
+                return 'success';
+            }else{
+                return 'order has already been redeemed.';
+            }
+        }else{
+            return 'coupon not found.';
+        }
     }
 }

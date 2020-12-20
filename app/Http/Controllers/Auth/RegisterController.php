@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use App\User;
 use App\Venue;
+use App\Country;
 use App\Supplier;
+use App\Currency;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -74,17 +76,41 @@ class RegisterController extends Controller
             'civil_status' => 'single',
             'user_type' => $data['user_type'],
             'is_active' => 1,
-            'username' => $data['username']
+            'username' => $data['username'],
+            'contact_number' => $data['contact_number'],
         ]);
-
-        //dd((User::latest()->first()->id + 1));
+        
         if($data['user_type'] == 1){
+            $client = new \GuzzleHttp\Client();
+            
+            $client = new \GuzzleHttp\Client(['base_uri' => 'https://maps.googleapis.com/maps/api/geocode/json?latlng='.$data['latitude'].','.$data['longitude'].'&key=AIzaSyByTWPwUTPmcOh6FGaHCo0HUAiFxFSsAyE']);
+
+            $response = $client->request('GET', '', []);
+            if($response){
+                $address = json_decode($response->getBody()->getContents(),true)['results'][0]['address_components'];
+                
+                foreach($address as $value){
+                    foreach($value['types'] as $key => $val){
+                        if($val == 'country'){
+                            $country = Country::where('iso', $value['short_name'])->first();
+                            if($country){
+                                $userData = User::where('id', $user->id)->first();
+                                $userData->country_id = $country->id;
+                                $userData->save();
+                            }
+                        }
+                    } 
+                }
+            }
+
+            $currency = Currency::where('code',$data['currency'])->first();
             $venue = new Venue;
             $venue->description = $data['description'];
             $venue->contact_number = $data['contact_number'];
             $venue->longitude = $data['longitude'];
             $venue->latitude = $data['latitude'];
             $venue->user_id = $user->id;  
+            $venue->default_currency = $currency->id;
             $venue->venue_type = $data['venue_type'];
             $venue->address = $data['address'];
             $venue->save();
@@ -95,8 +121,11 @@ class RegisterController extends Controller
         if($data['user_type'] == 2){
 
             $supplier = new Supplier;
+            $currency = Currency::where('code',$data['currency'])->first();
             $supplier->contact_name = $data['contact_name'];
             $supplier->contact_number = $data['contact_number'];
+            $supplier->default_currency = $currency->id;
+            $supplier->default_tax_rate = 1;
             $supplier->user_id = $user->id;
             $supplier->save();
 

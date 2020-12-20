@@ -24,6 +24,17 @@ Vue.component('menu-item-category', require('./components/MenuItem/Category.vue'
 Vue.component('menu-items', require('./components/MenuItem/Items.vue').default);
 Vue.component('menu-mixer', require('./components/MenuItem/Mixer.vue').default);
 Vue.component('order-list', require('./components/Orders/List.vue').default);
+Vue.component('customers', require('./components/Customers.vue').default);
+Vue.component('waiter', require('./components/Waiter.vue').default);
+Vue.component('tax-rates', require('./components/TaxRates.vue').default);
+Vue.component('admin-venue', require('./components/Admin/Venue.vue').default);
+Vue.component('admin-supplier', require('./components/Admin/Supplier.vue').default);
+Vue.component('admin-menu-item', require('./components/MenuItem/AdminItems.vue').default);
+Vue.component('dashboard', require('./components/Dashboard/Dashboard.vue').default);
+Vue.component('dashboard-order', require('./components/Dashboard/Order.vue').default);
+Vue.component('latest-order-list', require('./components/Dashboard/LatestOrders.vue').default);
+Vue.component('dashboard-feeds', require('./components/Dashboard/Feeds.vue').default);
+Vue.component('dashboard-posts', require('./components/Dashboard/Posts.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -32,7 +43,7 @@ Vue.component('order-list', require('./components/Orders/List.vue').default);
  */
 import VueToastr from "vue-toastr";
 Vue.use(VueToastr, {
-  defaultProgressBar: false,
+  //defaultProgressBar: false,
 });
 const app = new Vue({
     el: '#app',

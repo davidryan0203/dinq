@@ -322,8 +322,43 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group row">
+                                    <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Currency') }}</label>
 
-                                <br/>
+                                    <div class="col-md-6">
+                                        <select class="form-control" name="currency" id="currency" required="required">
+                                            <option value="">Select Currency</option>
+                                            <option value="AUD">Australian Dollar</option>
+                                            <option value="IDR">Balinese Rupee</option>
+                                            <option value="BRL">Brazilian Real</option>
+                                            <option value="CAD">Canadian Dollar</option>
+                                            <option value="DKK">Danish Krone</option>
+                                            <option value="AED">Dirhams</option>
+                                            <option value="EUR">Euro</option>
+                                            <option value="HKD">Hong Kong Dollar</option>
+                                            <option value="INR">Indian Rupee</option>
+                                            <option value="JPY">Japanese Yen</option>
+                                            <option value="MYR">Malaysian Ringgit</option>
+                                            <option value="MXN">Mexican Peso</option>
+                                            <option value="NZD">New Zealand Dollar</option>
+                                            <option value="NOK">Norwegian Krone</option>
+                                            <option value="PLN">Poland złoty</option>
+                                            <option value="GBP">Pound Sterling</option>
+                                            <option value="SGD">Singapore Dollar</option>
+                                            <option value="ZAR">South Africa Rand</option>
+                                            <option value="SEK">Swedish Krona</option>
+                                            <option value="CHF">Swiss Franc</option>
+                                            <option value="USD">US Dollar</option>
+                                        </select>
+
+                                        @error('venue_type')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                
                                 <div class="form-group row mb-0">
                                     <div class="col-md-6 offset-4">
                                         <button type="submit" class="btn btn-primary">

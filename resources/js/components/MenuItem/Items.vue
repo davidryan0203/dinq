@@ -37,7 +37,7 @@
 
 				        </stack-modal> -->
 				        <div class="modal fade" id="addNewMenuItemModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					  	<div class="modal-dialog" role="document">
+					  	<div class="modal-dialog modal-lg" role="document">
 						    <div class="modal-content">
 						      	<div class="modal-header">
 						        	<h5 class="modal-title" id="exampleModalLabel">Menu Item</h5>
@@ -92,15 +92,28 @@
 												</div>
 				                            </div>
 				                       	</div>
+
+				                       	<div class="form-group row" v-for="role in form.access_roles" v-if="role == 'supplier'">
+							    			<label for="access_roles" class="col-md-4 col-form-label">Choose Supplier</label>
+							    			<div class="col-md-12">
+								    			<multiselect class="" v-model="form.supplierId" :options="suppliers" :multiple="false" :close-on-select="true" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="contact_name" track-by="id">
+												    <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+												</multiselect>
+											</div>
+							    		</div>
+
 				                       	<div class="form-group row">
 							    			<label for="access_roles" class="col-md-4 col-form-label">Choose Category</label>
 							    			<div class="col-md-12">
 							    				<div class="row">
-				                                    <multiselect class="col-md-7" v-model="form.categories" :options="menuItemCategories" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id">
-													    <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
-													</multiselect>
-
-													<button class="btn btn-primary col-md-4"  @click.prevent="addNewCategory()">Add Category</button>
+							    					<div class="col-md-8">
+					                                    <multiselect v-model="form.categories" :options="menuItemCategories" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id">
+														    <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+														</multiselect>
+													</div>
+													<div class="col-md-4">
+														<button class="btn btn-primary"  @click.prevent="addNewCategory()">Add Category</button>
+													</div>
 												</div>
 
 												<div style="background-color:rgb(246, 246, 246)">
@@ -123,7 +136,7 @@
 												<div style="background-color:rgb(246, 246, 246)">
 													<ul>
 														<li v-for="item in form.mixers">
-															{{item.name}}
+															{{item.name}} - {{userDetails.venue.currency.symbol_left}}{{item.sling_price}} {{userDetails.venue.currency.symbol_right}}
 														</li>
 													</ul>
 												</div>
@@ -162,13 +175,13 @@
 				                          	<label for="description" class="col-md-4 col-form-label">Subtract From Quantity</label>
 				                            <div class="col-sm-12">
 				                                <select class="form-control" v-model="form.is_unlimited">
-				                                	<option :selected="(form.is_unlimited == '1')" value="1">Yes</option>
-				                                	<option :selected="form.is_unlimited == '0'" value="0">No</option>
+				                                	<option :selected="(form.is_unlimited == '0')" value="0">Yes</option>
+				                                	<option :selected="form.is_unlimited == '1'" value="1">No</option>
 				                                </select>
 				                            </div>
 				                       </div>
 
-				                       <div :class="['form-group row']" >
+				                       <div v-if="form.img_url" :class="['form-group row']" >
 				                       		<label for="mixerImage" class="col-md-4 col-form-label">&nbsp;</label>
 				                            <div class="col-sm-12">
 
@@ -184,17 +197,18 @@
 				                       	</div>
 
 				                       <div :class="['form-group row', allerros.min_quantity ? 'has-error' : '']" >
-				                          	<label for="description" class="col-md-4 col-form-label">Tax Type</label>
+				                          	<label for="description" class="col-md-4 col-form-label">Tax Rate</label>
 				                          	<div class="col-sm-12">
 				                           		<select v-model="form.tax_type" class="form-control">
-				                        			<option value="none"> --- None --- </option>
+				                        			<!-- <option value="none"> --- None --- </option>
 				                                	<option value="taxable_goods">Taxable Goods</option>
 				                                    <option value="non_taxable_goods">Non Taxable Goods</option>
 				                                    <option value="uae_vat">UAE VAT</option>
 				                                    <option value="indian_tax_food">Indian Tax Food</option>
 				                                    <option value="south_africa_rand">South Africa Rand</option>
 				                                    <option value="uk_service_charge">UK Service Charge</option>
-				                                    <option value="singapre_tax">Singapore Tax</option>
+				                                    <option value="singapre_tax">Singapore Tax</option> -->
+				                                   	<option v-for="rate in taxRates" v-if="rate.is_active == '1'" :value="rate.id">{{rate.name}}</option>
 				                              	</select>
 				                          	</div>
 				                      </div>
@@ -219,64 +233,17 @@
 				                   </div>
 				                   <div class="modal-footer">
 								        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-								        <!-- <button type="button" class="btn btn-primary" @click.prevent="saveMenuItemCategory">Save changes</button> -->
 								        <input type="submit" class="btn btn-primary" value="Save" @click.prevent="save()">
 							      	</div>
 							      </form>
 							  </div>
 							</div>
 						</div>
-
-				        <!-- <stack-modal
-				                :show="show"
-				                title="Create new Category"
-				                @close="show=false"
-				                :saveButton="{'visible':false}"
-				                :cancelButton="{'visible':false}"
-				        >
-				        	<form class="form">
-					            <div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-	                              	<label for="description" class="col-md-4 col-form-label">Name</label>
-		                            <div class="col-sm-12">
-		                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="category.name">
-		                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
-		                            </div>
-	                           </div>
-
-	                            <div class="form-group row">
-	                                <label for="description" class="col-md-4 col-form-label">Description</label>
-
-	                                <div class="col-md-12">
-	                                    <textarea class="form-control" :class="allerros.description ? 'is-invalid' : ''" v-model="category.description" required=""></textarea>
-	                                    <span v-if="allerros.description" :class="['label label-danger']">{{ allerros.description[0] }}</span>
-	                                </div>
-	                            </div>
-
-	                            <div slot="modal-footer"></div>
-		                        <slot name="modal-footer">
-								    <div class="modal-footer">
-								        <button
-								                type="button"
-								                @click.prevent="saveMenuItemCategory()"
-								                class="btn btn-primary"
-								        >Save
-								        </button>
-								        <button
-								                type="button"
-								                class="btn btn-secondary"
-								                data-dismiss="modal"
-								                @click.prevent="show=false"
-								        >Cancel
-								        </button>
-								    </div>
-								</slot>
-	                        </form>
-				        </stack-modal> -->
 				    <div class="modal" id="menuCategoryModal" data-backdrop="static">
 			            <div class="modal-dialog modal-lg">
 			                <div class="modal-content">
 			                    <div class="modal-header">
-			                    <h4 class="modal-title">Bills</h4>
+			                    <h4 class="modal-title">Menu Category</h4>
 			                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 			                </div><div class="container"></div>
 				                <div class="modal-body">
@@ -326,7 +293,7 @@
 					<v-client-table v-if="menuItems" :data="menuItems" :columns="['name','description','date_created','actions']" :options="options">
 						<template slot="actions" slot-scope="props" >
                             <div class="table-button-container text-center">
-                                <span class="edit-record" @click.prevent="edit(props.row.id, props.row.name, props.row.description,props.row.menu_categories,props.row.mixers,props.row.access_roles,props.row.venue_id,props.row.vendor_price,props.row.sling_price,props.row.tax_code,props.row.stock_quantity,props.row.minimum_purchase_quantity,props.row.is_unlimited,props.row.measure,props.row.unit_of_measure,props.row.image_url)" data-function="Edit" title="Edit"><i class="fa fa-edit" data-toggle="tooltip" data-placement="top" :id="props.row.id"></i>Edit</span>
+                                <span class="edit-record" @click.prevent="edit(props.row.id, props.row.name, props.row.description,props.row.menu_categories,props.row.mixers,props.row.access_roles,props.row.venue_id,props.row.vendor_price,props.row.sling_price,props.row.tax_rate,props.row.stock_quantity,props.row.minimum_purchase_quantity,props.row.is_unlimited,props.row.measure,props.row.unit_of_measure,props.row.image_url)" data-function="Edit" title="Edit"><i class="fa fa-edit" data-toggle="tooltip" data-placement="top" :id="props.row.id"></i>Edit</span>
                                 <span @click.prevent="removeModal(props.row.id)"><i class="fa fa-trash" data-toggle="tooltip" data-placement="top" :id="props.row.id"></i>Delete</span>
                             </div>
                         </template>
@@ -385,7 +352,7 @@
 			var self = this
 			return{
 				category: {'id':'','name': '', 'description' : ''},
-				form: {'id':'','name': '', 'description' : '', 'access_roles' : [], 'categories' : [], 'sling_price': 0,'vendor_price': 0, 'quantity' :1, 'min_quantity': "1", 'measure': '', 'uom':'','tax_type': '', 'mixers': [], 'img_url': ''},
+				form: {'id':'', 'supplierId':0,'name': '', 'description' : '', 'access_roles' : [], 'categories' : [], 'sling_price': 0,'vendor_price': 0, 'quantity' :1, 'min_quantity': "1", 'measure': '', 'uom':'','tax_type': '', 'mixers': [], 'img_url': ''},
 				menuItemCategories: [],
 				menuItems: [],
 				mixerItems: [],
@@ -416,13 +383,21 @@
 		            	console.log(file)
 		            	self.form.img_url = file.dataURL
 		            }
-			    }
+			    },
+			    taxRates: [],
+			    userDetails : {},
+			    suppliers: []
 			}
 		},
 		mounted(){
 			this.getMenuItemCategories()
 			this.getMenuItems()
 			this.getMixerItems()
+			this.getUserDetail()
+			this.getSuppliers()
+			axios.get('/get-tax-rates').then((response) => {
+				this.taxRates = response.data
+			})
 		},
 		computed:{
 			calculateSlingPrice(){
@@ -431,6 +406,17 @@
 			}
 		},
 		methods:{
+			getSuppliers(){
+				axios.get('/get-suppliers').then((response) => {
+					this.suppliers = response.data
+				})
+			},
+			getUserDetail(){
+				axios.get('/get-user-details').then((response) => {
+					this.userDetails = response.data
+					this.taxRate = this.userDetails.venue.tax_rate
+				})
+			},
 			getMenuItems(){
 				axios.get('/menu-items/get').then((response) => {
 					this.menuItems = response.data
@@ -461,7 +447,6 @@
 				$('#addNewMenuItemModal').modal('show')
 			},
 			edit(id,name,description,menuCaterogyID,mixerID,accessRoles,venueID,vendorPrice,slingPrice,taxCode,stockQuantity,minPurchaseQuantity,isUnlimited,measure,uom,imgURL){
-				console.log(imgURL)
 				this.$refs.myVueDropzone.removeAllFiles();
 				// console.log(name)
 				// let dropzone = this.$refs.myVueDropzone;
@@ -486,7 +471,7 @@
 				this.form.is_unlimited = isUnlimited
 				this.form.measure = measure
 				this.form.uom = uom
-				this.form.tax_type = taxCode
+				this.form.tax_type = taxCode.id
 				this.form.mixers = mixerID
 				this.form.id = id
 				this.form.img_url = imgURL
@@ -497,7 +482,7 @@
 			saveMenuItemCategory(){
 				axios.post('/menu-category-item/save',this.category).then((response) => {
      				this.success = true;
-					$('#categoryModal').modal('hide')
+					$('#menuCategoryModal').modal('hide')
 					this.getMenuItemCategories()
 					this.$toastr.s("Success! Category has been saved.");
 					this.category.name = ''

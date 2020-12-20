@@ -9,6 +9,16 @@ class Supplier extends Model {
 
     public function user()
     {
-  	return $this->belongsTo('App\User');
-  }
+	  	return $this->belongsTo('App\User', 'user_id', 'id');
+  	}
+
+  	public function tax_rate()
+    {
+  		return $this->belongsTo('App\TaxRates', 'default_tax_rate','id');
+  	}
+
+  	public function currency()
+    {
+  		return $this->belongsTo('App\Currency', 'default_currency','id');
+  	}
 }

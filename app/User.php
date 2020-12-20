@@ -5,10 +5,11 @@ namespace App;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable,Billable;
 
     /**
      * The attributes that are mass assignable.
@@ -44,6 +45,16 @@ class User extends Authenticatable
 
     public function venue()
     {
-        return $this->belongsTo('App\Venue', 'user_id');
+        return $this->belongsTo('App\Venue', 'id','user_id');
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo('App\Supplier', 'id','user_id');
+    }
+
+    public function country()
+    {
+        return $this->belongsTo('App\Country');
     }
 }
