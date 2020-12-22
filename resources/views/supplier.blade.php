@@ -91,7 +91,7 @@
                                         <label for="country" class="col-md-3 pull-left col-form-label">{{ __('Select Country') }}</label>
                                         
                                         <div class="col-md-12">
-                                            <select class="form-control selectpicker countrypicker" data-live-search="true" multiple="" name="countries[]" data-flag="true"></select>
+                                            <select class="form-control selectpicker countrypicker" data-live-search="true" multiple="" name="countries[]" data-flag="true" data-default="{{$info['available_countries']}}"></select>
                                         </div>
 
                                         <input type="hidden" name="selectedCountries" id="selectedCountries">

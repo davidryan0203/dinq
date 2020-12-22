@@ -101,10 +101,10 @@
 								            <tab-content title="Items" :before-change="beforeTabSwitch">
 								            	<div class="form-group">
 									            	<label class="radio-inline">
-												      	<input type="radio" name="optradio" :checked="form.isCredit == '0'" value="0" v-model="form.isCredit">Dinq
+												      	<input type="radio" name="optradio1" :checked="form.isCredit == '0'" value="0" v-model="form.isCredit">Dinq
 												    </label>
 												    <label class="radio-inline">
-												      	<input type="radio" name="optradio" value="1" v-model="form.isCredit">Credit
+												      	<input type="radio" name="optradio2" value="1" v-model="form.isCredit">Credit
 												    </label>
 												</div>
 
@@ -169,18 +169,22 @@
 								            </tab-content>
 
 								            <tab-content title="Payment Details">
+								            	<div class="form-group" style="font-size:18px;">
+								            		<h4 for="description" class="col-md-4 col-form-label">Select Order Expiry</h4>
+								            		<div class="col-12">
+										            	<label class="radio-inline">
+													      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '0'" value="0" v-model="form.order_expiry_option">4 hours
+													    </label>
 
-								            	<label class="radio-inline">
-											      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '0'" value="0" v-model="form.order_expiry_option">4 hours
-											    </label>
+													    <label class="radio-inline">
+													      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '1'" value="1" v-model="form.order_expiry_option">24 hours
+													    </label>
 
-											    <label class="radio-inline">
-											      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '1'" value="1" v-model="form.order_expiry_option">24 hours
-											    </label>
-
-											    <label class="radio-inline">
-											      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '2'" value="2" v-model="form.order_expiry_option">48 hours
-											    </label>
+													    <label class="radio-inline">
+													      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '2'" value="2" v-model="form.order_expiry_option">48 hours
+													    </label>
+													</div>
+												</div>
 
 								            	<div v-if="!userDetails.card_id">
 									            	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
@@ -242,8 +246,12 @@
 						                       	</div>
 
 						                       	<div v-else>
-						                       		<h4>Default Saved Card:</h4> {{userDetails.card_brand}}: xxxx-xxxx-xxxx-{{userDetails.card_last_four}}
-						                       		<button class="btn btn-primary" @click.prevent="changeCard()">Change Card</button>
+						                       		<div class="form-group">
+						                       			<div class="col-12">
+								                       		<h4>Default Saved Card:</h4> {{userDetails.card_brand}}: xxxx-xxxx-xxxx-{{userDetails.card_last_four}}
+								                       		<button class="btn btn-primary" @click.prevent="changeCard()">Change Card</button>
+								                       	</div>
+							                       </div>
 						                       	</div>
 
 								            </tab-content>
@@ -381,7 +389,7 @@
            			customers: [],
            			paymentInfo: {},
            			mixer : [],
-           			order_expiry_option:0,
+           			order_expiry_option:1,
          		},
 				orderItems: [],
                 options: {
@@ -545,6 +553,7 @@
 			getUserDetail(){
 				axios.get('/get-user-details').then((response) => {
 					this.userDetails = response.data
+					this.form.comments = this.userDetails.name+' has dinq you.'
 					if(this.userDetails.user_type == 1){
 						this.taxRate = this.userDetails.venue.tax_rate
 					}

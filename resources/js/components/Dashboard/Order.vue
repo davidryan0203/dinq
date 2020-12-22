@@ -92,10 +92,10 @@
 								            <tab-content title="Items" :before-change="beforeTabSwitch">
 								            	<div class="form-group">
 									            	<label class="radio-inline">
-												      	<input type="radio" name="optradio" :checked="form.isCredit == '0'" value="0" v-model="form.isCredit">Dinq
+												      	<input type="radio" name="optradio1" :checked="form.isCredit == '0'" value="0" v-model="form.isCredit">Dinq
 												    </label>
 												    <label class="radio-inline">
-												      	<input type="radio" name="optradio" value="1" v-model="form.isCredit">Credit
+												      	<input type="radio" name="optradio2" value="1" v-model="form.isCredit">Credit
 												    </label>
 												</div>
 
@@ -160,18 +160,22 @@
 								            </tab-content>
 
 								            <tab-content title="Payment Details">
+								            	<div class="form-group" style="font-size:18px;">
+								            		<h4 for="description" class="col-md-4 col-form-label">Select Order Expiry</h4>
+								            		<div class="col-12">
+										            	<label class="radio-inline">
+													      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '0'" value="0" v-model="form.order_expiry_option">4 hours
+													    </label>
 
-								            	<label class="radio-inline">
-											      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '0'" value="0" v-model="form.order_expiry_option">4 hours
-											    </label>
+													    <label class="radio-inline">
+													      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '1'" value="1" v-model="form.order_expiry_option">24 hours
+													    </label>
 
-											    <label class="radio-inline">
-											      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '1'" value="1" v-model="form.order_expiry_option">24 hours
-											    </label>
-
-											    <label class="radio-inline">
-											      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '2'" value="2" v-model="form.order_expiry_option">48 hours
-											    </label>
+													    <label class="radio-inline">
+													      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '2'" value="2" v-model="form.order_expiry_option">48 hours
+													    </label>
+													</div>
+												</div>
 
 								            	<div v-if="!userDetails.card_id">
 									            	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
@@ -233,8 +237,12 @@
 						                       	</div>
 
 						                       	<div v-else>
-						                       		<h4>Default Saved Card:</h4> {{userDetails.card_brand}}: xxxx-xxxx-xxxx-{{userDetails.card_last_four}}
-						                       		<button class="btn btn-primary" @click.prevent="changeCard()">Change Card</button>
+						                       		<div class="form-group">
+						                       			<div class="col-12">
+								                       		<h4>Default Saved Card:</h4> {{userDetails.card_brand}}: xxxx-xxxx-xxxx-{{userDetails.card_last_four}}
+								                       		<button class="btn btn-primary" @click.prevent="changeCard()">Change Card</button>
+								                       	</div>
+							                       </div>
 						                       	</div>
 
 								            </tab-content>
@@ -363,13 +371,14 @@
 		data(){
 			return{
         		form: {
+        			comments : '',
            			venue: '',
            			isCredit: 0,
            			orderItems: [],
            			customers: [],
            			paymentInfo: {},
            			mixer : [],
-           			order_expiry_option:0,
+           			order_expiry_option:1,
          		},
 				orderItems: [],
                 options: {
@@ -441,13 +450,11 @@
 				var venuePrice = 0
 				var taxes = groupAll(this.orderItems)
 				//
-		    	console.log(self.orderItems)
 			    	for(let order of self.orderItems){
 			    		price += Number(order.sling_price)
 			    		venuePrice += Number(order.vendor_price)
 			    	}
 		    	//}, 100);
-		    	console.log(price)
 		    	if(price && price != 0){
 		    		this.subTotal = Number(price)
 		    		this.orderTotal = (Number(price) + Number(this.serviceCharge) + Number(sum(taxes)))
@@ -466,7 +473,6 @@
 				}
 
 		        if (value) {
-		        	console.log(value)
 		        	var now  = moment();
 					var then = moment(value);
 		   			return expiryDate(then);
@@ -509,7 +515,6 @@
 		   	},
 		   	beforeTabSwitch: function(){
 		     	//alert("This is called before switchind tabs")
-		     	console.log(this.orderItems)
 		     	if(this.orderItems.length == 0){
 					this.$toastr.e('Must select Order first before proceeding.');
 			     	return false;
@@ -541,6 +546,8 @@
 			getUserDetail(){
 				axios.get('/get-user-details').then((response) => {
 					this.userDetails = response.data
+
+					this.form.comments = this.userDetails.name+' has dinq you.'
 					if(this.userDetails.user_type == 1){
 						this.taxRate = this.userDetails.venue.tax_rate
 					}
@@ -548,7 +555,6 @@
 					if(this.userDetails.user_type == 0){
 						this.taxRate = this.userDetails.venue.tax_rate
 					}
-					console.log(this.userDetails)
 					if(this.userDetails.user_type == 2){
 						this.taxRate = this.userDetails.supplier.tax_rate
 					}
@@ -568,10 +574,8 @@
 				var price = 0
 				var self = this
 				for(let stock of event){
-					console.log(stock)
 					price += Number(stock.sling_price)
 				}
-				console.log(price)
 				Vue.set(this.menuItems[item.index - 1], 'sling_price', this.menuItems[item.index - 1].sling_price=(Number(price) + Number(data.sling_item_price)));
 
 				Vue.set(this.menuItems[item.index - 1], 'selected_mixers', this.menuItems[item.index - 1].selected_mixers=event);
@@ -585,13 +589,11 @@
 				}
 			},
 			filterVenue(){
-				console.log(this.form)
 				axios.post('/menu-items/filter',this.form).then((response) => {
 					this.menuItems = response.data
 				})
 			},
 			addOrder(orderItem, index){
-				console.log(orderItem)
 				this.orderItems.push(orderItem)
 				Vue.set(this.menuItems[index], 'orderQuantity', this.menuItems[index].orderQuantity+=1);
 			},
@@ -615,19 +617,16 @@
 					if(this.userDetails.user_type == 2){
 						this.currencyCode = this.userDetails.supplier
 						axios.get('/get-supplier-venues').then((response) => {
-							console.log(response.data)
 							this.venues = response.data
 						})
 					}
 
 					if(this.userDetails.user_type == 0){
 						axios.get('/get-all-venues').then((response) => {
-							console.log(response.data)
 							this.venues = response.data
 						})
 					}
 
-					console.log(this.currencyCode)
 					this.serviceCharge = (response.data.exchange_rates.rates[this.currencyCode.currency.code] * response.data.conversion_rates.result)
 				})
 			}
