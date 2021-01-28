@@ -50,7 +50,8 @@ class SupplierController extends Controller
 
     public function getSupplier()
     {
-        $suppliers = Supplier::with('user')->get();
+        //$suppliers = Supplier::with('user')->get();
+        $suppliers = User::with('supplier')->where(['is_active' => 1, 'user_type' => 2])->get();
         return $suppliers;
     }
 

@@ -113,6 +113,27 @@ class RegisterController extends Controller
             $venue->default_currency = $currency->id;
             $venue->venue_type = $data['venue_type'];
             $venue->address = $data['address'];
+
+                // $image = Image::make($request->file('img_url')->getRealPath());
+                // $img = Image::make($request)->resize(320, 240)->insert('public/watermark.png');
+                $img = \Image::make($data['img_url'])->resize(200, 200);
+
+                $mime = $img->mime();  //edited due to updated to 2.x
+                if ($mime == 'image/jpeg')
+                    $extension = '.jpg';
+                elseif ($mime == 'image/png')
+                    $extension = '.png';
+                elseif ($mime == 'image/gif')
+                    $extension = '.gif';
+                else
+                    $extension = '';
+                $name = sha1(date('YmdHis') . $this->generateRandomString());
+                $img_name = $name . $extension;
+
+                $path = public_path('/images/venue/' . $img_name);
+                $img->save($path);
+                $venue->img_url = ($data['img_url']) ? '/images/venue/' . $img_name : '';
+
             $venue->save();
 
             return $user;
@@ -127,9 +148,40 @@ class RegisterController extends Controller
             $supplier->default_currency = $currency->id;
             $supplier->default_tax_rate = 1;
             $supplier->user_id = $user->id;
+
+                // $image = Image::make($request->file('img_url')->getRealPath());
+                // $img = Image::make($request)->resize(320, 240)->insert('public/watermark.png');
+                $img = \Image::make($data['img_url'])->resize(200, 200);
+
+                $mime = $img->mime();  //edited due to updated to 2.x
+                if ($mime == 'image/jpeg')
+                    $extension = '.jpg';
+                elseif ($mime == 'image/png')
+                    $extension = '.png';
+                elseif ($mime == 'image/gif')
+                    $extension = '.gif';
+                else
+                    $extension = '';
+                $name = sha1(date('YmdHis') . $this->generateRandomString());
+                $img_name = $name . $extension;
+
+                $path = public_path('/images/supplier/' . $img_name);
+                $img->save($path);
+                $supplier->img_url = ($data['img_url']) ? '/images/supplier/' . $img_name : '';
+
             $supplier->save();
 
             return $user;
         }
+    }
+    
+    public function generateRandomString($length = 10) {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
     }
 }

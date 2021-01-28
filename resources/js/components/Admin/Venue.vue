@@ -19,7 +19,8 @@
 						</template>
 						<template slot="actions" slot-scope="props">
 	             			<a class="btn btn-primary" :href="'/venue/edit/'+props.row.id"><i class="fa fa-edit"></i>Edit</a>
-	             			<a class="btn btn-danger" :href="'/venue/remove/'+props.row.id"><i class="fa fa-trash"></i>Remove</a>
+	             			<!-- <a class="btn btn-danger" :href="'/venue/remove/'+props.row.id"><i class="fa fa-trash"></i>Remove</a> -->
+	             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)"><i class="fa fa-trash"></i>Deactivate</button>
 	             		</template>
 					</v-client-table>
 
@@ -111,6 +112,25 @@
 					this.venues = response.data
 				})
 			},
+			deactivate(venue){
+				var self = this
+				this.$fire({
+				  	title: 'Do you want to delete this venue? This action is irreversible.',
+				  	showDenyButton: true,
+				  	showCancelButton: true,
+				  	confirmButtonText: `Yes`,
+				  	cancelButtonText: `No`,
+				}).then(r => {
+					console.log(r)
+					if(r.value == true){
+					 	self.venue = venue
+						axios.get('/venue/remove/'+venue.id).then((response) => {
+							self.getCustomers()
+							self.$toastr.w("Success! Venue has been deactivated.");
+						})
+					}			
+				});
+			}
 		}
 	}
 </script>

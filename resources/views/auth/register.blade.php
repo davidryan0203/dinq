@@ -20,7 +20,7 @@
                 <div class="card-body">
                     <div class="tab-content">
                         <div id="venue" class="container tab-pane active"><br>
-                            <form method="POST" action="{{ route('register') }}">
+                            <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                                 @csrf
 
                                 <div class="form-group row">
@@ -88,6 +88,14 @@
                                 </div>
 
                                 <div class="form-group row">
+                                    <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Venue Logo') }}</label>
+
+                                    <div class="col-md-6">
+                                        <input type="file" name="img_url" required id="exampleInputFile" style="display: block !important;">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Venue Type') }}</label>
 
                                     <div class="col-md-6">
@@ -117,7 +125,7 @@
                                     <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Currency') }}</label>
 
                                     <div class="col-md-6">
-                                        <select class="form-control" name="currency" id="currency" required="required">
+                                        <select class="form-control" name="currency" id="currency1" required="required">
                                             <option value="">Select Currency</option>
                                             <option value="AUD">Australian Dollar</option>
                                             <option value="IDR">Balinese Rupee</option>
@@ -312,7 +320,7 @@
                                     <label for="description" class="col-md-4 col-form-label text-md-right">{{ __('Contact Number') }}</label>
 
                                     <div class="col-md-6">
-                                        <input id="contact_number" type="number" class="form-control @error('contact_number') is-invalid @enderror" name="contact_number" value="{{ old('contact_number') }}" required="" autocomplete="contact_number" autofocus>
+                                        <input id="contact_number_2" type="number" class="form-control @error('contact_number') is-invalid @enderror" name="contact_number" value="{{ old('contact_number') }}" required="" autocomplete="contact_number" autofocus>
 
                                         @error('contact_number')
                                             <span class="invalid-feedback" role="alert">

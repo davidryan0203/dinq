@@ -67,6 +67,8 @@ Route::get('/get-orders/', 'OrdersController@getOrders');
 Route::post('/place-orders/', 'OrdersController@placeOrders');
 
 Route::post('/store-payment-info', 'PaymentsController@storePaymentInfo');
+Route::post('/store-payment-info-checkout', 'PaymentsController@storePaymentInfoCheckout');
+
 Route::post('/remove-payment-info', 'PaymentsController@removePaymentInfo');
 
 Route::get('/get-exchange-rates/', 'HomeController@getExchangeRates');
@@ -102,3 +104,9 @@ Route::get('get-pending-orders', 'HomeController@getPendingOrders');
 Route::get('get-todays-checkins', 'HomeController@getTodaysCheckins');
 
 Route::get('get-countries', 'HomeController@getCountries');
+Route::get('test-payment', 'PaymentsController@testPayment');
+
+Route::post('deactivate-customer', 'HomeController@deactivateCustomer');
+Route::get('social-media/feeds', 'FeedsController@feeds');
+Route::get('/get-feeds', 'FeedsController@get');
+

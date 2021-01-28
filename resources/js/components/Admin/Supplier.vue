@@ -13,13 +13,14 @@
 	                </div>
 
 	                <div class="card-body">
-					<v-client-table v-if="venues" :data="venues" :columns="['id','user.name','actions']" :options="options">
+					<v-client-table v-if="venues" :data="venues" :columns="['id','name','actions']" :options="options">
 						<template slot="name" slot-scope="props">
 							{{props.row.name}}
 						</template>
 						<template slot="actions" slot-scope="props">
-	             			<a class="btn btn-primary" :href="'/supplier/edit/'+props.row.user.id"><i class="fa fa-edit"></i>Edit</a>
-	             			<a class="btn btn-danger" :href="'/supplier/remove/'+props.row.user.id"><i class="fa fa-trash"></i>Remove</a>
+	             			<a class="btn btn-primary" :href="'/supplier/edit/'+props.row.id"><i class="fa fa-edit"></i>Edit</a>
+	             			<!-- <a class="btn btn-danger" :href="'/supplier/remove/'+props.row.user.id"><i class="fa fa-trash"></i>Remove</a> -->
+	             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)"><i class="fa fa-trash"></i>Deactivate</button>
 	             		</template>
 					</v-client-table>
 
@@ -111,6 +112,25 @@
 					this.venues = response.data
 				})
 			},
+			deactivate(supplier){
+				var self = this
+				this.$fire({
+				  	title: 'Do you want to delete this supplier? This action is irreversible.',
+				  	showDenyButton: true,
+				  	showCancelButton: true,
+				  	confirmButtonText: `Yes`,
+				  	cancelButtonText: `No`,
+				}).then(r => {
+					console.log(r)
+					if(r.value == true){
+					 	self.supplier = supplier
+						axios.get('/supplier/remove/'+supplier.id).then((response) => {
+							self.getCustomers()
+							self.$toastr.w("Success! Supplier has been deactivated.");
+						})
+					}			
+				});
+			}
 		}
 	}
 </script>

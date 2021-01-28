@@ -75,10 +75,10 @@ class HomeController extends Controller
             
             $countryIds = Country::whereIn('iso', $countriesArray)->get()->pluck('id');
             //dd($countryIds);
-            $users = User::with('country')->where('user_type', 3)->whereIn('country_id', $countryIds)->get();
+            $users = User::with('country')->where(['user_type' => 3, 'is_active' => 1])->whereIn('country_id', $countryIds)->get();
             //dd($users);
         }else{
-            $users = User::with('country')->where('user_type', 3)->get();
+            $users = User::with('country')->where(['user_type' => 3, 'is_active' => 1])->get();
         }
         return collect($users)->isNotEmpty() ? $users : [];
     }
@@ -156,5 +156,13 @@ class HomeController extends Controller
     public function getCountries(){
         $countries = Country::all();
         return $countries;
+    }
+
+    public function deactivateCustomer(Request $request){
+        $input = $request->all();
+        //dd($input);
+        $user = User::where('id',$input['id'])->update(['is_active' => 0]);
+
+        return 'delete success.';
     }
 }

@@ -5,34 +5,30 @@
 	            <div class="card">
 	                <div class="card-header" style="padding:10px 0px;">
 	                	<div class="container-fluid row">
-		                	<span class="col-6 pull-left"><h3>Customers</h3></span>
+		                	<span class="col-6 pull-left"><h3>Feeds</h3></span>
 		                	<span class="col-6">
 			                	
 			                </span>
 		                </div>
 	                </div>
 
-	                <div class="card-body" v-if="userDetails.user_type == '0'">
-						<v-client-table v-if="customers" :data="customers" :columns="['id','name','age','gender','country.name','actions']" :options="options">
-							<template slot="age" slot-scope="props">
-		             			{{props.row.date_of_birth | getAge}}
-		             		</template>
-
-		             		<template slot="actions" slot-scope="props">
-		             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)">Deactivate</button>
+	                <div class="card-body">
+						<v-client-table v-if="feeds" :data="feeds" :columns="['id','likes','comments','name','created_at']" :options="options">
+							<template slot="created_at" slot-scope="props">
+		             			{{props.row.created_at | formatDate}}
 		             		</template>
 						</v-client-table>
 
 					</div>
 
-					<div class="card-body" v-if="userDetails.user_type != '0'">
+					<!-- <div class="card-body" v-if="userDetails.user_type != '0'">
 						<v-client-table v-if="customers" :data="customers" :columns="['id','name','age','gender','country.name']" :options="options">
 							<template slot="age" slot-scope="props">
 		             			{{props.row.date_of_birth | getAge}}
 		             		</template>
 						</v-client-table>
 
-					</div>
+					</div> -->
             	</div>
         	</div>
     	</div>
@@ -104,7 +100,7 @@
                	menuItems: [],
            		success : false,
            		userDetails: {},
-           		customers: [],
+           		feeds: [],
            		currentYear : Number(moment().year()),
            		exchangeRates: {},
            		orderTax: 0,
@@ -119,7 +115,7 @@
 			}
 		},
 		mounted(){
-			this.getCustomers()			
+			this.getFeeds()			
 			this.getUserDetail()
 		},
 		methods:{
@@ -128,31 +124,12 @@
 					this.userDetails = response.data
 				})
 			},
-			getCustomers(){
-				axios.get('/get-customers').then((response) => {
+			getFeeds(){
+				axios.get('/get-feeds').then((response) => {
 					console.log(response.data)
-					this.customers = response.data
+					this.feeds = response.data
 				})
 			},
-			deactivate(customer){
-				var self = this
-				this.$fire({
-				  	title: 'Do you want to delete this customer? This action is irreversible.',
-				  	showDenyButton: true,
-				  	showCancelButton: true,
-				  	confirmButtonText: `Yes`,
-				  	cancelButtonText: `No`,
-				}).then(r => {
-					console.log(r)
-					if(r.value == true){
-					 	self.customer = customer
-						axios.post('/deactivate-customer',self.customer).then((response) => {
-							self.getCustomers()
-							self.$toastr.w("Success! Customer has been deactivated.");
-						})
-					}			
-				});
-			}
 		}
 	}
 </script>

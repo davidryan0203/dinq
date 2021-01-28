@@ -35,6 +35,7 @@ Vue.component('dashboard-order', require('./components/Dashboard/Order.vue').def
 Vue.component('latest-order-list', require('./components/Dashboard/LatestOrders.vue').default);
 Vue.component('dashboard-feeds', require('./components/Dashboard/Feeds.vue').default);
 Vue.component('dashboard-posts', require('./components/Dashboard/Posts.vue').default);
+Vue.component('feeds', require('./components/Feeds.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
