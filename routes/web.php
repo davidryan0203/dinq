@@ -110,3 +110,11 @@ Route::post('deactivate-customer', 'HomeController@deactivateCustomer');
 Route::get('social-media/feeds', 'FeedsController@feeds');
 Route::get('/get-feeds', 'FeedsController@get');
 
+Route::get('simple-qr-code', function () {
+     return QrCode::size(200)->generate('W3Adda Laravel Tutorialsfdafafdafdagsssafa');
+});
+
+Route::get('qr-scanner', function () {
+    
+  return view('qr_code-scanner');
+});
