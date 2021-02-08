@@ -116,5 +116,5 @@ Route::get('simple-qr-code', function () {
 
 Route::get('qr-scanner', function () {
     
-  return view('qr_code-scanner');
+  return view('qr-scanner');
 });
