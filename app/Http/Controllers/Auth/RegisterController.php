@@ -111,11 +111,35 @@ class RegisterController extends Controller
             $venue->latitude = $data['latitude'];
             $venue->user_id = $user->id;  
             $venue->default_currency = $currency->id;
+            switch ($data['venue_type']) {
+                case "Bar":
+                    $venueTypeId = 1;
+                break;
+                case "Bar and Restaurant":
+                    $venueTypeId = 2;
+                break;
+                case "Club":
+                    $venueTypeId = 3;
+                break;
+                case "Hotel":
+                    $venueTypeId = 4;
+                break;
+                case "Lounge":
+                    $venueTypeId = 5;
+                break;
+                case "Event":
+                    $venueTypeId = 6;
+                break;
+                case "Pub":
+                    $venueTypeId = 7;
+                break;
+                default:
+                    $venueTypeId = 8;
+            }
+            $venue->venue_type_id = $venueTypeId;
             $venue->venue_type = $data['venue_type'];
             $venue->address = $data['address'];
 
-                // $image = Image::make($request->file('img_url')->getRealPath());
-                // $img = Image::make($request)->resize(320, 240)->insert('public/watermark.png');
                 $img = \Image::make($data['img_url'])->resize(200, 200);
 
                 $mime = $img->mime();  //edited due to updated to 2.x
@@ -149,8 +173,6 @@ class RegisterController extends Controller
             $supplier->default_tax_rate = 1;
             $supplier->user_id = $user->id;
 
-                // $image = Image::make($request->file('img_url')->getRealPath());
-                // $img = Image::make($request)->resize(320, 240)->insert('public/watermark.png');
                 $img = \Image::make($data['img_url'])->resize(200, 200);
 
                 $mime = $img->mime();  //edited due to updated to 2.x
