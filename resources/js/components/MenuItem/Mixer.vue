@@ -5,7 +5,7 @@
 	            <div class="card">
 	                <div class="card-header" style="padding:10px 0px;">
 	                	<div class="container-fluid row">
-		                	<span class="col-6 pull-left"><h3>Menu Mixer</h3></span>
+		                	<span class="col-6 pull-left"><h3>Add-ons</h3></span>
 		                	<span class="col-6" style="padding-top:5px;">
 			                	<button class="btn btn-danger pull-right" @click.prevent="addNewCategory()"><i class="fa fa-plus"></i> Add New</button>
 			                </span>
@@ -40,7 +40,7 @@
 					  	<div class="modal-dialog modal-lg" role="document">
 						    <div class="modal-content">
 						      	<div class="modal-header">
-						        	<h5 class="modal-title" id="exampleModalLabel">Mixer</h5>
+						        	<h5 class="modal-title" id="exampleModalLabel">Add-on</h5>
 							        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							          <span aria-hidden="true">&times;</span>
 							        </button>
@@ -106,7 +106,7 @@
 				                       	</div>
 
 			                           	<div :class="['form-group row']" >
-			                           		<label for="mixerImage" class="col-md-3 col-form-label text-md-left">Mixer Image</label>
+			                           		<label for="mixerImage" class="col-md-3 col-form-label text-md-left">Add-on Image</label>
 				                            <div class="col-sm-12">
 				                            	<vue-dropzone @vdropzone-file-added="test" ref="myVueDropzone" id="dropzone" :options="dropzoneOptions"></vue-dropzone>
 											</div>

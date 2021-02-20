@@ -5,7 +5,7 @@
 	            <div class="card">
 	                <div class="card-header" style="padding:10px 0px;">
 	                	<div class="container-fluid row">
-		                	<span class="col-6 pull-left"><h3>Menu</h3></span>
+		                	<span class="col-6 pull-left"><h3>Order</h3></span>
 		                	<span class="col-6">
 			                	<button class="btn btn-danger pull-right" @click.prevent="addNewOrder()"><i class="fa fa-plus"></i> Add New Order</button>
 			                </span>
@@ -419,7 +419,7 @@
 			this.getCustomers()
 			this.getExchangeRates()
 
-			$('.wizard-title').text('Menu Wizard')
+			$('.wizard-title').text('Order Wizard')
 			$('.category').text('sending item to customer')
 			this.getMixerItems()
 		},

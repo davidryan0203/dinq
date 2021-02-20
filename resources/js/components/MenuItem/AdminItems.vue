@@ -82,7 +82,7 @@
 					                       	<div class="form-group row" v-for="role in form.access_roles" v-if="role == 'supplier'">
 								    			<label for="access_roles" class="col-md-4 col-form-label">Choose Supplier</label>
 								    			<div class="col-md-12">
-									    			<multiselect class="" v-model="form.supplierId" :options="suppliers" :multiple="false" :close-on-select="true" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="contact_name" track-by="id">
+									    			<multiselect class="" v-model="form.supplierId" :options="suppliers" :multiple="false" :close-on-select="true" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id">
 													    <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
 													</multiselect>
 												</div>

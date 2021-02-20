@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Storage;
 use App\User;
 use App\Venue;
 use App\Orders;
 use Auth;
 use Carbon\Carbon;
+use App\Activities;
 use Illuminate\Http\Request;
 
 class PaymentsController extends Controller
@@ -111,7 +113,23 @@ class PaymentsController extends Controller
 				$expiry = Carbon::now()->addHours(48);
 			}
 
-			$couponCode = (Carbon::now()->format('m-d')).'-'.$this->generateRandomString();
+			//$couponCode = (Carbon::now()->format('m-d')).'-'.$this->generateRandomString();
+
+			$orderItem = Orders::first();
+			if(collect($orderItem)->isNotEmpty()){
+				$id = Orders::latest()->first()->id;
+			}else{
+				$id = 0;
+			}
+			$couponCode = $id.$this->generateRandomString();
+
+			$image = \QrCode::format('svg')
+                ->size(200)->errorCorrection('H')
+                ->generate($couponCode);
+            //dd($image);
+			$output_file = '/img/qr-code/img-' . time() . '.svg';
+			(Storage::disk('public')->put($output_file, $image));
+			//dd('123');
 			$order = new Orders;
 			$order->comment = $input['comments'];
 			$order->order_total = $input['orderTotal'];
@@ -119,7 +137,16 @@ class PaymentsController extends Controller
 			$order->venue_total = $input['venueTotal'];
 	    	$order->recepient_id = $customer['id'];
 			$order->order_type = $input['isCredit'];
+			$order->qr_code_path = \URL::to('/').$output_file;
 			$user = Auth::user();
+
+			$activity = new Activities();
+			$activity->activity = 'send Dinq activity';
+			$activity->sender_id = Auth::user()->id;
+			$activity->receiver_id = $customer['id'];
+			$activity->venue_id = $input['venue']['id'];
+			$activity->save();
+
 			if($user['user_type'] == 2){
 				$order->supplier_id = Auth::user()->supplier->id;
 				foreach ($input['orderItems'] as $key => $data) {

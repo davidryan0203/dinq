@@ -216,7 +216,8 @@ class MenuItemController extends Controller
 
         if($user->user_type == 2){
             $supplier = Supplier::where('user_id', '=', Auth::user()->id)->first();
-            $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where('supplier_id', '=', $supplier['id'])->get();
+            //dd($supplier['id']);
+            $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where('supplier_id', '=', Auth::user()->id)->get();
             foreach ($menuItems as $key => $item) {
                 $item['orderQuantity'] = 0;
                 if($item['mixers']){

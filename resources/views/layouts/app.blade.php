@@ -143,7 +143,7 @@
                                         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavLayout">
                                             <a class="nav-link" href="/menu/category">Categories</a>
                                             <a class="nav-link" href="/admin-menu-items">Items</a>
-                                            <a class="nav-link" href="/menu/mixer">Mixer Details</a>
+                                            <a class="nav-link" href="/menu/add-on">Add-on Details</a>
                                         </nav>
                                     </div>
                                     <a class="nav-link" href="/orders">
@@ -181,6 +181,10 @@
                                             <div class="nav-link-icon"><i data-feather="file"></i></div>
                                             Tax Rates
                                         </a>
+                                        <a class="nav-link" href="/activities">
+                                            <div class="nav-link-icon"><i data-feather="file"></i></div>
+                                            Activities
+                                        </a>
                                     @endif
                                 </div>
                             @endif
@@ -206,7 +210,7 @@
                                         <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavLayout">
                                             <a class="nav-link" href="/menu/category">Categories</a>
                                             <a class="nav-link" href="/menu/items">Items</a>
-                                            <a class="nav-link" href="/menu/mixer">Mixer Details</a>
+                                            <a class="nav-link" href="/menu/add-on">Add-on Details</a>
                                         </nav>
                                     </div>
                                     <a class="nav-link" href="/orders">

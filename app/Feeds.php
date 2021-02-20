@@ -36,4 +36,9 @@ class Feeds extends Model {
     {
       return $this->hasMany('App\Comments', 'feed_id', 'id');
     }
+
+    public function venue_info()
+    {
+      return $this->belongsTo('App\User', 'venue_id', 'id');
+    }
 }

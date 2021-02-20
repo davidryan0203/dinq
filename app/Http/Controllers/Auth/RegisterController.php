@@ -172,24 +172,27 @@ class RegisterController extends Controller
             $supplier->default_currency = $currency->id;
             $supplier->default_tax_rate = 1;
             $supplier->user_id = $user->id;
+                if(isset($data['img_url'])){
+                    $img = \Image::make($data['img_url'])->resize(200, 200);
 
-                $img = \Image::make($data['img_url'])->resize(200, 200);
+                    $mime = $img->mime();  //edited due to updated to 2.x
+                    if ($mime == 'image/jpeg')
+                        $extension = '.jpg';
+                    elseif ($mime == 'image/png')
+                        $extension = '.png';
+                    elseif ($mime == 'image/gif')
+                        $extension = '.gif';
+                    else
+                        $extension = '';
+                    $name = sha1(date('YmdHis') . $this->generateRandomString());
+                    $img_name = $name . $extension;
 
-                $mime = $img->mime();  //edited due to updated to 2.x
-                if ($mime == 'image/jpeg')
-                    $extension = '.jpg';
-                elseif ($mime == 'image/png')
-                    $extension = '.png';
-                elseif ($mime == 'image/gif')
-                    $extension = '.gif';
-                else
-                    $extension = '';
-                $name = sha1(date('YmdHis') . $this->generateRandomString());
-                $img_name = $name . $extension;
-
-                $path = public_path('/images/supplier/' . $img_name);
-                $img->save($path);
-                $supplier->img_url = ($data['img_url']) ? '/images/supplier/' . $img_name : '';
+                    $path = public_path('/images/supplier/' . $img_name);
+                    $img->save($path);
+                    $supplier->img_url = ($data['img_url']) ? '/images/supplier/' . $img_name : '';
+                }else{
+                    $supplier->img_url = '/images/supplier/default.png';
+                }
 
             $supplier->save();
 

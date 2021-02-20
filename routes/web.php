@@ -52,12 +52,14 @@ Route::post('/menu-items/filter', 'MenuItemController@filterMenuItems');
 Route::post('/menu-items/save', 'MenuItemController@saveMenuItem');
 Route::post('/menu-items/delete', 'MenuItemController@deleteMenuItem');
 
+Route::get('/activities', 'HomeController@activities');
+Route::get('/get-activities', 'HomeController@getActivities');
 
 Route::get('/admin-menu-items/{id}', 'MenuItemController@getAdminMenuItems');
 Route::get('/admin-menu-category-item/{id}', 'MenuItemController@getAdminMenuCategory');
 Route::get('/admin-menu/mixer/{id}', 'MenuItemController@getAdminMenuMixers');
 
-Route::get('/menu/mixer', 'MenuItemController@menuMixer');
+Route::get('/menu/add-on', 'MenuItemController@menuMixer');
 Route::get('/menu/mixer/get', 'MenuItemController@getMenuMixer');
 Route::post('/menu/mixer/save', 'MenuItemController@saveMixerDetails');
 Route::post('/mixer/upload', 'MenuItemController@mixerUpload');
@@ -109,6 +111,10 @@ Route::get('test-payment', 'PaymentsController@testPayment');
 Route::post('deactivate-customer', 'HomeController@deactivateCustomer');
 Route::get('social-media/feeds', 'FeedsController@feeds');
 Route::get('/get-feeds', 'FeedsController@get');
+Route::get('/get-checkins', 'FeedsController@getCheckIns');
+Route::get('/social-media/checkins', 'FeedsController@checkins');
+
+
 
 Route::get('simple-qr-code', function () {
      return QrCode::size(200)->generate('W3Adda Laravel Tutorialsfdafafdafdagsssafa');

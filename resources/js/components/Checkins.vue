@@ -5,7 +5,7 @@
 	            <div class="card">
 	                <div class="card-header" style="padding:10px 0px;">
 	                	<div class="container-fluid row">
-		                	<span class="col-6 pull-left"><h3>Feeds</h3></span>
+		                	<span class="col-6 pull-left"><h3>Checkins</h3></span>
 		                	<span class="col-6">
 			                	
 			                </span>
@@ -13,7 +13,7 @@
 	                </div>
 
 	                <div class="card-body">
-						<v-client-table v-if="feeds" :data="feeds" :columns="['id','likes','comments','name','content','created_at']" :options="options">
+						<v-client-table v-if="checkins" :data="checkins" :columns="['id','author.name','venue_info.name','created_at']" :options="options">
 							<template slot="created_at" slot-scope="props">
 		             			{{props.row.created_at | formatDate}}
 		             		</template>
@@ -44,7 +44,7 @@
     import moment from 'moment';
 	Vue.filter('formatDate', function(value) {
         if (value) {
-            return moment(String(value)).format('D MMM Y')
+            return moment(String(value)).format('D MMM Y hh:mm A')
         }
     })
 
@@ -93,14 +93,17 @@
 				        down: 'fa-sort-desc'
 				    },
 				    headings:{
-				    	'country.name': 'Country'
+				    	'country.name': 'Country',
+				    	'venue_info.name': 'Venue Name',
+				    	'Author.name': 'Name',
+				    	'created_at' : 'Check In Date'
 				    }
                 },
                	allerros: [],
                	menuItems: [],
            		success : false,
            		userDetails: {},
-           		feeds: [],
+           		checkins: [],
            		currentYear : Number(moment().year()),
            		exchangeRates: {},
            		orderTax: 0,
@@ -125,9 +128,9 @@
 				})
 			},
 			getFeeds(){
-				axios.get('/get-feeds').then((response) => {
+				axios.get('/get-checkins').then((response) => {
 					console.log(response.data)
-					this.feeds = response.data
+					this.checkins = response.data
 				})
 			},
 		}

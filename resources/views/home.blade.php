@@ -10,7 +10,7 @@
 		</div>
 	</div>
     <br/> 
-    <dashboard-order></dashboard-order>
+    <!-- <dashboard-order></dashboard-order> -->
     <br/>
     <latest-order-list></latest-order-list>
 @endsection

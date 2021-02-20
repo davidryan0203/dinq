@@ -12,6 +12,7 @@ use App\Orders;
 use App\Feeds;
 use App\Country;
 use App\Currency;
+use App\Activities;
 
 class HomeController extends Controller
 {
@@ -43,6 +44,17 @@ class HomeController extends Controller
     public function customers()
     {
         return view('customers');
+    }
+
+    public function activities()
+    {
+        return view('admin.activities');
+    }
+
+    public function getActivities(){
+        $activities = Activities::with('sender','receiver')->get();
+        return $activities;
+        dd($activities);
     }
 
     public function testEmail(){
@@ -78,7 +90,8 @@ class HomeController extends Controller
             $users = User::with('country')->where(['user_type' => 3, 'is_active' => 1])->whereIn('country_id', $countryIds)->get();
             //dd($users);
         }else{
-            $users = User::with('country')->where(['user_type' => 3, 'is_active' => 1])->get();
+            $users = User::with('country','receiver_activity','sender_activity')->where(['user_type' => 3, 'is_active' => 1])->get();
+            //dd($users);
         }
         return collect($users)->isNotEmpty() ? $users : [];
     }

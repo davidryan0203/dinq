@@ -57,4 +57,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Country');
     }
+
+    public function receiver_activity()
+    {
+        return $this->hasMany('App\Activities', 'receiver_id');
+    }
+
+    public function sender_activity()
+    {
+      return $this->hasMany('App\Activities', 'sender_id');
+    }
 }

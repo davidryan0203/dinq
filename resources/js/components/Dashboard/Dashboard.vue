@@ -6,7 +6,7 @@
 	                <div class="card-body">
 	                    <div class="d-flex justify-content-between align-items-center">
 	                        <div class="mr-3">
-	                            <div class="text-white-75 small">Total Revennue</div>
+	                            <div class="text-white-75 small"><span v-if="user.user_type == '2'">Total Spend</span><span v-else>Total Revenue</span></div>
 	                            <div class="text-lg font-weight-bold">{{revenue}}</div>
 	                        </div>
 	                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign feather-xl text-white-50"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
@@ -145,6 +145,10 @@
 			this.getPendingOrders()
 			this.getRedeemedOrders()
 			//this.getCurrency()
+
+			axios.get('/get-user-details').then((response) => {
+				this.user = response.data
+			})
 		},
 		methods:{
 			getCurrency(){

@@ -27,6 +27,16 @@ class FeedsController extends Controller
         return view('feeds');
     }
 
+    public function checkins()
+    {
+        return view('checkins');
+    }
+
+    public function getCheckIns(){
+        $checkins = Feeds::with('venue_info','author')->where('feed_type', '=', 'checkin')->get();
+        return $checkins;
+    }
+
     public function get(Request $request){
     	$input = $request->all();
     	$friends = Friends::whereIn('status' , ['accepted','following'])->pluck('friend_id');

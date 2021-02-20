@@ -142,7 +142,7 @@
 
 											    	<template slot="mixer" slot-scope="props">
 											    		<multiselect 
-			                                          		class="mixer" :options="props.row.mixerStocks" open-direction="bottom" v-model="form.mixer[props.index]" :close-on-select="false" :multiple="true" track-by="id" label="name" placeholder="Select Mixer" @input="modifyMixer($event,props.row, props)">
+			                                          		class="mixer" :options="props.row.mixerStocks" open-direction="bottom" v-model="form.mixer[props.index]" :close-on-select="false" :multiple="true" track-by="id" label="name" placeholder="Select Add-ons" @input="modifyMixer($event,props.row, props)">
 			                                        	</multiselect>
 											    	</template>
 
@@ -401,7 +401,8 @@
 				        down: 'fa-sort-desc'
 				    },
 				    headings:{
-				    	'venue.user.name':'Venue Name'
+				    	'venue.user.name':'Venue Name',
+				    	'mixer' : 'Add-ons'
 				    }
                 },
                	allerros: [],
@@ -430,7 +431,7 @@
 			this.getCustomers()
 			this.getExchangeRates()
 
-			$('.wizard-title').text('Venue Wizard')
+			$('.wizard-title').text('Order Wizard')
 			$('.category').text('sending item to customer')
 			this.getMixerItems()
 		},
@@ -553,7 +554,7 @@
 			getUserDetail(){
 				axios.get('/get-user-details').then((response) => {
 					this.userDetails = response.data
-					this.form.comments = this.userDetails.name+' has dinq you.'
+					this.form.comments = this.userDetails.name+' has Dinq\'d you.'
 					if(this.userDetails.user_type == 1){
 						this.taxRate = this.userDetails.venue.tax_rate
 					}

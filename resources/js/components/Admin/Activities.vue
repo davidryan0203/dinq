@@ -5,30 +5,22 @@
 	            <div class="card">
 	                <div class="card-header" style="padding:10px 0px;">
 	                	<div class="container-fluid row">
-		                	<span class="col-6 pull-left"><h3>Feeds</h3></span>
+		                	<span class="col-6 pull-left"><h3>Activities</h3></span>
 		                	<span class="col-6">
 			                	
 			                </span>
 		                </div>
 	                </div>
 
-	                <div class="card-body">
-						<v-client-table v-if="feeds" :data="feeds" :columns="['id','likes','comments','name','content','created_at']" :options="options">
-							<template slot="created_at" slot-scope="props">
-		             			{{props.row.created_at | formatDate}}
-		             		</template>
-						</v-client-table>
+					<v-client-table v-if="activities" :data="activities" :columns="['id','sender','receiver','activity']" :options="options">
+						<template slot="sender" slot-scope="props">
+	             			{{props.row.sender.name}}
+	             		</template>
+	             		<template slot="receiver" slot-scope="props">
+	             			{{props.row.receiver.name}}
+	             		</template>
+					</v-client-table>
 
-					</div>
-
-					<!-- <div class="card-body" v-if="userDetails.user_type != '0'">
-						<v-client-table v-if="customers" :data="customers" :columns="['id','name','age','gender','country.name']" :options="options">
-							<template slot="age" slot-scope="props">
-		             			{{props.row.date_of_birth | getAge}}
-		             		</template>
-						</v-client-table>
-
-					</div> -->
             	</div>
         	</div>
     	</div>
@@ -79,7 +71,7 @@
            			venue: '',
            			isCredit: 0,
            			orderItems: [],
-           			customers: [],
+           			activities: [],
            			paymentInfo: {},
            			mixer : []
          		},
@@ -100,7 +92,7 @@
                	menuItems: [],
            		success : false,
            		userDetails: {},
-           		feeds: [],
+           		activities: [],
            		currentYear : Number(moment().year()),
            		exchangeRates: {},
            		orderTax: 0,
@@ -115,7 +107,7 @@
 			}
 		},
 		mounted(){
-			this.getFeeds()			
+			this.getActivities()			
 			this.getUserDetail()
 		},
 		methods:{
@@ -124,10 +116,10 @@
 					this.userDetails = response.data
 				})
 			},
-			getFeeds(){
-				axios.get('/get-feeds').then((response) => {
+			getActivities(){
+				axios.get('/get-activities').then((response) => {
 					console.log(response.data)
-					this.feeds = response.data
+					this.activities = response.data
 				})
 			},
 		}
