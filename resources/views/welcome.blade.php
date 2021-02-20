@@ -85,7 +85,14 @@
                 <div class="row">
                     <!-- Portfolio Item 1-->
                     <div class="col-md-6 col-lg-4 mb-5">
-                            <iframe width="370" height="315" src="https://www.youtube.com/embed/Ak41BUwzyzM" frameborder="0" gesture="media" allowfullscreen></iframe>
+                            <!-- <iframe width="370" height="315" src="https://www.youtube.com/embed/Ak41BUwzyzM" frameborder="0" gesture="media" allowfullscreen></iframe> -->
+                        <video controls width="370" height="315">
+
+                            <source src="/assets/DINQ_animation_1.mp4"
+                                    type="video/mp4">
+
+                            Sorry, your browser doesn't support embedded videos.
+                        </video>
                     </div>
                     <!-- Portfolio Item 2-->
                     <div class="col-md-6 col-lg-4 mb-5">
