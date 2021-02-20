@@ -95,7 +95,7 @@
 				    headings:{
 				    	'country.name': 'Country',
 				    	'venue_info.name': 'Venue Name',
-				    	'Author.name': 'Name',
+				    	'author.name': 'Name',
 				    	'created_at' : 'Check In Date'
 				    }
                 },
