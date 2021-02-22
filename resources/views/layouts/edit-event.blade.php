@@ -150,10 +150,13 @@
       .btn-light{
         border:1px solid #ced4da
       }
+
+        [v-cloak] > * { display:none; }
+        [v-cloak]::before { content: "loading..."; }
         </style>
     </head>
     <body class="nav-fixed">
-        <span id="app">
+        <span id="app" v-cloak>
             <nav class="topnav navbar navbar-expand shadow navbar-light bg-white" id="sidenavAccordion">
                 <a class="navbar-brand d-none d-sm-block container" href="/">
                     <div class="row">

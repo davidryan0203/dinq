@@ -13,7 +13,7 @@
 	                </div>
 
 	                <div class="card-body">
-						<v-client-table v-if="feeds" :data="feeds" :columns="['id','likes','comments','name','content','created_at']" :options="options">
+						<v-client-table v-if="feeds" :data="feeds" :columns="['id','likes','comments','user.name','user.email','content','created_at']" :options="options">
 							<template slot="created_at" slot-scope="props">
 		             			{{props.row.created_at | formatDate}}
 		             		</template>
@@ -93,7 +93,9 @@
 				        down: 'fa-sort-desc'
 				    },
 				    headings:{
-				    	'country.name': 'Country'
+				    	'country.name': 'Country',
+				    	'user.name' : 'Name',
+				    	'user.email' : 'Email'
 				    }
                 },
                	allerros: [],

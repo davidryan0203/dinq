@@ -41,8 +41,8 @@ class FeedsController extends Controller
     	$input = $request->all();
     	$friends = Friends::whereIn('status' , ['accepted','following'])->pluck('friend_id');
     	
-    	$feeds = Feeds::with('comments','user', 'venue.user')->get();
-
+    	$feeds = Feeds::with('comments','user', 'venue.user','author')->get();
+        
     	$feedResults = [];
     	foreach ($feeds as $key => $data) {
     		
@@ -62,6 +62,7 @@ class FeedsController extends Controller
     			'author_name' => $data['author']['name'],
                 'isLiked' => $data['is_liked'],
     			'comments' => $data['comments']->count(),
+                'user' => $data['author']
     		];
     	}
         return response($feedResults, 200)->header('Access-Control-Allow-Origin', '*')

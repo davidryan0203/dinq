@@ -30,9 +30,12 @@
 					</div>
 
 					<div class="card-body" v-if="userDetails.user_type != '0'">
-						<v-client-table v-if="customers" :data="customers" :columns="['id','name','age','gender','country.name']" :options="options">
+						<v-client-table v-if="customers" :data="customers" :columns="['id','name','email','age','gender','country.name','activity_count']" :options="options">
 							<template slot="age" slot-scope="props">
 		             			{{props.row.date_of_birth | getAge}}
+		             		</template>
+		             		<template slot="activity_count" slot-scope="props">
+		             			{{props.row.receiver_activity.length + props.row.sender_activity.length}}
 		             		</template>
 						</v-client-table>
 

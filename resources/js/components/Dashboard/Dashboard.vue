@@ -55,7 +55,7 @@
 	            </div>
 	        </div>
 
-	        <div class="col-xxl-3 col-lg-3">
+	        <div class="col-xxl-3 col-lg-3" v-if="user.user_type != '2'">
 	            <div class="card bg-warning text-white mb-4">
 	                <div class="card-body">
 	                    <div class="d-flex justify-content-between align-items-center">
