@@ -19,8 +19,8 @@
 						</template>
 						<template slot="actions" slot-scope="props">
 	             			<a class="btn btn-primary" :href="'/supplier/edit/'+props.row.id"><i class="fa fa-edit"></i>Edit</a>
-	             			<!-- <a class="btn btn-danger" :href="'/supplier/remove/'+props.row.user.id"><i class="fa fa-trash"></i>Remove</a> -->
-	             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)"><i class="fa fa-trash"></i>Deactivate</button>
+	             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)" v-if="props.row.is_active == '1'">Deactivate</button>
+	             			<button class="btn btn-warning" @click.prevent="reactivate(props.row)" v-if="props.row.is_active == '0'">Reactivate</button>
 	             		</template>
 					</v-client-table>
 
@@ -115,7 +115,7 @@
 			deactivate(supplier){
 				var self = this
 				this.$fire({
-				  	title: 'Do you want to delete this supplier? This action is irreversible.',
+				  	title: 'Do you want to deactivate this supplier? This action is irreversible.',
 				  	showDenyButton: true,
 				  	showCancelButton: true,
 				  	confirmButtonText: `Yes`,
@@ -127,6 +127,25 @@
 						axios.get('/supplier/remove/'+supplier.id).then((response) => {
 							self.getCustomers()
 							self.$toastr.w("Success! Supplier has been deactivated.");
+						})
+					}			
+				});
+			},
+			reactivate(supplier){
+				var self = this
+				this.$fire({
+				  	title: 'Do you want to reactivate this supplier? This action is irreversible.',
+				  	showDenyButton: true,
+				  	showCancelButton: true,
+				  	confirmButtonText: `Yes`,
+				  	cancelButtonText: `No`,
+				}).then(r => {
+					console.log(r)
+					if(r.value == true){
+					 	self.supplier = supplier
+						axios.get('/supplier/reactivate/'+supplier.id).then((response) => {
+							self.getCustomers()
+							self.$toastr.w("Success! Supplier has been reactivated.");
 						})
 					}			
 				});

@@ -50,7 +50,7 @@ class VenueController extends Controller
     }
 
     public function getAllVenues(){
-        $info = User::with('venue')->where(['is_active' => 1, 'user_type' => 1])->get();
+        $info = User::with('venue')->where(['user_type' => 1])->get();
         return $info;
     }
 
@@ -250,6 +250,15 @@ class VenueController extends Controller
         
         return 'success';
     }
+
+    public function reactivateVenue($id){
+        if(Auth::user()->user_type == 0){
+            $user = User::where('id', $id)->update(['is_active' => 1]);
+            return redirect('admin-venue')->with('status', 'Venue Profile updated!');
+        }
+        
+        return 'success';
+    }    
 
     public function getTaxRates(){
         $rates = TaxRates::all();

@@ -90,7 +90,7 @@ class HomeController extends Controller
             $users = User::with('country')->where(['user_type' => 3, 'is_active' => 1])->whereIn('country_id', $countryIds)->get();
             //dd($users);
         }else{
-            $users = User::with('country','receiver_activity','sender_activity')->where(['user_type' => 3, 'is_active' => 1])->get();
+            $users = User::with('country','receiver_activity','sender_activity')->where(['user_type' => 3])->get();
             //dd($users);
         }
         return collect($users)->isNotEmpty() ? $users : [];
@@ -177,5 +177,13 @@ class HomeController extends Controller
         $user = User::where('id',$input['id'])->update(['is_active' => 0]);
 
         return 'delete success.';
+    }
+
+    public function reactivateCustomer(Request $request){
+        $input = $request->all();
+        //dd($input);
+        $user = User::where('id',$input['id'])->update(['is_active' => 1]);
+
+        return 'success.';
     }
 }

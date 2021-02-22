@@ -51,7 +51,7 @@ class SupplierController extends Controller
     public function getSupplier()
     {
         //$suppliers = Supplier::with('user')->get();
-        $suppliers = User::with('supplier')->where(['is_active' => 1, 'user_type' => 2])->get();
+        $suppliers = User::with('supplier')->where(['user_type' => 2])->get();
         return $suppliers;
     }
 
@@ -134,4 +134,13 @@ class SupplierController extends Controller
         
         return 'success';
     }
+
+    public function reactivateSupplier($id){
+        if(Auth::user()->user_type == 0){
+            $user = User::where('id', $id)->update(['is_active' => 1]);
+            return redirect('admin-supplier')->with('status', 'Supplier Removed!');
+        }
+        
+        return 'success';
+    }    
 }

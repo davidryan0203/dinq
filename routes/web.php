@@ -82,7 +82,9 @@ Route::post('/venue/edit-data/{id}', 'VenueController@editData');
 Route::post('/venue/edit-bank/{id}', 'VenueController@editBank');
 Route::post('/venue/edit-option/{id}', 'VenueController@editOption');
 Route::get('/venue/remove/{id}', 'VenueController@removeVenue');
+Route::get('/venue/reactivate/{id}', 'VenueController@reactivateVenue');
 Route::get('/supplier/remove/{id}', 'SupplierController@removeSupplier');
+Route::get('/supplier/reactivate/{id}', 'SupplierController@reactivateSupplier');
 Route::get('/supplier/edit/{id}', 'SupplierController@editSupplier');
 Route::get('/get-tax-rates', 'VenueController@getTaxRates');
 Route::get('/customers', 'HomeController@customers');
@@ -109,6 +111,7 @@ Route::get('get-countries', 'HomeController@getCountries');
 Route::get('test-payment', 'PaymentsController@testPayment');
 
 Route::post('deactivate-customer', 'HomeController@deactivateCustomer');
+Route::post('reactivate-customer', 'HomeController@reactivateCustomer');
 Route::get('social-media/feeds', 'FeedsController@feeds');
 Route::get('/get-feeds', 'FeedsController@get');
 Route::get('/get-checkins', 'FeedsController@getCheckIns');

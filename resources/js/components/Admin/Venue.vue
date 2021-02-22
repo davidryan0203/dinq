@@ -19,8 +19,8 @@
 						</template>
 						<template slot="actions" slot-scope="props">
 	             			<a class="btn btn-primary" :href="'/venue/edit/'+props.row.id"><i class="fa fa-edit"></i>Edit</a>
-	             			<!-- <a class="btn btn-danger" :href="'/venue/remove/'+props.row.id"><i class="fa fa-trash"></i>Remove</a> -->
-	             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)"><i class="fa fa-trash"></i>Deactivate</button>
+	             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)" v-if="props.row.is_active == '1'"></i>Deactivate</button>
+	             			<button class="btn btn-warning" @click.prevent="deactivate(props.row)" v-if="props.row.is_active == '0'"></i>Reactivate</button>
 	             		</template>
 					</v-client-table>
 
@@ -115,7 +115,7 @@
 			deactivate(venue){
 				var self = this
 				this.$fire({
-				  	title: 'Do you want to delete this venue? This action is irreversible.',
+				  	title: 'Do you want to deactivate this venue? This action is irreversible.',
 				  	showDenyButton: true,
 				  	showCancelButton: true,
 				  	confirmButtonText: `Yes`,
@@ -127,6 +127,25 @@
 						axios.get('/venue/remove/'+venue.id).then((response) => {
 							self.getCustomers()
 							self.$toastr.w("Success! Venue has been deactivated.");
+						})
+					}			
+				});
+			},
+			reactivate(venue){
+				var self = this
+				this.$fire({
+				  	title: 'Do you want to reactivate this venue? This action is irreversible.',
+				  	showDenyButton: true,
+				  	showCancelButton: true,
+				  	confirmButtonText: `Yes`,
+				  	cancelButtonText: `No`,
+				}).then(r => {
+					console.log(r)
+					if(r.value == true){
+					 	self.venue = venue
+						axios.get('/venue/reactivate/'+venue.id).then((response) => {
+							self.getCustomers()
+							self.$toastr.w("Success! Venue has been reactivated.");
 						})
 					}			
 				});

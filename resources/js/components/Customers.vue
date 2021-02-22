@@ -19,7 +19,9 @@
 		             		</template>
 
 		             		<template slot="actions" slot-scope="props">
-		             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)">Deactivate</button>
+		             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)" v-if="props.row.is_active == '1'">Deactivate</button>
+
+		             			<button class="btn btn-warning" @click.prevent="reactivate(props.row)" v-if="props.row.is_active == '0'">Reactivate</button>
 		             		</template>
 
 		             		<template slot="activity_count" slot-scope="props">
@@ -156,6 +158,25 @@
 						axios.post('/deactivate-customer',self.customer).then((response) => {
 							self.getCustomers()
 							self.$toastr.w("Success! Customer has been deactivated.");
+						})
+					}			
+				});
+			},
+			reactivate(customer){
+				var self = this
+				this.$fire({
+				  	title: 'Do you want to reactivate this customer? This action is irreversible.',
+				  	showDenyButton: true,
+				  	showCancelButton: true,
+				  	confirmButtonText: `Yes`,
+				  	cancelButtonText: `No`,
+				}).then(r => {
+					console.log(r)
+					if(r.value == true){
+					 	self.customer = customer
+						axios.post('/reactivate-customer',self.customer).then((response) => {
+							self.getCustomers()
+							self.$toastr.w("Success! Customer has been reactivated.");
 						})
 					}			
 				});
