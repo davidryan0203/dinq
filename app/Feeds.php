@@ -14,7 +14,7 @@ class Feeds extends Model {
 
   	public function venue()
     {
-  		return $this->belongsTo('App\Venue', 'venue_id', 'id');
+  		return $this->belongsTo('App\Venue', 'venue_id', 'user_id');
   	}
 
   	public function receiver()

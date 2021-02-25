@@ -13,6 +13,7 @@ use App\Feeds;
 use App\Country;
 use App\Currency;
 use App\Activities;
+use Carbon\Carbon;
 
 class HomeController extends Controller
 {
@@ -82,10 +83,20 @@ class HomeController extends Controller
 
     public function getCustomers(){
         if(Auth::user()->user_type == 2){
+            $from = \Carbon\Carbon::now()->subDays(30);
+            $to = \Carbon\Carbon::now()->addDay(1);
+            $checkins = Feeds::with('venue.user.country')->where('feed_type', 'checkin')->whereBetween('created_at', [$from, $to])->get();
+
+            $countryID = [];
+            foreach ($checkins as $key => $data) {
+                $countryID[] = $data['venue']['user']['country']['iso'];            }
+
+            $countryIDResults = collect($countryID)->unique()->toArray();            
+
             $countriesArray = explode(',', Auth::user()->supplier->available_countries);
-            $array = implode("','",$countriesArray);
-            
-            $countryIds = Country::whereIn('iso', $countriesArray)->get()->pluck('id');
+            $array = implode("','",array_merge($countriesArray,$countryIDResults));
+            //dd($array);
+            $countryIds = Country::whereIn('iso', array_merge($countriesArray,$countryIDResults))->get()->pluck('id');
             //dd($countryIds);
             $users = User::with('country')->where(['user_type' => 3, 'is_active' => 1])->whereIn('country_id', $countryIds)->get();
             //dd($users);
