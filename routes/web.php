@@ -117,7 +117,9 @@ Route::get('/get-feeds', 'FeedsController@get');
 Route::get('/get-checkins', 'FeedsController@getCheckIns');
 Route::get('/social-media/checkins', 'FeedsController@checkins');
 
-
+Route::get('/influencers', 'InfluencersController@influencers');
+Route::get('/get-influencer-coupons', 'InfluencersController@getInfluencerCoupons');
+Route::get('/get-influencers', 'InfluencersController@getInfluencers');
 
 Route::get('simple-qr-code', function () {
      return QrCode::size(200)->generate('W3Adda Laravel Tutorialsfdafafdafdagsssafa');
@@ -127,3 +129,5 @@ Route::get('qr-scanner', function () {
     
   return view('qr-scanner');
 });
+
+Route::get('/gallery/{id}', 'WelcomeController@gallery');

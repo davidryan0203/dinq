@@ -5,7 +5,7 @@
 	            <div class="card">
 	                <div class="card-header" style="padding:10px 0px;">
 	                	<div class="container-fluid row">
-		                	<span class="col-6 pull-left"><h3>Suppliers</h3></span>
+		                	<span class="col-6 pull-left"><h3>List of Influencer Users</h3></span>
 		                	<span class="col-6">
 			                	
 			                </span>
@@ -13,22 +13,46 @@
 	                </div>
 
 	                <div class="card-body">
-					<v-client-table v-if="venues" :data="venues" :columns="['id','name','actions']" :options="options">
-						<template slot="name" slot-scope="props">
-							{{props.row.name}}
-						</template>
-						<template slot="actions" slot-scope="props">
-	             			<a class="btn btn-primary" :href="'/supplier/edit/'+props.row.id"><i class="fa fa-edit"></i>Edit</a>
-	             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)" v-if="props.row.is_active == '1'">Deactivate</button>
-	             			<button class="btn btn-warning" @click.prevent="reactivate(props.row)" v-if="props.row.is_active == '0'">Reactivate</button>
-	             		</template>
-					</v-client-table>
+						<v-client-table v-if="coupons" :data="coupons" :columns="['id','code','user.name','created_at']" :options="options">
+							<template slot="created_at" slot-scope="props">
+		             			{{props.row.created_at | formatDate}}
+		             		</template>
 
-				</div>
-            </div>
-        </div>
-    </div>
-</div>
+		             		<template slot="code" slot-scope="props">
+		             			{{props.row.coupon}}
+		             		</template>
+						</v-client-table>
+
+					</div>
+            	</div>
+        	</div>
+        	<div class="col-md-12" style="margin-top:20px;">
+	            <div class="card">
+	                <div class="card-header" style="padding:10px 0px;">
+	                	<div class="container-fluid row">
+		                	<span class="col-6 pull-left"><h3>List of Influencer Registrations</h3></span>
+		                	<span class="col-6">
+			                	
+			                </span>
+		                </div>
+	                </div>
+
+	                <div class="card-body">
+						<v-client-table v-if="couponUsers" :data="couponUsers" :columns="['id','code_registerd_users', 'user.email','owner.name','influencer_coupon.coupon','created_at']" :options="options">
+							<template slot="created_at" slot-scope="props">
+		             			{{props.row.created_at | formatDate}}
+		             		</template>
+
+		             		<template slot="code_registerd_users" slot-scope="props">
+		             			{{props.row.user.name}}
+		             		</template>
+						</v-client-table>
+
+					</div>
+            	</div>
+        	</div>
+    	</div>
+	</div>
 </template>
 
 <script type="text/javascript">
@@ -60,6 +84,9 @@
 	import 'vue-form-wizard/dist/vue-form-wizard.min.css'
 	import ElementUI from 'element-ui';
 	import 'element-ui/lib/theme-chalk/index.css';
+	import VueSimpleAlert from "vue-simple-alert";
+
+	Vue.use(VueSimpleAlert, { 'confirmButtonText': 'Yes' });
 	export default{
 		components: {
 			Multiselect,
@@ -69,12 +96,8 @@
 		data(){
 			return{
         		form: {
-           			venue: '',
-           			isCredit: 0,
-           			orderItems: [],
-           			venues: [],
-           			paymentInfo: {},
-           			mixer : []
+           			coupon: '',
+           			user_id : ''
          		},
 				orderItems: [],
                 options: {
@@ -84,71 +107,50 @@
 				        is: 'fa-sort',
 				        up: 'fa-sort-asc',
 				        down: 'fa-sort-desc'
+				    },
+				    headings:{
+				    	'influencer_coupon.user.name': 'Coupon Owner',
+				    	'influencer_coupon.coupon' : 'Influencer Registration',
+				    	'owner.name' : 'Influencer User',
+				    	'user.name' : 'Influencer user',
+				    	'user.email' : 'email',
 				    }
                 },
                	allerros: [],
-               	menuItems: [],
            		success : false,
            		userDetails: {},
-           		venues: [],
            		currentYear : Number(moment().year()),
-           		exchangeRates: {},
-           		orderTax: 0,
-           		serviceCharge: 0,
-           		orderTotal: 0,
-           		subTotal: 0,
-           		venueTotal: 0,
-           		orders: [],
-           		taxRate: {},
-           		mixerItems: []
+           		coupons: [],
+           		customers: [],
+           		couponUsers: []
 			}
 		},
 		mounted(){
-			this.getCustomers()
+			this.getCoupons()	
+			this.getCouponUsers()			
+			this.getCustomers()		
+			this.getUserDetail()
 		},
 		methods:{
-			getCustomers(){
-				axios.get('/get-suppliers').then((response) => {
-					this.venues = response.data
+			getUserDetail(){
+				axios.get('/get-user-details').then((response) => {
+					this.userDetails = response.data
 				})
 			},
-			deactivate(supplier){
-				var self = this
-				this.$fire({
-				  	title: 'Do you want to deactivate this supplier?',
-				  	showDenyButton: true,
-				  	showCancelButton: true,
-				  	confirmButtonText: `Yes`,
-				  	cancelButtonText: `No`,
-				}).then(r => {
-					console.log(r)
-					if(r.value == true){
-					 	self.supplier = supplier
-						axios.get('/supplier/remove/'+supplier.id).then((response) => {
-							self.getCustomers()
-							self.$toastr.w("Success! Supplier has been deactivated.");
-						})
-					}			
-				});
+			getCoupons(){
+				axios.get('/get-influencer-coupons').then((response) => {
+					this.coupons = response.data
+				})
 			},
-			reactivate(supplier){
-				var self = this
-				this.$fire({
-				  	title: 'Do you want to reactivate this supplier?',
-				  	showDenyButton: true,
-				  	showCancelButton: true,
-				  	confirmButtonText: `Yes`,
-				  	cancelButtonText: `No`,
-				}).then(r => {
-					console.log(r)
-					if(r.value == true){
-					 	self.supplier = supplier
-						axios.get('/supplier/reactivate/'+supplier.id).then((response) => {
-							self.getCustomers()
-							self.$toastr.w("Success! Supplier has been reactivated.");
-						})
-					}			
-				});
+			getCustomers(){
+				axios.get('/get-customers').then((response) => {
+					this.customers = response.data
+				})
+			},
+			getCouponUsers(){
+				axios.get('/get-influencers').then((response) => {
+					this.couponUsers = response.data
+				})
 			}
 		}
 	}

@@ -188,6 +188,10 @@
                                             <div class="nav-link-icon"><i data-feather="file"></i></div>
                                             Activities
                                         </a>
+                                        <a class="nav-link" href="/influencers">
+                                            <div class="nav-link-icon"><i class="fa fa-users"></i></div>
+                                            Influencers
+                                        </a>
                                     @endif
                                 </div>
                             @endif

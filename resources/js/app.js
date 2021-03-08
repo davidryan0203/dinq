@@ -38,6 +38,7 @@ Vue.component('dashboard-posts', require('./components/Dashboard/Posts.vue').def
 Vue.component('feeds', require('./components/Feeds.vue').default);
 Vue.component('activities', require('./components/Admin/Activities.vue').default);
 Vue.component('checkins', require('./components/Checkins.vue').default);
+Vue.component('influencers', require('./components/Admin/Influencers.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

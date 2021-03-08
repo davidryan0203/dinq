@@ -113,7 +113,7 @@
 								    		</div>
 
 								    		<div class="form-group row" v-if="venue">
-								    			<label for="access_roles" class="col-md-4 col-form-label">Choose Mixer</label>
+								    			<label for="access_roles" class="col-md-4 col-form-label">Choose Add-on</label>
 								    			<div class="col-md-12">
 					                                    <multiselect class="" v-model="form.mixers" :options="mixerItems" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id">
 														    <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>

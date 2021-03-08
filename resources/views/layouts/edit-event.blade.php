@@ -15,7 +15,7 @@
         <script data-search-pseudo-elements defer src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.24.1/feather.min.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="/css/select.min.css" type="text/css" />
-  <link rel="stylesheet" href="/css/bootstrap-select-country.min.css" type="text/css" />
+  <link rel="stylesheet" href="/css/select-country.min.css" type="text/css" />
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
         <style type="text/css">
@@ -156,7 +156,7 @@
         </style>
     </head>
     <body class="nav-fixed">
-        <span id="app" v-cloak>
+        <span id="app">
             <nav class="topnav navbar navbar-expand shadow navbar-light bg-white" id="sidenavAccordion">
                 <a class="navbar-brand d-none d-sm-block container" href="/">
                     <div class="row">
@@ -266,6 +266,10 @@
                                         <a class="nav-link" href="/activities">
                                             <div class="nav-link-icon"><i data-feather="file"></i></div>
                                             Activities
+                                        </a>
+                                        <a class="nav-link" href="/influencers">
+                                            <div class="nav-link-icon"><i class="fa fa-users"></i></div>
+                                            Influencers
                                         </a>
                                     @endif
                                 </div>

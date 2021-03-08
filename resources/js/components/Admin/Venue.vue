@@ -20,7 +20,7 @@
 						<template slot="actions" slot-scope="props">
 	             			<a class="btn btn-primary" :href="'/venue/edit/'+props.row.id"><i class="fa fa-edit"></i>Edit</a>
 	             			<button class="btn btn-danger" @click.prevent="deactivate(props.row)" v-if="props.row.is_active == '1'"></i>Deactivate</button>
-	             			<button class="btn btn-warning" @click.prevent="deactivate(props.row)" v-if="props.row.is_active == '0'"></i>Reactivate</button>
+	             			<button class="btn btn-warning" @click.prevent="reactivate(props.row)" v-if="props.row.is_active == '0'"></i>Reactivate</button>
 	             		</template>
 					</v-client-table>
 
@@ -115,7 +115,7 @@
 			deactivate(venue){
 				var self = this
 				this.$fire({
-				  	title: 'Do you want to deactivate this venue? This action is irreversible.',
+				  	title: 'Do you want to deactivate this venue?',
 				  	showDenyButton: true,
 				  	showCancelButton: true,
 				  	confirmButtonText: `Yes`,
@@ -134,7 +134,7 @@
 			reactivate(venue){
 				var self = this
 				this.$fire({
-				  	title: 'Do you want to reactivate this venue? This action is irreversible.',
+				  	title: 'Do you want to reactivate this venue?',
 				  	showDenyButton: true,
 				  	showCancelButton: true,
 				  	confirmButtonText: `Yes`,

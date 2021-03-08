@@ -146,7 +146,7 @@
 			deactivate(customer){
 				var self = this
 				this.$fire({
-				  	title: 'Do you want to delete this customer? This action is irreversible.',
+				  	title: 'Do you want to deactivate this customer?',
 				  	showDenyButton: true,
 				  	showCancelButton: true,
 				  	confirmButtonText: `Yes`,
@@ -165,7 +165,7 @@
 			reactivate(customer){
 				var self = this
 				this.$fire({
-				  	title: 'Do you want to reactivate this customer? This action is irreversible.',
+				  	title: 'Do you want to reactivate this customer?',
 				  	showDenyButton: true,
 				  	showCancelButton: true,
 				  	confirmButtonText: `Yes`,

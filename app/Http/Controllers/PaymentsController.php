@@ -158,8 +158,8 @@ class PaymentsController extends Controller
 		    	}
 		    	$order->menu_items = json_encode($orderItems);
 			}elseif(Auth::user()->user_type == 0){
-				$order->venue_id = $input['venue']['id'];
-		    	$order->menu_items = json_encode($input['orderItems']);
+				//$order->venue_id = $input['venue']['id'];
+		  		$order->menu_items = json_encode($input['orderItems']);
 
 		    	$activity = new Activities();
 				$activity->activity = 'send Dinq activity';
@@ -167,15 +167,30 @@ class PaymentsController extends Controller
 				$activity->receiver_id = $customer['id'];
 				$activity->venue_id = $input['venue']['id'];
 				$activity->save();
+				$order->venue_id = $input['orderItems'][0]['venue']['user']['id'];
+				// foreach ($input['orderItems'] as $key => $data) {
+					
+		  //   		$data['venue'] = Venue::with('user')->where('id',$data['venue']['user']['id'])->first();
+
+		  //   		$activity = new Activities();
+				// 	$activity->activity = 'send Dinq activity';
+				// 	$activity->sender_id = Auth::user()->id;
+				// 	$activity->receiver_id = $customer['id'];
+				// 	$activity->venue_id = $data['venue']['id'];
+				// 	$activity->save();
+					
+		  //   		$orderItems[] = $data;		    		
+		  //   	}
+		  //   	$order->menu_items = json_encode($orderItems);
 			}else{
-		    	$order->venue_id = $input['venue']['id'];
+				$order->venue_id = $input['orderItems'][0]['venue']['user']['id'];
 		    	$order->menu_items = json_encode($input['orderItems']);
 
 		    	$activity = new Activities();
 				$activity->activity = 'send Dinq activity';
 				$activity->sender_id = Auth::user()->id;
 				$activity->receiver_id = $customer['id'];
-				$activity->venue_id = $input['venue']['id'];
+				$activity->venue_id = $input['orderItems'][0]['venue']['user']['id'];
 				$activity->save();
 		    }
 	    	$order->coupon_code = $couponCode;

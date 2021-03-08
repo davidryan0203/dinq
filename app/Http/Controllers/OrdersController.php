@@ -40,7 +40,7 @@ class OrdersController extends Controller
             return $orders;
         }else{
             if(Auth::user()->user_type == 1){
-                $orders = Orders::with('receiver','sender','menu_item','venue')->where('venue_id' , Auth::user()->venue->id)->get();
+                $orders = Orders::with('receiver','sender','menu_item','venue')->where('venue_id' , Auth::user()->venue->user->id)->get();
             }
 
             if(Auth::user()->user_type == 2){
