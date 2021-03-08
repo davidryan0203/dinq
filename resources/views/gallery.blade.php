@@ -10,12 +10,12 @@
                          alt="Another alt text">
             </div> -->
             @foreach($results as $data)
-                
+                @if($data['media'])
                 <div class="col-lg-3 col-md-4 col-xs-6 thumb">
                     <img class="img-thumbnail"
                          src="{{$data['media']}}"
                          alt="Another alt text">
-                
+                @endif
             </div>
             @endforeach
         </div>
