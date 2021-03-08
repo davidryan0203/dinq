@@ -12,7 +12,7 @@ class Influencers extends Model {
         return $this->belongsTo('App\User', 'user_id','id');
     }
 
-    public function ower()
+    public function owner()
     {
         return $this->belongsTo('App\User', 'owner_id','id');
     }
