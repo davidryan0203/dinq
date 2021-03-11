@@ -10,6 +10,7 @@ use Auth;
 use Carbon\Carbon;
 use App\Activities;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class PaymentsController extends Controller
 {
@@ -131,6 +132,7 @@ class PaymentsController extends Controller
 			(Storage::disk('public')->put($output_file, $image));
 			//dd('123');
 			$order = new Orders;
+			$order->invoice_id = 'INV'.Carbon::now()->format('mdy')$this->generateRandomString();
 			$order->comment = $input['comments'];
 			$order->order_total = $input['orderTotal'];
 			$order->sling_total = $input['orderTotal'];
@@ -139,9 +141,6 @@ class PaymentsController extends Controller
 			$order->order_type = $input['isCredit'];
 			$order->qr_code_path = \URL::to('/').$output_file;
 			$user = Auth::user();
-
-			
-
 			if($user['user_type'] == 2){
 				$order->supplier_id = Auth::user()->supplier->id;
 				foreach ($input['orderItems'] as $key => $data) {

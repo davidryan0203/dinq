@@ -7,7 +7,7 @@
                 <!-- <div class="column">
                     <img src="{{$data['media']}}" style="width:100%" onclick="openModal();currentSlide(1)" class="hover-shadow cursor">
                 </div> -->
-                <div class="col-lg-3 col-md-4 col-6">
+                <div class="col-lg-3 col-md-4 col-6" style="padding-top:.5em">
                     <img class="img-fluid img-thumbnail" src="{{$data['media']}}" alt="">
                 </div>
             @endif

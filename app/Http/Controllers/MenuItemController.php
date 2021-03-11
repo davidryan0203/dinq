@@ -365,6 +365,8 @@ class MenuItemController extends Controller
         $mixer->name = $input['name'];
         $mixer->stock_quantity = intval($input['quantity']);
         $mixer->is_unlimited = $input['is_unlimited'];
+        $mixer->category_id = $input['categories']['id'];
+        $mixer->description = $input['description'];
         if(Auth::user()->user_type == 0){
             $mixer->venue_id = $input['venue']['venue']['id'];
         }else{

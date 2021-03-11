@@ -63,6 +63,24 @@
 				                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
 				                            </div>
 			                           	</div>
+			                           	<div class="form-group row">
+				                            <label for="description" class="col-md-4 col-form-label">Description</label>
+
+				                            <div class="col-md-12">
+				                                <textarea class="form-control" v-model="form.description" required=""></textarea>
+				                            </div>
+				                        </div>
+			                           	<div class="form-group row">
+							    			<label for="access_roles" class="col-md-4 col-form-label">Choose Category</label>
+							    			<div class="col-md-12">
+							    				<div class="row">
+							    					<div class="col-md-12">
+					                                    <multiselect v-model="form.categories" track-by="id" label="name" placeholder="Select one" :options="menuItemCategories" :allow-empty="false">
+														  </multiselect>
+													</div>
+												</div>
+				                            </div>
+							    		</div>
 
 			                           	<div :class="['form-group row', allerros.quantity ? 'has-error' : '']" >
 			                              	<label for="quantity" class="col-md-3 col-form-label text-md-left">Quantity</label>
@@ -132,6 +150,7 @@
 
 <script type="text/javascript">
 	import {ServerTable, ClientTable, Event} from 'vue-tables-2';
+	import Multiselect from 'vue-multiselect'
     
     Vue.use(ClientTable, {}, false, 'bootstrap4');
 
@@ -146,12 +165,12 @@
     // import 'vue2-dropzone/dist/vue2Dropzone.min.css'
 	export default{
 		components: {
-	        vueDropzone: vue2Dropzone 
+	        vueDropzone: vue2Dropzone,Multiselect
 	    },
 		data(){
 			var self = this
 			return{
-				form: {'id':'','name': '', 'is_unlimited' : 0, 'quantity':1,'img_url':'','sling_price': 0,'vendor_price': 0},
+				form: {'id':'','name': '', 'is_unlimited' : 0, 'quantity':1,'img_url':'','sling_price': 0,'vendor_price': 0, 'categories' : ''},
 				mixerItems: [],
                 options: {
                     perPage: 10,
@@ -178,7 +197,8 @@
 			    },
 			    userDetails : {},
 			    venue: {},
-			    venues: []
+			    venues: [],
+			    menuItemCategories: []
 			}
 		},
 		computed:{
@@ -196,6 +216,7 @@
 			axios.get('/get-all-venues').then((response) => {
 				this.venues = response.data
 			})
+			this.getMenuItemCategories()
 		},
 		methods:{
 			saveMixerDetails(){
@@ -212,6 +233,7 @@
 					this.form.sling_price = 0
 					this.form.is_unlimited = 0
 					this.form.quantity = 1
+					this.form.categories = ''
 					this.getMixerItems()
 				}).catch((error) => {
                     this.allerros = error.response.data.errors;
@@ -246,7 +268,12 @@
 			},
 			test(){
 				console.log(this.form)
-			}
+			},
+			getMenuItemCategories(){
+				axios.get('/menu-category-item/get').then((response) => {
+					this.menuItemCategories = response.data
+				})
+			},
 		}
 	}
 </script>
