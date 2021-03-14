@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notifications;
 use Storage;
 use App\User;
 use App\Venue;
@@ -26,7 +27,6 @@ class PaymentsController extends Controller
 	
     public function storePaymentInfo(Request $request){
         $input = $request->all();
-
         $user = User::where('id', Auth::user()->id)->first();
 
        	$stripe = \Stripe::make(config('services.stripe.secret'));
@@ -132,7 +132,7 @@ class PaymentsController extends Controller
 			(Storage::disk('public')->put($output_file, $image));
 			//dd('123');
 			$order = new Orders;
-			$order->invoice_id = 'INV'.Carbon::now()->format('mdy')$this->generateRandomString();
+			$order->invoice_id = 'INV'.Carbon::now()->format('mdy').$this->generateRandomString();
 			$order->comment = $input['comments'];
 			$order->order_total = $input['orderTotal'];
 			$order->sling_total = $input['orderTotal'];
@@ -199,6 +199,46 @@ class PaymentsController extends Controller
 	    	$order->order_expiry = $expiry;
 	    	$order->order_status = 'pending';
 	    	$order->save();
+
+	    	if($input['isCredit'] == 1){
+		        $coupon = null;
+		        $coupon_code = null;
+		        
+	           $coupon = Orders::where('id', $order['coupon_id'])->first();
+	           $coupon_code = $coupon['coupon_code'];
+
+		        $notification = new Notifications();
+		        $notification->sender_id = $order['sender_id'];
+		        $notification->receiver_id = $order['recepient_id'];
+		        $notification->content = '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a credit. Dinq your friends!';
+		        $notification->venue_id = $input['orderItems'][0]['venue']['id'];
+		        $notification->notification_type = 'credit';
+		        $notification->coupon_id = $order['id'];
+		        $notification->coupon_code = $coupon_code;
+		        $notification->save();
+		        $user = User::with('venue')->where('id', $order['sender_id'])->first();
+		        $sender = User::where('id', $order['sender_id'])->first();
+		        $reciever = User::where('id', $order['recepient_id'])->first();
+		        $venue = '';
+		        
+		        $venue = Venue::with('user')->where('id', $input['orderItems'][0]['venue']['id'])->first();
+		        
+		        $notif = [
+		            'id' => $notification->id,
+		            'avatar' => $user['image_url'],
+		            'content' => '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a credit. Dinq your friends!',
+		            'sender_name' => $sender['name'],
+		            'sender_id' => $order['sender_id'],
+		            'receiver_id' => $order['recepient_id'],
+		            'receiver_name' => $reciever['name'],
+		            'venue_id' => $input['orderItems'][0]['venue']['id'],
+		            'venue_name' => ($venue != '' && collect($venue)->isNotEmpty()) ? $venue['user']['name'] : null,
+		            'type' => 'credit',
+		            'created_at' => Carbon::parse($notification['created_at'])->toISOString(),
+		            'coupon_id' => $order['id'],
+		            'coupon_code' =>  $coupon_code,
+		        ];
+			}
     	}
     	return 'order success';
     }
