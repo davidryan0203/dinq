@@ -235,7 +235,7 @@ class PaymentsController extends Controller
 	            'type' => ($input['isCredit'] == 1) ? 'credit' : 'receive-dinq',
 	            'created_at' => Carbon::parse($notification['created_at'])->toISOString(),
 	            'coupon_id' => $order['id'],
-	            'coupon_code' =>  $coupon_code,
+	            'coupon_code' =>  $couponCode,
 	        ];
 			
     	}
