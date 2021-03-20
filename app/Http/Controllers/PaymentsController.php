@@ -209,7 +209,14 @@ class PaymentsController extends Controller
 	        $notification = new Notifications();
 	        $notification->sender_id = $input['orderItems'][0]['venue']['id'];
 	        $notification->receiver_id = $order['recepient_id'];
-	        $notification->content = '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a credit. Dinq your friends!';
+
+	        if($input['isCredit'] == 1){
+	        	$notifMessage = '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a credit. Dinq your friends!'
+	        }else{
+	        	$notifMessage = '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a dinq. Claim it now!'
+	        }
+
+	        $notification->content = $notifMessage;
 	        $notification->venue_id = $input['orderItems'][0]['venue']['id'];
 	        $notification->notification_type = ($input['isCredit'] == 1) ? 'credit' : 'receive-dinq';
 	        $notification->coupon_id = $order['id'];
@@ -225,7 +232,7 @@ class PaymentsController extends Controller
 	        $notif = [
 	            'id' => $notification->id,
 	            'avatar' => $user['image_url'],
-	            'content' => '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a credit. Dinq your friends!',
+	            'content' => $notifMessage,
 	            'sender_name' => $sender['name'],
 	            'sender_id' => $input['orderItems'][0]['venue']['id'],
 	            'receiver_id' => $order['recepient_id'],
