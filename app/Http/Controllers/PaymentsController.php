@@ -207,7 +207,7 @@ class PaymentsController extends Controller
            	$coupon_code = $coupon['coupon_code'];
 
 	        $notification = new Notifications();
-	        $notification->sender_id = $input['orderItems'][0]['venue']['id'];
+	        $notification->sender_id = $order['sender_id'];
 	        $notification->receiver_id = $order['recepient_id'];
 
 	        if($input['isCredit'] == 1){
@@ -217,7 +217,7 @@ class PaymentsController extends Controller
 	        }
 
 	        $notification->content = $notifMessage;
-	        $notification->venue_id = $$order['sender_id'];
+	        $notification->venue_id = $input['orderItems'][0]['venue']['id'];
 	        $notification->notification_type = ($input['isCredit'] == 1) ? 'credit' : 'receive-dinq';
 	        $notification->coupon_id = $order['id'];
 	        $notification->coupon_code = $couponCode; 
