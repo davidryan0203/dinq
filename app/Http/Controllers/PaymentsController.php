@@ -213,7 +213,7 @@ class PaymentsController extends Controller
 	        $notification->venue_id = $input['orderItems'][0]['venue']['id'];
 	        $notification->notification_type = 'credit';
 	        $notification->coupon_id = $order['id'];
-	        $notification->coupon_code = $couponCode;
+	        $notification->coupon_code = $couponCode; 
 	        $notification->save();
 	        $user = User::with('venue')->where('id', $order['sender_id'])->first();
 	        $sender = User::where('id', $order['sender_id'])->first();
