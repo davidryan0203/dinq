@@ -211,9 +211,9 @@ class PaymentsController extends Controller
 	        $notification->receiver_id = $order['recepient_id'];
 
 	        if($input['isCredit'] == 1){
-	        	$notifMessage = '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a credit. Dinq your friends!'
+	        	$notifMessage = '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a credit. Dinq your friends!';
 	        }else{
-	        	$notifMessage = '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a dinq. Claim it now!'
+	        	$notifMessage = '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a dinq. Claim it now!';
 	        }
 
 	        $notification->content = $notifMessage;
