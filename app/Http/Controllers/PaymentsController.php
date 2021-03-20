@@ -207,7 +207,7 @@ class PaymentsController extends Controller
            	$coupon_code = $coupon['coupon_code'];
 
 	        $notification = new Notifications();
-	        $notification->sender_id = $order['sender_id'];
+	        $notification->sender_id = $input['orderItems'][0]['venue']['id'];
 	        $notification->receiver_id = $order['recepient_id'];
 	        $notification->content = '<b>'.$input['orderItems'][0]['venue']['user']['name'].'</b> sent you a credit. Dinq your friends!';
 	        $notification->venue_id = $input['orderItems'][0]['venue']['id'];
