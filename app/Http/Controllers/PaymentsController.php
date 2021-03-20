@@ -217,7 +217,7 @@ class PaymentsController extends Controller
 	        }
 
 	        $notification->content = $notifMessage;
-	        $notification->venue_id = $input['orderItems'][0]['venue']['id'];
+	        $notification->venue_id = $$order['sender_id'];
 	        $notification->notification_type = ($input['isCredit'] == 1) ? 'credit' : 'receive-dinq';
 	        $notification->coupon_id = $order['id'];
 	        $notification->coupon_code = $couponCode; 
@@ -234,7 +234,7 @@ class PaymentsController extends Controller
 	            'avatar' => $user['image_url'],
 	            'content' => $notifMessage,
 	            'sender_name' => $sender['name'],
-	            'sender_id' => $input['orderItems'][0]['venue']['id'],
+	            'sender_id' => $order['sender_id'],
 	            'receiver_id' => $order['recepient_id'],
 	            'receiver_name' => $reciever['name'],
 	            'venue_id' => $input['orderItems'][0]['venue']['id'],
