@@ -81,7 +81,6 @@
                	allerros: [],
                	menuItems: [],
            		success : false,
-           		userDetails: {},
            		customers: [],
            		currentYear : Number(moment().year()),
            		exchangeRates: {},

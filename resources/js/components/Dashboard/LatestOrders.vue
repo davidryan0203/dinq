@@ -317,6 +317,35 @@
 					if(this.userDetails.user_type == 2){
 						this.taxRate = this.userDetails.supplier.tax_rate
 					}
+
+					axios.get('/get-exchange-rates').then((response) => {
+						this.exchangeRates = response.data
+						if(this.userDetails.user_type == 1){
+							this.currencyCode = this.userDetails.venue
+						}
+
+						if(this.userDetails.user_type == 0){
+							this.currencyCode = this.userDetails.venue
+						}
+
+						if(this.userDetails.user_type == 2){
+							this.currencyCode = this.userDetails.supplier
+							axios.get('/get-supplier-venues').then((response) => {
+								console.log(response.data)
+								this.venues = response.data
+							})
+						}
+
+						if(this.userDetails.user_type == 0){
+							axios.get('/get-all-venues').then((response) => {
+								console.log(response.data)
+								this.venues = response.data
+							})
+						}
+
+						console.log(this.currencyCode)
+						this.serviceCharge = (response.data.exchange_rates.rates[this.currencyCode.currency.code] * response.data.conversion_rates.result)
+					})
 				})
 			},
 			getCustomers(){
@@ -367,34 +396,7 @@
 				this.orderItems.splice(idx, 1);
 			},
 			getExchangeRates(){
-				axios.get('/get-exchange-rates').then((response) => {
-					this.exchangeRates = response.data
-					if(this.userDetails.user_type == 1){
-						this.currencyCode = this.userDetails.venue
-					}
-
-					if(this.userDetails.user_type == 0){
-						this.currencyCode = this.userDetails.venue
-					}
-
-					if(this.userDetails.user_type == 2){
-						this.currencyCode = this.userDetails.supplier
-						axios.get('/get-supplier-venues').then((response) => {
-							console.log(response.data)
-							this.venues = response.data
-						})
-					}
-
-					if(this.userDetails.user_type == 0){
-						axios.get('/get-all-venues').then((response) => {
-							console.log(response.data)
-							this.venues = response.data
-						})
-					}
-
-					console.log(this.currencyCode)
-					this.serviceCharge = (response.data.exchange_rates.rates[this.currencyCode.currency.code] * response.data.conversion_rates.result)
-				})
+				
 			}
 		}
 	}
