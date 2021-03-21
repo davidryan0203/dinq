@@ -12,6 +12,6 @@
  -->
 <tr>
     <td class="header">
-        <img src="https://ops.azenko.com.au/assets/demo/demo2/media/img/logo/azenko_logo.png" height="100">
+        <img src="https://dinq.app/img/welcome-page/logo-4.png" height="100">
     </td>
 </tr>
