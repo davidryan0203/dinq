@@ -278,8 +278,11 @@
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{-- config('app.name', 'Laravel') --}}
-                    <div class="row">
+                    <div class="row d-none d-sm-block">
                         <img class="col-sm-1 row" src="/img/welcome-page/logo-4.png" style="height: 3.8rem"><h1 class="col-sm-6 row" style="padding-top:1%;color:#eb5a54">dinq</h1>
+                    </div>
+                    <div class="row d-block d-sm-none">
+                        <img src="/img/welcome-page/logo-4.png" style="height: 50px"><h1 class="col-sm-6 row" style="padding-top:1%;color:#eb5a54"></h1>
                     </div>
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
