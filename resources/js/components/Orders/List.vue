@@ -94,7 +94,7 @@
 							      	<div class="modal-body">
 		                                <form-wizard @on-complete="onComplete" 
 								                      shape="circle"
-								                      color="red">
+								                      color="red" ref="wizard">
 								            <template slot="footer" slot-scope="props">
 
 								            </template>
@@ -184,6 +184,13 @@
 													      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '2'" value="2" v-model="form.order_expiry_option">48 hours
 													    </label>
 													</div>
+												</div>
+
+												<div class="alert alert-danger alert-dismissible fade show" role="alert" v-if="cardError">
+													<strong>{{this.cardError}}</strong> 
+												  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+												    <span aria-hidden="true">&times;</span>
+												  </button>
 												</div>
 
 								            	<div v-if="!userDetails.card_id">
@@ -351,7 +358,6 @@
 		}
 
         if (value) {
-        	console.log(value)
         	var now  = moment();
 			var then = moment(value);
    			return expiryDate(then);
@@ -421,7 +427,8 @@
            		taxRate: {},
            		mixerItems: [],
            		currencyCode : {},
-           		venues : []
+           		venues : [],
+           		cardError : ''
 			}
 		},
 		mounted(){
@@ -461,14 +468,10 @@
 				var price = 0
 				var venuePrice = 0
 				var taxes = groupAll(this.orderItems)
-				//
-		    	console.log(self.orderItems)
 			    	for(let order of self.orderItems){
 			    		price += Number(order.sling_price)
 			    		venuePrice += Number(order.vendor_price)
 			    	}
-		    	//}, 100);
-		    	console.log(price)
 		    	if(price && price != 0){
 		    		this.subTotal = Number(price)
 		    		this.orderTotal = (Number(price) + Number(this.serviceCharge) + Number(sum(taxes)))
@@ -487,7 +490,6 @@
 				}
 
 		        if (value) {
-		        	console.log(value)
 		        	var now  = moment();
 					var then = moment(value);
 		   			return expiryDate(then);
@@ -500,7 +502,12 @@
 			},
 			storePaymentInfo(){
 				axios.post('/store-payment-info', this.form.paymentInfo).then((response) => {
-					this.getUserDetail()
+					if(!response.data.error){
+						this.cardError = ''
+						this.getUserDetail()
+					}else{
+						this.cardError = response.data.error
+					}
 				})
 			},
          	onComplete: function(){
@@ -514,15 +521,28 @@
          		this.form.menuItems = this.menuItems
 		    	axios.post('/process-order', this.form).then((response) => {
 		    		this.form.customers = []
+		    		this.form.orderTotal = 0
+		    		this.form.venueTotal = 0
+		    		this.form.orderTax = 0
+		    		this.form.serviceCharge = 0
+		    		this.form.venue = ''
 		    		this.form.orderItems = []
 		    		this.orderItems = []
+		    		this.form.menuItems = []
 		    		this.getOrders()
 		    		$('#orderModal').modal('hide')
+		    		this.$refs.wizard.reset()
+		    		var menus = []
+		    		for(let menu of this.menuItems){
+		    			menu.orderQuantity = 0
+		    			menus.push(menu)
+		    		}
+		    		this.menuItems = []
+		    		this.menuItems = menus
 		    	})
 		   	},
 		   	beforeTabSwitch: function(){
 		     	//alert("This is called before switchind tabs")
-		     	console.log(this.orderItems)
 		     	if(this.orderItems.length == 0){
 					this.$toastr.e('Must select Order first before proceeding.');
 			     	return false;
@@ -562,7 +582,6 @@
 					if(this.userDetails.user_type == 0){
 						this.taxRate = this.userDetails.venue.tax_rate
 					}
-					console.log(this.userDetails)
 					if(this.userDetails.user_type == 2){
 						this.taxRate = this.userDetails.supplier.tax_rate
 					}
@@ -580,19 +599,16 @@
 						if(this.userDetails.user_type == 2){
 							this.currencyCode = this.userDetails.supplier
 							axios.get('/get-supplier-venues').then((response) => {
-								console.log(response.data)
 								this.venues = response.data
 							})
 						}
 
 						if(this.userDetails.user_type == 0){
 							axios.get('/get-all-venues').then((response) => {
-								console.log(response.data)
 								this.venues = response.data
 							})
 						}
 
-						console.log(this.currencyCode)
 						this.serviceCharge = (response.data.exchange_rates.rates[this.currencyCode.currency.code] * response.data.conversion_rates.result)
 					})
 				})
@@ -611,10 +627,8 @@
 				var price = 0
 				var self = this
 				for(let stock of event){
-					console.log(stock)
 					price += Number(stock.sling_price)
 				}
-				console.log(price)
 				Vue.set(this.menuItems[item.index - 1], 'sling_price', this.menuItems[item.index - 1].sling_price=(Number(price) + Number(data.sling_item_price)));
 
 				Vue.set(this.menuItems[item.index - 1], 'selected_mixers', this.menuItems[item.index - 1].selected_mixers=event);
@@ -628,13 +642,11 @@
 				}
 			},
 			filterVenue(){
-				console.log(this.form)
 				axios.post('/menu-items/filter',this.form).then((response) => {
 					this.menuItems = response.data
 				})
 			},
 			addOrder(orderItem, index){
-				console.log(orderItem)
 				this.orderItems.push(orderItem)
 				Vue.set(this.menuItems[index], 'orderQuantity', this.menuItems[index].orderQuantity+=1);
 			},

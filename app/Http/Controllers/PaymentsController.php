@@ -27,6 +27,7 @@ class PaymentsController extends Controller
 	
     public function storePaymentInfo(Request $request){
         $input = $request->all();
+        
         $user = User::where('id', Auth::user()->id)->first();
 
        	$stripe = \Stripe::make(config('services.stripe.secret'));
@@ -36,14 +37,25 @@ class PaymentsController extends Controller
 	        	'email' => Auth::user()->email
 	        ]);
 
-	        $token = $stripe->tokens()->create([
-			    'card' => [
-			        'number'    => '4242424242424242',
-			        'exp_month' => 10,
-			        'cvc'       => 314,
-			        'exp_year'  => 2022,
-			    ],
-			]);
+	        try {
+		        $token = $stripe->tokens()->create([
+				    'card' => [
+				        'number'    => $input['cartNumber'],
+				        'exp_month' => Carbon::parse($input['expMonth'])->format('m'),
+				        'cvc'       => $input['cvs'],
+				        'exp_year'  => $input['expYear'],
+				    ],
+				]);
+			} catch (\Cartalyst\Stripe\Exception\CardErrorException $e) {
+			    // Get the status code
+			    $code = $e->getCode();
+
+			    // Get the error message returned by Stripe
+			    $message = $e->getMessage();
+			    // Get the error type returned by Stripe
+			    $type = $e->getErrorType();
+			    return ['error' => $message];
+			}
 
 			$card = $stripe->cards()->create($customer['id'], $token['id']);
 			
@@ -53,13 +65,15 @@ class PaymentsController extends Controller
 			$user->stripe_customer_id = $customer['id'];
 			$user->save();
 		}else{
+
+	        dd('123');
 			$removeCard = $stripe->cards()->delete($user['stripe_customer_id'], $user['card_id']);
 			$token = $stripe->tokens()->create([
 			    'card' => [
-			        'number'    => '4242424242424242',
-			        'exp_month' => 10,
-			        'cvc'       => 314,
-			        'exp_year'  => 2022,
+			        'number'    => $input['cartNumber'],
+			        'exp_month' => Carbon::parse($input['expMonth'])->format('m'),
+			        'cvc'       => $input['cvs'],
+			        'exp_year'  => $input['expYear'],
 			    ],
 			]);
 			$card = $stripe->cards()->create($user['stripe_customer_id'], $token['id']);
