@@ -279,15 +279,15 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{-- config('app.name', 'Laravel') --}}
                     <div class="row d-none d-sm-block">
-                        <img class="col-sm-1 row" src="/img/welcome-page/logo-4.png" style="height: 3.8rem"><h1 class="col-sm-6 row" style="padding-top:1%;color:#eb5a54">dinq</h1>
+                        <img class="row" src="/img/welcome-page/logo-4.png" style="height: 70px"><h1 class="col-sm-6 row" style="padding-top:1%;color:#eb5a54"></h1>
                     </div>
                     <div class="row d-block d-sm-none">
                         <img src="/img/welcome-page/logo-4.png" style="height: 50px"><h1 class="col-sm-6 row" style="padding-top:1%;color:#eb5a54"></h1>
                     </div>
                 </a>
-                <button class="navbar-toggler d-none d-sm-block" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <!-- <button class="navbar-toggler d-none d-sm-block" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon "></span>
-                </button>
+                </button> -->
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
