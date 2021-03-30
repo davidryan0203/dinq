@@ -272,27 +272,29 @@ class MenuItemController extends Controller
         $menuItem->measure = $input['measure'];
         $menuItem->unit_of_measure = $input['uom'];
         $word = "images";
-     
+        
         $contains = Str::contains($input['img_url'], 'images');
-        if($contains == false){
- 
-            $img = \Image::make($input['img_url']);
+        if(isset($input['img_url'])){
+            if($contains == false){
+                
+                $img = \Image::make($input['img_url']);
 
-            $mime = $img->mime();  //edited due to updated to 2.x
-            if ($mime == 'image/jpeg')
-                $extension = '.jpg';
-            elseif ($mime == 'image/png')
-                $extension = '.png';
-            elseif ($mime == 'image/gif')
-                $extension = '.gif';
-            else
-                $extension = '';
-            $name = sha1(date('YmdHis') . $this->generateRandomString());
-            $img_name = $name . $extension;
+                $mime = $img->mime();  //edited due to updated to 2.x
+                if ($mime == 'image/jpeg')
+                    $extension = '.jpg';
+                elseif ($mime == 'image/png')
+                    $extension = '.png';
+                elseif ($mime == 'image/gif')
+                    $extension = '.gif';
+                else
+                    $extension = '';
+                $name = sha1(date('YmdHis') . $this->generateRandomString());
+                $img_name = $name . $extension;
 
-            $path = public_path('/images/menu/items/' . $img_name);
-            $img->save($path);
-            $menuItem->image_url = ($input['img_url']) ? '/images/menu/items/' . $img_name : '';
+                $path = public_path('/images/menu/items/' . $img_name);
+                $img->save($path);
+                $menuItem->image_url = ($input['img_url']) ? '/images/menu/items/' . $img_name : '';
+            }
         }
 
         $menuItem->save();
@@ -341,8 +343,7 @@ class MenuItemController extends Controller
     public function saveMixerDetails(Request $request){
         $user = Auth::user();
         $input = $request->all();
-        //dd($input);
-        if(!empty($input['img_url'])){
+        if(isset($input['img_url'])){
             $img = \Image::make($input['img_url']);
             $mime = $img->mime();  //edited due to updated to 2.x
             if ($mime == 'image/jpeg')
