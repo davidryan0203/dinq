@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;  
 use Illuminate\Support\Str; 
+use Carbon\Carbon;
 
 class WaiterController extends Controller
 {
@@ -69,7 +70,7 @@ class WaiterController extends Controller
             $waiter->password = Hash::make($input['password']);
         }
         $contains = Str::contains($input['img_url'], 'images');
-        if($contains == false){
+        if($request->hasFile('img_url')) {
  
             $img = \Image::make($input['img_url']);
 
@@ -92,6 +93,30 @@ class WaiterController extends Controller
 
         $waiter->contact_number = $input['contact_number'];
         $waiter->save();
+
+        $user = new User;
+        $user->name = $input['name'];
+        $user->username = $input['username'];
+        $user->email = $input['email'];
+        $user->password = Hash::make($input['password']);
+        $user->country_id = (isset($input['country'])) ? intval($input['country']) : null;
+        $user->area_code = (isset($input['areaCode'])) ? intval($input['areaCode']) : null;
+        $user->state_id = (isset($input['state'])) ? intval($input['state']) : null;
+        $user->user_type = 4;
+        $user->city_id = (isset($input['city'])) ? intval($input['city']) : null;
+        $user->civil_status = isset($input['civil_status']) ? $input['civil_status'] : 'single';
+        $user->contact_number = isset($input['mobile']) ? $input['mobile'] : null;
+        $user->gender = 'Others';        
+        $user->date_of_birth = Carbon::parse(Carbon::now())->format('Y-m-d');
+        $user->favorites_id = isset($input['favorites']) ? ($input['favorites']) : null;
+
+
+        $user->image_url = \URL::to('/').'/images/users/default.png';
+  
+        $user->save();
+
+        
+
         return 'success';
     }
 

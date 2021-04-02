@@ -44,7 +44,8 @@
 
 	             		<template slot="username" slot-scope="props">
 	             			
-	             			<span>{{props.row.venue_id}}-{{props.row.username}}</span>
+	             			<!-- <span>{{props.row.venue_id}}-{{props.row.username}}</span> -->
+	             			<span>{{props.row.username}}</span>
 	             		</template>
 
 	             		<template slot="actions" slot-scope="props">
