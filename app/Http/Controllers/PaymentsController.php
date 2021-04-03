@@ -166,7 +166,7 @@ class PaymentsController extends Controller
 					$activity->receiver_id = $customer['id'];
 					$activity->venue_id = $input['orderItems'][0]['venue']['id'];
 					$activity->save();
-					
+					$data['quantity'] = 1;
 		    		$orderItems[] = $data;		    		
 		    	}
 		    	$order->menu_items = json_encode($orderItems);
@@ -208,6 +208,7 @@ class PaymentsController extends Controller
 		    }
 	    	$order->coupon_code = $couponCode;
 	    	$order->sender_id = Auth::user()->id;
+			$order->original_sender_id = Auth::user()->id;
 	    	
 	    	$order->order_expiry_option = $input['order_expiry_option'];
 	    	$order->order_expiry = $expiry;
