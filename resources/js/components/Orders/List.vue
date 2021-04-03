@@ -62,7 +62,13 @@
                         </template>
 
                         <template slot="receiver" slot-scope="props">
-                        	{{props.row.receiver.name}}
+                        	<span v-if="props.row.recepient_id == '0'">
+                        		{{props.row.receiver_mobile}}
+                        	</span>
+                        	<span v-else>
+                        		{{props.row.receiver.name}}
+                        	</span>
+                        	
                         </template>
 
                         <template slot="order_type" slot-scope="props">
