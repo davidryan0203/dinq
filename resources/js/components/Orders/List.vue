@@ -36,12 +36,14 @@
                         		<thead>
                         			<th>Name</th>
                         			<th v-if="userDetails.user_type != '1'">Venue</th>
+                        			<th>Quantity</th>
                         			<th>Add-ons used</th>
                         		</thead>
                         		<tbody>
                         			<tr v-for="item in props.row.menu_items">
                         				<td>{{item.name}}</td>
                         				<td v-if="userDetails.user_type != '1'">{{(item.venue) ? item.venue.user.name : 'N/A'}}</td>
+                        				<td>{{item.quantity}}</td>
                         				<td v-if="item.selected_mixers">
                         					<ul v-if="item.selected_mixers">
 	                        					<li v-for="mixer in item.selected_mixers">{{mixer.name}}</li>
