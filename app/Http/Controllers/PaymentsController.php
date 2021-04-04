@@ -99,7 +99,7 @@ class PaymentsController extends Controller
 		return 'success';
     }
 
-    public function generateRandomString($length = 15) {
+    public function generateRandomString($length = 6) {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
