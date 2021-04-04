@@ -112,7 +112,10 @@ class PaymentsController extends Controller
     public function processOrder(Request $request){
     	$input = $request->all();
     	//dd($input);
+
     	$orderItems = [];
+    	$orderItemsSupplier = [];
+		$ordersSupplier = [];
     	
 		foreach ($input['customers'] as $key => $customer) {
 
@@ -155,24 +158,36 @@ class PaymentsController extends Controller
 			$order->order_type = $input['isCredit'];
 			$order->qr_code_path = \URL::to('/').$output_file;
 			$user = Auth::user();
+			$venue = User::with('venue')->where('id',Auth::user()->id)->first();
+			//dd($user['venue']['id']);
+			//dd($input['orderItems']);
+			foreach ($input['orderItems'] as $key => $data) {
+				$orderData = collect($input['menuItems'])->where('id',$data['id'])->first();
+				$data['quantity'] = $orderData['orderQuantity'];
+				$orders[] = $data;
+			}
+
+			$orders = collect($orders)->unique('id')->toArray();
+			//dd($orders);
 			if($user['user_type'] == 2){
 				$order->supplier_id = Auth::user()->supplier->id;
 				foreach ($input['orderItems'] as $key => $data) {
 		    		$data['venue'] = Venue::with('user')->where('id',$data['venue_id'])->first();
-
+		    		$orderData = collect($input['menuItems'])->where('id',$data['id'])->first();
+					$data['quantity'] = $orderData['orderQuantity'];
 		    		$activity = new Activities();
 					$activity->activity = 'send Dinq activity';
 					$activity->sender_id = Auth::user()->id;
 					$activity->receiver_id = $customer['id'];
 					$activity->venue_id = $input['orderItems'][0]['venue']['id'];
 					$activity->save();
-					$data['quantity'] = 1;
-		    		$orderItems[] = $data;		    		
+		    		$orderItemsSupplier[] = $data;		    		
 		    	}
-		    	$order->menu_items = json_encode($orderItems);
+		    	$ordersSupplier = collect($orderItemsSupplier)->unique('id')->toArray();
+		    	$order->menu_items = json_encode($ordersSupplier);
 			}elseif(Auth::user()->user_type == 0){
 				//$order->venue_id = $input['venue']['id'];
-		  		$order->menu_items = json_encode($input['orderItems']);
+		  		//$order->menu_items = json_encode($input['orderItems']);
 
 		    	$activity = new Activities();
 				$activity->activity = 'send Dinq activity';
@@ -194,16 +209,16 @@ class PaymentsController extends Controller
 					
 		  //   		$orderItems[] = $data;		    		
 		  //   	}
-		  //   	$order->menu_items = json_encode($orderItems);
+		     	$order->menu_items = json_encode($orders);
 			}else{
-				$order->venue_id = $input['orderItems'][0]['venue']['id'];
-		    	$order->menu_items = json_encode($input['orderItems']);
+				$order->venue_id = $venue['venue']['id'];
+		    	$order->menu_items = json_encode($orders);
 
 		    	$activity = new Activities();
 				$activity->activity = 'send Dinq activity';
 				$activity->sender_id = Auth::user()->id;
 				$activity->receiver_id = $customer['id'];
-				$activity->venue_id = $input['orderItems'][0]['venue']['id'];
+				$activity->venue_id = $venue['venue']['id'];
 				$activity->save();
 		    }
 	    	$order->coupon_code = $couponCode;
