@@ -287,8 +287,8 @@
 }
 
 .circular_image {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   overflow: hidden;
   background-color: blue;
