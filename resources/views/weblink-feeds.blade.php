@@ -20,6 +20,10 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
 <style type="text/css">
+
+    .navbar{
+        background-color: #ea504a !important;
+    }
     .card-footer{
             background-color: #5AB8A8;
         }
@@ -271,6 +275,36 @@
         font-weight: 500;
         padding: 6px 12px;
       }
+
+      .footer {
+   position: fixed;
+   left: 0;
+   bottom: 0;
+   width: 100%;
+   background-color: #ea504a;
+   color: white;
+   text-align: center;
+}
+
+.circular_image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-color: blue;
+  /* commented for demo
+  float: left;
+  margin-left: 125px;
+  margin-top: 20px;
+  */
+  
+  /*for demo*/
+  display:inline-block;
+  vertical-align:middle;
+}
+.circular_image img{
+  width:100%;
+}
 </style>
 <body>
     <div>
@@ -279,8 +313,9 @@
                 <a class="navbar-brand" href="{{ url('/') }}" style="width:100%;">
                     <div class="container">
                         <div class="row">
-                            <img src="/img/welcome-page/logo-4.png" style="height: 50px" class="col-3 row">
-                            <h1 class="col-6 row" style="padding-top:1.5%;color:#eb5a54">Dinq</h1>
+                            <img src="/img/logo-2.png" style="height: 50px;padding-left:10px;" class="row">
+                           <!--  <h1 class="col-6 row" style="padding-top:1.5%;color:#fff">Dinq</h1> -->
+
                         </div>
                     </div>
                 </a>
@@ -302,20 +337,32 @@
         <main class="py-4">
             <div class="container">
                 <div class="row">
-                    <div class="col-3">
-                        <img src="{{$feed['user']['image_url']}}" style="border-radius:50%;width: 100%">
+                    <div class="col-3 circular--portrait">
+                        <img src="{{$feed['user']['image_url']}}" style="width: 100%" class="circular_image">
                     </div>
                     <div class="col-9">
                         <p>{{$feed['name']}}</p>
-                        <p>Checked in {{$feed['created_at_formatted']}} at {{$feed['venue']['user']['name']}}</p>
+                        @if($feed['feed_type'] == 'checkin')
+                            <p>Checked in {{$feed['created_at_formatted']}} at {{$feed['venue']['user']['name']}}</p>
+                        @endif
                     </div>
                 </div>
+                <br/>
                 @if($feed['media'])
                 <div class="row">
 
                     <img src="{{$feed['media']}}" class="col-12">
                 </div>
                 @endif
+            </div>
+            <div class="footer">
+                <p>
+                    <div class="row">
+                        <div class="offset-3"></div>
+                        <img src="/img/welcome-page/app_store_download.png" class="col-3">
+                        <img src="/img/welcome-page/play_store_download.png" class="col-3">
+                    </div>
+                </p>
             </div>
         </main>
     </div>
