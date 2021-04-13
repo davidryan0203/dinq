@@ -305,6 +305,11 @@
 .circular_image img{
   width:100%;
 }
+
+.mobile {
+    display: none !important;
+    visibility: hidden !important;
+}
 </style>
 <body>
     <div>
@@ -359,8 +364,8 @@
                 <p>
                     <div class="row">
                         <div class="offset-3"></div>
-                        <img src="/img/welcome-page/app_store_download.png" class="col-3">
-                        <img src="/img/welcome-page/play_store_download.png" class="col-3">
+                        <img src="/img/welcome-page/app_store_download.png" class="col-3" height="25">
+                        <img src="/img/welcome-page/play_store_download.png" class="col-3" height="25">
                     </div>
                 </p>
             </div>
