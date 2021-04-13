@@ -68,4 +68,13 @@ class FeedsController extends Controller
         return response($feedResults, 200)->header('Access-Control-Allow-Origin', '*')
                 ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     }
+
+    public function getFeed(Request $request, $id){
+        $feed = Feeds::with('venue.user')->where('id', $id)->first();
+        //dd(Carbon::parse($feed['created_at'])->diffForHumans());
+
+        //dd($feed);
+        $feed['created_at_formatted'] = Carbon::parse($feed['created_at'])->diffForHumans();
+        return view('weblink-feeds')->with(['feed' => $feed]);
+    }
 }
