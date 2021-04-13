@@ -303,7 +303,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-3">
-                        <img src="/images/users/default.png" style="border-radius:50%;width: 100%">
+                        <img src="{{$feed['user']['image_url']}}" style="border-radius:50%;width: 100%">
                     </div>
                     <div class="col-9">
                         <p>{{$feed['name']}}</p>

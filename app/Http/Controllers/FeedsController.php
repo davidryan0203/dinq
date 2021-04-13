@@ -70,7 +70,7 @@ class FeedsController extends Controller
     }
 
     public function getFeed(Request $request, $id){
-        $feed = Feeds::with('venue.user')->where('id', $id)->first();
+        $feed = Feeds::with('user','venue.user')->where('id', $id)->first();
         //dd(Carbon::parse($feed['created_at'])->diffForHumans());
 
         //dd($feed);
