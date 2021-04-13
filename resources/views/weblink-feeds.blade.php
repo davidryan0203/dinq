@@ -310,11 +310,12 @@
                         <p>Checked in {{$feed['created_at_formatted']}} at {{$feed['venue']['user']['name']}}</p>
                     </div>
                 </div>
-
+                @if($feed['media'])
                 <div class="row">
 
                     <img src="{{$feed['media']}}" class="col-12">
                 </div>
+                @endif
             </div>
         </main>
     </div>
