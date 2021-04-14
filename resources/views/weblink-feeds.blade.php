@@ -276,7 +276,7 @@
         padding: 6px 12px;
       }
 
-      .footer {
+/*      .footer {
    position: fixed;
    left: 0;
    bottom: 0;
@@ -285,7 +285,7 @@
    color: white;
    text-align: center;
 }
-
+*/
 .circular_image {
   width: 70px;
   height: 70px;
@@ -310,38 +310,17 @@
     display: none !important;
     visibility: hidden !important;
 }
+
+main{
+  background-color: #ea504a;
+}
 </style>
 <body>
     <div>
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}" style="width:100%;">
-                    <div class="container">
-                        <div class="row">
-                            <img src="/img/logo-2.png" style="height: 50px;padding-left:10px;" class="row">
-                           <!--  <h1 class="col-6 row" style="padding-top:1.5%;color:#fff">Dinq</h1> -->
-
-                        </div>
-                    </div>
-                </a>
-                <!-- <button class="navbar-toggler d-none d-sm-block" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon "></span>
-                </button> -->
-
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
-
-                    </ul>
-
-                    <!-- Right Side Of Navbar -->
-                </div>
-            </div>
-        </nav>
 
         <main class="py-4">
             <div class="container">
-                <div class="row">
+                <!-- <div class="row">
                     <div class="col-3 circular--portrait">
                         <img src="{{$feed['user']['image_url']}}" style="width: 100%" class="circular_image">
                     </div>
@@ -352,7 +331,7 @@
                         @endif
                     </div>
                 </div>
-                <br/>
+                <br/> -->
                 @if($feed['media'])
                 <div class="row">
 
@@ -363,7 +342,7 @@
             <div class="footer">
                 <p>
                     <div class="row">
-                        <div class="offset-3"></div>
+                        <div class="col-4 offset-1"><img src="/img/logo-2.png" style="height: 30px;padding-left:10px;" class="row"></div>
                         <img src="/img/welcome-page/app_store_download.png" class="col-3" height="25">
                         <img src="/img/welcome-page/play_store_download.png" class="col-3" height="25">
                     </div>
