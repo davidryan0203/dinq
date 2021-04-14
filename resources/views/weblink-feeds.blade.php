@@ -276,7 +276,7 @@
         padding: 6px 12px;
       }
 
-/*      .footer {
+      .footer {
    position: fixed;
    left: 0;
    bottom: 0;
@@ -285,7 +285,7 @@
    color: white;
    text-align: center;
 }
-*/
+
 .circular_image {
   width: 70px;
   height: 70px;
