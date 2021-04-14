@@ -281,7 +281,7 @@
    left: 0;
    bottom: 0;
    width: 100%;
-   background-color: #ea504a;
+   background-color: #585858;
    color: white;
    text-align: center;
 }
@@ -312,6 +312,10 @@
 }
 
 main{
+  background-color: #ea504a;
+}
+
+html body{
   background-color: #ea504a;
 }
 </style>
