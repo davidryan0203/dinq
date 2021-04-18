@@ -149,10 +149,22 @@
                                             <a class="nav-link" href="/menu/add-on">Add-on Details</a>
                                         </nav>
                                     </div>
-                                    <a class="nav-link" href="/orders">
+                                    <!-- <a class="nav-link" href="/orders">
                                         <div class="nav-link-icon"><i class="fa fa-cart-plus"></i></div>
                                         Orders
+                                    </a> -->
+
+                                    <a class="nav-link collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#orders" aria-expanded="false" aria-controls="orders"
+                                        ><div class="nav-link-icon"><i class="fa fa-cart-plus"></i></div>
+                                        Orders
+                                        <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                     </a>
+                                    <div class="collapse" id="orders" data-parent="#accordionSidenav">
+                                        <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavLayout">
+                                            <a class="nav-link" href="/orders">List</a>
+                                            <a class="nav-link" href="/orders/payouts">Payouts</a>
+                                        </nav>
+                                    </div>
 
                                     <a class="nav-link collapsed" href="javascript:void(0);" data-toggle="collapse" data-target="#social_media" aria-expanded="false" aria-controls="social_media"
                                         ><div class="nav-link-icon"><i data-feather="heart"></i></div>

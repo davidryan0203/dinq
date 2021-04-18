@@ -6,6 +6,24 @@
 	                <div class="card-body">
 	                    <div class="d-flex justify-content-between align-items-center">
 	                        <div class="mr-3">
+	                            <div class="text-white-75 small"><span v-if="user.user_type == '2'">Total Spend</span><span v-else>Total Redeemed Amount</span></div>
+	                            <div class="text-lg font-weight-bold">{{paidRedeemed}}</div>
+	                        </div>
+	                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-dollar-sign feather-xl text-white-50"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+	                    </div>
+	                </div>
+	                <div class="card-footer d-flex align-items-center justify-content-between">
+	                    <a class="small text-white stretched-link" href="#">View Report</a>
+	                    <div class="small text-white"><svg class="svg-inline--fa fa-angle-right fa-w-8" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="angle-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 512" data-fa-i2svg=""><path fill="currentColor" d="M224.3 273l-136 136c-9.4 9.4-24.6 9.4-33.9 0l-22.6-22.6c-9.4-9.4-9.4-24.6 0-33.9l96.4-96.4-96.4-96.4c-9.4-9.4-9.4-24.6 0-33.9L54.3 103c9.4-9.4 24.6-9.4 33.9 0l136 136c9.5 9.4 9.5 24.6.1 34z"></path></svg><!-- <i class="fas fa-angle-right"></i> Font Awesome fontawesome.com --></div>
+	                </div>
+	            </div>
+	        </div>
+
+	        <div class="col-xxl-3 col-lg-3">
+	            <div class="card bg-primary text-white mb-4">
+	                <div class="card-body">
+	                    <div class="d-flex justify-content-between align-items-center">
+	                        <div class="mr-3">
 	                            <div class="text-white-75 small"><span v-if="user.user_type == '2'">Total Spend</span><span v-else>Total Revenue</span></div>
 	                            <div class="text-lg font-weight-bold">{{revenue}}</div>
 	                        </div>
@@ -24,7 +42,7 @@
 	                <div class="card-body">
 	                    <div class="d-flex justify-content-between align-items-center">
 	                        <div class="mr-3">
-	                            <div class="text-white-75 small">Total Redeemed</div>
+	                            <div class="text-white-75 small">Total Redeemed Order Count</div>
 	                            <div class="text-lg font-weight-bold">{{redeemed}}</div>
 	                        </div>
 	                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-square feather-xl text-white-50"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
@@ -132,6 +150,7 @@
 				datacollection: null,
 				revenue: 0,
 				redeemed : 0,
+				paidRedeemed : 0,
 				pendingOrders : 0,
 				todaysCheckins : 0,
 				currencyCodes: {},
@@ -144,6 +163,7 @@
 			this.getRedeemed()
 			this.getPendingOrders()
 			this.getRedeemedOrders()
+			this.getTotalRedeemed()
 			//this.getCurrency()
 
 			axios.get('/get-user-details').then((response) => {
@@ -198,6 +218,11 @@
 	      	getRevenue(){
 	      		axios.get('/get-revenue').then((response) => {
 	      			this.revenue = response.data
+	      		})
+	      	},
+	      	getTotalRedeemed(){
+	      		axios.get('/get-paid-redeemed').then((response) => {
+	      			this.paidRedeemed = response.data
 	      		})
 	      	},
 	      	getRedeemed(){

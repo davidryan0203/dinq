@@ -5,18 +5,20 @@
 	            <div class="card">
 	                <div class="card-header" style="padding:10px 0px;">
 	                	<div class="container-fluid row">
-		                	<span class="col-6 pull-left"><h3>Orders</h3></span>
+		                	<span class="col-6 pull-left"><h3>Payouts</h3></span>
 		                	<span class="col-6">
-			                	<button class="btn btn-danger pull-right" @click.prevent="addNewOrder()"><i class="fa fa-plus"></i> Add New Order</button>
 			                </span>
 		                </div>
 	                </div>
 
 	                <div class="card-body">
-					<v-client-table v-if="orders" :data="orders" :columns="['id','sender','receiver', 'order_type','status','payment_status','order_total','venue_total','date_created','order_expiry']" :options="options">
+					<v-client-table v-if="orders" :data="orders" :columns="['id','sender','receiver', 'order_type','status','payment_status','order_total','venue_total','date_created','order_expiry','actions']" :options="options">
 						<template slot="payment_status" slot-scope="props" >
                         	<span v-if="props.row.is_paid == '0'">Not Paid</span>
                         	<span v-if="props.row.is_paid == '1'">Paid</span>
+                        </template>
+						<template slot="actions" slot-scope="props" >
+                        	<button v-if="props.row.is_paid == '0'" @click.prevent="pay(props.row)" class="btn btn-danger">Pay</button>
                         </template>
                         <template slot="date_created" slot-scope="props" >
                         	{{props.row.created_at | formatDate}}
@@ -98,254 +100,6 @@
                         	</span>
                         </template>
 					</v-client-table>
-
-					<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-					  	<div class="modal-dialog modal-lg" role="document" style="max-width: 1000px">
-						    <div class="modal-content">
-						      	<div class="modal-header">
-						        	<h5 class="modal-title" id="exampleModalLabel">Add Order</h5>
-							        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-							          <span aria-hidden="true">&times;</span>
-							        </button>
-						      	</div>
-						      	<form class="form">
-							      	<div class="modal-body">
-		                                <form-wizard @on-complete="onComplete" 
-								                      shape="circle"
-								                      color="red" ref="wizard">
-								            <template slot="footer" slot-scope="props">
-
-								            </template>
-								            <tab-content title="Items" :before-change="beforeTabSwitch">
-								            	<div class="form-group">
-									            	<label class="radio-inline">
-												      	<input type="radio" name="optradio1" :checked="form.isCredit == '0'" value="0" v-model="form.isCredit">Dinq
-												    </label>
-												    <label class="radio-inline">
-												      	<input type="radio" name="optradio2" value="1" v-model="form.isCredit">Credit
-												    </label>
-												</div>
-
-											    <div class="form-group row" v-if="userDetails.user_type == '0'" style="width: 40%;float: left;">
-					                              	<label style="padding:0px;margin:0px;padding-left:15px;" for="username" class="col-md-4 pull-left col-form-label">Filter by Venue</label>
-						                            <div class="col-md-12">
-						                            	<select class="form-control" v-model="form.venue" @change="filterVenue()">
-						                            		<option value="0">All</option>
-						                            		<option v-for="venue in venues" :value="venue">{{venue.name}}</option>
-						                            	</select>
-						                            </div>
-					                           	</div>	
-
-					                           	<div class="form-group row" v-if="userDetails.user_type == '2'" style="width: 40%;float: left;">
-					                              	<label style="padding:0px;margin:0px;padding-left:15px;" for="username" class="col-md-4 pull-left col-form-label">Filter by Venue</label>
-						                            <div class="col-md-12">
-						                            	<select class="form-control" v-model="form.venue" @change="filterVenue()">
-						                            		<option value="0">All</option>
-						                            		<option v-for="venue in venues" :value="venue">{{venue.user.name}}</option>
-						                            	</select>
-						                            </div>
-					                           	</div>												    
-
-											    <v-client-table v-if="menuItems" :data="menuItems" :columns="['id','name','venue.user.name','sling_price','stock_quantity','mixer','order_quantity']" :options="options">
-											    	<template slot="stock_quantity" slot-scope="props">
-											    		<span v-if="props.row.is_unlimited == '1'">
-											    			Unlimited
-											    		</span>
-											    		<span v-else>
-											    			{{props.row.stock_quantity}}
-											    		</span>
-											    	</template>
-
-											    	<template slot="props"></template>
-
-											    	<template slot="mixer" slot-scope="props">
-											    		<multiselect 
-			                                          		class="mixer" :options="props.row.mixerStocks" open-direction="bottom" v-model="form.mixer[props.index]" :close-on-select="false" :multiple="true" track-by="id" label="name" placeholder="Select Add-ons" @input="modifyMixer($event,props.row, props)">
-			                                        	</multiselect>
-											    	</template>
-
-											    	<template slot="order_quantity" slot-scope="props">
-											    		<button class="btn btn-danger" @click.prevent="addOrder(props.row, (props.index - 1))"><i class="fa fa-plus"></i></button>
-											    			{{ props.row.orderQuantity }}
-
-											    		<button :disabled="props.row.orderQuantity == '0'" class="btn btn-danger" @click.prevent="subtractOrder(props.row, (props.index - 1))"><i class="fa fa-minus"></i></button>
-
-											    	</template>
-											    </v-client-table>
-											    
-								            </tab-content>
-								            <tab-content title="Customer Details" :before-change="beforeTabSwitchCustomer">
-								             	<h2>Add Customer</h2>
-								             	<v-client-table v-if="customers" :data="customers" :columns="['name','age','gender','select']" :options="options">
-								             		<template slot="age" slot-scope="props">
-								             			{{props.row.date_of_birth | getAge}}
-								             		</template>
-								             		<template slot="select" slot-scope="props">
-								             			<input type="checkbox" :value="props.row" v-model="form.customers">
-								             		</template>
-											    </v-client-table>
-								            </tab-content>
-
-								            <tab-content title="Payment Details">
-								            	<div class="form-group" style="font-size:18px;">
-								            		<h4 for="description" class="col-md-4 col-form-label">Select Order Expiry</h4>
-								            		<div class="col-12">
-										            	<label class="radio-inline">
-													      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '0'" value="0" v-model="form.order_expiry_option">4 hours
-													    </label>
-
-													    <label class="radio-inline">
-													      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '1'" value="1" v-model="form.order_expiry_option">24 hours
-													    </label>
-
-													    <label class="radio-inline">
-													      	<input type="radio" name="optradio" :checked="form.order_expiry_option == '2'" value="2" v-model="form.order_expiry_option">48 hours
-													    </label>
-													</div>
-												</div>
-
-												<div class="alert alert-danger alert-dismissible fade show" role="alert" v-if="cardError">
-													<strong>{{this.cardError}}</strong> 
-												  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-												    <span aria-hidden="true">&times;</span>
-												  </button>
-												</div>
-
-								            	<div v-if="!userDetails.card_id">
-									            	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-							                          	<label for="description" class="col-md-4 col-form-label">Card Name</label>
-							                            <div class="col-sm-12">
-							                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="form.paymentInfo.name">
-							                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
-							                            </div>
-							                       	</div>
-
-							                       	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-							                          	<label for="description" class="col-md-4 col-form-label">Card Number</label>
-							                            <div class="col-sm-12">
-							                                <input id="card_name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="form.paymentInfo.cartNumber">
-							                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
-							                            </div>
-							                       	</div>
-
-							                       	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-							                          	<label for="description" class="col-md-4 col-form-label">Exp Month</label>
-							                            <div class="col-sm-12">
-							                                <select class="form-control" v-model="form.paymentInfo.expMonth">
-							                                	<option value="January">January</option>
-							                                	<option value="February">February</option>
-							                                	<option value="March">March</option>
-							                                	<option value="April">April</option>
-							                                	<option value="May">May</option>
-							                                	<option value="June">June</option>
-							                                	<option value="July">July</option>
-							                                	<option value="August">August</option>
-							                                	<option value="September">September</option>
-							                                	<option value="October">October</option>
-							                                	<option value="November">November</option>
-							                                	<option value="December">December</option>
-							                                </select>
-							                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
-							                            </div>
-							                       	</div>
-
-							                       	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-							                          	<label for="description" class="col-md-4 col-form-label">Exp Year</label>
-							                            <div class="col-sm-12">
-							                                <select class="form-control" v-model="form.paymentInfo.expYear">
-							                                	<option v-for="year in years" :value="year">{{ year }}</option>
-							                                </select>
-							                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
-							                            </div>
-							                       	</div>
-
-							                       	<div :class="['form-group row', allerros.name ? 'has-error' : '']" >
-							                          	<label for="description" class="col-md-4 col-form-label">CVC</label>
-							                            <div class="col-sm-12">
-							                                <input id="cvc" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="form.paymentInfo.cvs">
-							                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
-							                            </div>
-							                       	</div>
-
-							                       	<button class="btn btn-primary" @click.prevent="storePaymentInfo">Store Payment Info</button>
-						                       	</div>
-
-						                       	<div v-else>
-						                       		<div class="form-group">
-						                       			<div class="col-12">
-								                       		<h4>Default Saved Card:</h4> {{userDetails.card_brand}}: xxxx-xxxx-xxxx-{{userDetails.card_last_four}}
-								                       		<button class="btn btn-primary" @click.prevent="changeCard()">Change Card</button>
-								                       	</div>
-							                       </div>
-						                       	</div>
-
-								            </tab-content>
-								            <tab-content title="Order Details">
-								            	<h3>Order Comments</h3>
-								            	<textarea class="form-control" v-model="form.comments">Enter comment here</textarea>
-								            	<h3>Customer Details</h3>
-								            	<table class="table">
-								            		<thead>
-								            			<th>Name</th>
-								            			<th>Country</th>
-								            			<th>Age</th>
-								            			<th>Gender</th>
-								            		</thead>
-								            		<tbody>
-								            			<tr v-for="customer in form.customers">
-								            				<td>{{customer.name}}</td>
-								            				<td>{{customer.country.name}}</td>
-								            				<td>{{customer.date_of_birth | getAge}}</td>
-								            				<td>{{customer.gender}}</td>
-								            			</tr>
-								            		</tbody>
-								            	</table>
-
-								            	<h3>Order Items</h3>
-								            	<table class="table">
-								            		<thead>
-								            			<th>Product</th>
-								            			<th>Quantity</th>
-								            			<th>Total</th>
-								            		</thead>
-								            		<tbody>
-								            			<tr v-for="order in menuItems" v-if="order.orderQuantity != '0'">
-								            				<td>{{order.name}}</td>
-								            				<td>{{order.orderQuantity}}</td>
-								            				<td>{{currencyCode.currency.symbol_left}}{{Number(order.orderQuantity * order.sling_price).toFixed(2)}}{{currencyCode.currency.symbol_right}}</td>
-								            			</tr>
-								            			<tr>
-								            				<td colspan="3">&nbsp;</td>
-								            			</tr>
-								            			<tr v-if="orderTotal">
-								            				<td></td>
-								            				<td>Sub Total:</td>
-								            				<td>{{currencyCode.currency.symbol_left}}{{Number(subTotal).toFixed(2)}}{{currencyCode.currency.symbol_right}}</td>
-								            			</tr>
-								            			<tr v-if="serviceCharge">
-								            				<td></td>
-								            				<td>Service Charge:</td>
-								            				<td>{{currencyCode.currency.symbol_left}}{{Number(serviceCharge).toFixed(2)}}{{currencyCode.currency.symbol_right}}</td>
-								            			</tr>
-								            			<tr v-if="totalTax" v-for="(tax,key) in totalTax">
-								            				<td></td>
-								            				<td>{{key}}</td>
-								            				<td>{{currencyCode.currency.symbol_left}} {{Number(tax).toFixed(2)}}{{currencyCode.currency.symbol_right}}</td>
-								            			</tr>
-								            			<tr v-if="orderTotal">
-								            				<td></td>
-								            				<td>Order Total:</td>
-								            				<td>{{currencyCode.currency.symbol_left}}{{Number(orderTotal).toFixed(2)}}{{currencyCode.currency.symbol_right}}</td>
-								            			</tr>
-								            		</tbody>
-								            	</table>
-								            </tab-content>
-								        </form-wizard>
-							     	</div>
-						      	</form>
-						    </div>
-					  	</div>
-					</div>
 
 				</div>
             </div>
@@ -447,7 +201,8 @@
            		mixerItems: [],
            		currencyCode : {},
            		venues : [],
-           		cardError : ''
+           		cardError : '',
+           		orderData: {}
 			}
 		},
 		mounted(){
@@ -590,7 +345,7 @@
 				})
 			},
 			getOrders(){
-				axios.get('/get-orders').then((response) => {
+				axios.get('/get-paid-orders').then((response) => {
 					this.orders = response.data
 				})
 			},
@@ -684,6 +439,13 @@
 			},
 			getExchangeRates(){
 				
+			},
+			pay(data){
+				this.orderData = data
+				axios.post('/order/payout/process',this.orderData).then((response) => {
+					this.$toastr.s('Order has been marked paid.');
+					this.getOrders()
+				})
 			}
 		}
 	}

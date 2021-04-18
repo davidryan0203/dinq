@@ -33,6 +33,11 @@ class OrdersController extends Controller
         return view('orders.index');
     }
 
+    public function payouts()
+    {
+        return view('orders.payouts');
+    }
+
     public function getOrders(){
         $orders = [];
         if(Auth::user()->user_type == 0){
@@ -48,6 +53,30 @@ class OrdersController extends Controller
             }
             return $orders;
         }
+    }
+
+    public function getPaidOrders(){
+        $orders = [];
+        if(Auth::user()->user_type == 0){
+            $orders = Orders::with('receiver','sender','menu_item')->where('order_status', 'redeemed')->get();
+            return $orders;
+        }else{
+            if(Auth::user()->user_type == 1){
+                $orders = Orders::with('receiver','sender','menu_item','venue')->where('order_status', 'redeemed')->where('venue_id' , Auth::user()->venue->id)->get();
+            }
+
+            if(Auth::user()->user_type == 2){
+                $orders = Orders::with('receiver','sender','menu_item','venue')->where('order_status', 'redeemed')->where('supplier_id' , Auth::user()->supplier->id)->get();
+            }
+            return $orders;
+        }
+    }
+
+    public function processPayOrder(Request $request){
+        $input = $request->all();
+        $order = Orders::where('id',$input['id'])->update(['is_paid' => 1]);
+        return 'success';
+        dd($input);
     }
 
     public function redeemCoupon(Request $request){

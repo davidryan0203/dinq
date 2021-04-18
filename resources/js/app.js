@@ -24,6 +24,7 @@ Vue.component('menu-item-category', require('./components/MenuItem/Category.vue'
 Vue.component('menu-items', require('./components/MenuItem/Items.vue').default);
 Vue.component('menu-mixer', require('./components/MenuItem/Mixer.vue').default);
 Vue.component('order-list', require('./components/Orders/List.vue').default);
+Vue.component('order-payouts', require('./components/Orders/Payouts.vue').default);
 Vue.component('customers', require('./components/Customers.vue').default);
 Vue.component('waiter', require('./components/Waiter.vue').default);
 Vue.component('tax-rates', require('./components/TaxRates.vue').default);

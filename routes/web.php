@@ -65,7 +65,9 @@ Route::post('/menu/mixer/save', 'MenuItemController@saveMixerDetails');
 Route::post('/mixer/upload', 'MenuItemController@mixerUpload');
 
 Route::get('/orders/', 'OrdersController@index');
+Route::get('/orders/payouts', 'OrdersController@payouts');
 Route::get('/get-orders/', 'OrdersController@getOrders');
+Route::get('/get-paid-orders/', 'OrdersController@getPaidOrders');
 Route::post('/place-orders/', 'OrdersController@placeOrders');
 
 Route::post('/store-payment-info', 'PaymentsController@storePaymentInfo');
@@ -76,6 +78,7 @@ Route::post('/remove-payment-info', 'PaymentsController@removePaymentInfo');
 Route::get('/get-exchange-rates/', 'HomeController@getExchangeRates');
 Route::post('/process-order', 'PaymentsController@processOrder');
 Route::get('/pay-order/', 'PaymentsController@payOrder');
+Route::post('/order/payout/process/', 'OrdersController@processPayOrder');
 
 Route::post('/venue/edit-general/{id}', 'VenueController@editGeneral');
 Route::post('/venue/edit-data/{id}', 'VenueController@editData');
@@ -104,6 +107,7 @@ Route::get('/admin-menu-items', 'MenuItemController@adminMenuItems');
 
 Route::get('get-revenue', 'HomeController@getRevenue');
 Route::get('get-redeemed', 'HomeController@getRedeemed');
+Route::get('get-paid-redeemed', 'HomeController@getPaidRedeemed');
 Route::get('get-pending-orders', 'HomeController@getPendingOrders');
 Route::get('get-todays-checkins', 'HomeController@getTodaysCheckins');
 

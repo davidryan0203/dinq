@@ -114,11 +114,19 @@ class HomeController extends Controller
 
     public function getRevenue(){
         if(Auth::user()->user_type == 0){
-            $revenue = Orders::all()->pluck('venue_total')->sum();
-        }
+            $revenues = [];
+            $orders = Orders::select('venue_total','order_total')->where('is_paid', 1)->get();
 
+            foreach ($orders as $key => $data) {
+                
+                $revenues[] = ($data['order_total'] - $data['venue_total']);
+            }
+            //dd($revenues);
+            $revenue = array_sum($revenues);
+        }
+        
         if(Auth::user()->user_type == 1){            
-            $revenue = Orders::where('venue_id', '=', Auth::user()->venue->id)->pluck('venue_total')->sum();
+            $revenue = Orders::where('venue_id', '=', Auth::user()->venue->id)->where('is_paid', 1)->pluck('venue_total')->sum();
         }
 
         if(Auth::user()->user_type == 2){            
@@ -148,6 +156,29 @@ class HomeController extends Controller
         }
         return $redeemed;
     }
+
+    public function getPaidRedeemed(){
+        if(Auth::user()->user_type == 0){
+            $revenue = Orders::all()->pluck('order_total')->sum();
+        }
+
+        if(Auth::user()->user_type == 1){            
+            $revenue = Orders::where('venue_id', '=', Auth::user()->venue->id)->pluck('venue_total')->sum();
+        }
+
+        if(Auth::user()->user_type == 2){            
+            $revenue = Orders::where('supplier_id', '=', Auth::user()->supplier->id)->pluck('venue_total')->sum();
+        }
+
+        if(Auth::user()->user_type == 2){
+            $currencyCode = Currency::where('id', Auth::user()->supplier['default_currency'])->first();
+        }else{
+            $currencyCode = Currency::where('id', Auth::user()->venue['default_currency'])->first();
+        }
+
+        return $currencyCode['symbol_left'].number_format($revenue,2).$currencyCode['symbol_right'];
+    }
+    
     public function getPendingOrders(){
         if(Auth::user()->user_type == 0){
             $pending = Orders::where('order_status','=','pending')->count();
