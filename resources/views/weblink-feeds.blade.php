@@ -271,7 +271,7 @@
       #title {
         color: #fff;
         background-color: #4d90fe;
-        font-size: 25px;
+        fojnt-size: 25px;
         font-weight: 500;
         padding: 6px 12px;
       }
@@ -291,7 +291,7 @@
   height: 70px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: blue;
+  background-color: blue;`
   /* commented for demo
   float: left;
   margin-left: 125px;
@@ -320,141 +320,46 @@ html body{
 }
 </style>
 <body>
+    <div class="container my-4">
+
+    
+      <div class="d-flex justify-content-center align-items-center p-6" style="height: 650px;">
+
+        <img src="{{$feed['media']}}" class="img-fluid" alt="">
+
+      </div>
+
+    </div>
+      <div class="footer">
+          <p>
+              <div class="row">
+                  <div class="col-4 offset-1"><img src="/img/logo-2.png" style="height: 30px;padding-left:10px;" class="row"></div>
+                  <img src="/img/welcome-page/app_store_download.png" class="col-3" height="25">
+                  <img src="/img/welcome-page/play_store_download.png" class="col-3" height="25">
+              </div>
+          </p>
+      </div>
     <div>
 
-        <main class="py-4">
-            <div class="container">
-                <!-- <div class="row">
-                    <div class="col-3 circular--portrait">
-                        <img src="{{$feed['user']['image_url']}}" style="width: 100%" class="circular_image">
-                    </div>
-                    <div class="col-9">
-                        <p>{{$feed['name']}}</p>
-                        @if($feed['feed_type'] == 'checkin')
-                            <p>Checked in {{$feed['created_at_formatted']}} at {{$feed['venue']['user']['name']}}</p>
-                        @endif
-                    </div>
-                </div>
-                <br/> -->
-                @if($feed['media'])
+    {{--<main class="py-4">
+        <div class="container">
+            @if($feed['media'])
+            <div class="row">
+
+                <img src="{{$feed['media']}}" class="col-12">
+            </div>
+            @endif
+        </div>
+        <div class="footer">
+            <p>
                 <div class="row">
-
-                    <img src="{{$feed['media']}}" class="col-12">
+                    <div class="col-4 offset-1"><img src="/img/logo-2.png" style="height: 30px;padding-left:10px;" class="row"></div>
+                    <img src="/img/welcome-page/app_store_download.png" class="col-3" height="25">
+                    <img src="/img/welcome-page/play_store_download.png" class="col-3" height="25">
                 </div>
-                @endif
-            </div>
-            <div class="footer">
-                <p>
-                    <div class="row">
-                        <div class="col-4 offset-1"><img src="/img/logo-2.png" style="height: 30px;padding-left:10px;" class="row"></div>
-                        <img src="/img/welcome-page/app_store_download.png" class="col-3" height="25">
-                        <img src="/img/welcome-page/play_store_download.png" class="col-3" height="25">
-                    </div>
-                </p>
-            </div>
-        </main>
+            </p>
+        </div>
+    </main>--}}
     </div>
-
-    <script type="text/javascript">
-
-      // This example requires the Places library. Include the libraries=places
-      // parameter when you first load the API. For example:
-      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -33.8688, lng: 151.2195},
-          zoom: 13
-        });
-        var card = document.getElementById('pac-card');
-        var input = document.getElementById('pac-input');
-        var types = document.getElementById('type-selector');
-        var strictBounds = document.getElementById('strict-bounds-selector');
-
-        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-        var autocomplete = new google.maps.places.Autocomplete(input);
-
-        // Bind the map's bounds (viewport) property to the autocomplete object,
-        // so that the autocomplete requests use the current map bounds for the
-        // bounds option in the request.
-        autocomplete.bindTo('bounds', map);
-
-        // Set the data fields to return when the user selects a place.
-        autocomplete.setFields(
-            ['address_components', 'geometry', 'icon', 'name']);
-
-        var infowindow = new google.maps.InfoWindow();
-        var infowindowContent = document.getElementById('infowindow-content');
-        infowindow.setContent(infowindowContent);
-        var marker = new google.maps.Marker({
-          map: map,
-          anchorPoint: new google.maps.Point(0, -29)
-        });
-
-        autocomplete.addListener('place_changed', function() {
-          infowindow.close();
-          marker.setVisible(false);
-          var place = autocomplete.getPlace();
-          if (!place.geometry) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
-            window.alert("No details available for input: '" + place.name + "'");
-            return;
-          }
-
-          // If the place has a geometry, then present it on a map.
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-          } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);  // Why 17? Because it looks good.
-          }
-          marker.setPosition(place.geometry.location);
-          marker.setVisible(true);
-
-          var address = '';
-          if (place.address_components) {
-            address = [
-              (place.address_components[0] && place.address_components[0].short_name || ''),
-              (place.address_components[1] && place.address_components[1].short_name || ''),
-              (place.address_components[2] && place.address_components[2].short_name || '')
-            ].join(' ');
-          }
-          console.log("latitude: " + place.geometry.location.lat() + ", longitude: " + place.geometry.location.lng());
-          $('#latitude').val(place.geometry.location.lat());
-          $('#longitude').val(place.geometry.location.lng());
-          infowindowContent.children['place-icon'].src = place.icon;
-          infowindowContent.children['place-name'].textContent = place.name;
-          infowindowContent.children['place-address'].textContent = address;
-          infowindow.open(map, marker);
-        });
-
-        // Sets a listener on a radio button to change the filter type on Places
-        // Autocomplete.
-        function setupClickListener(id, types) {
-          var radioButton = document.getElementById(id);
-          radioButton.addEventListener('click', function() {
-            autocomplete.setTypes(types);
-          });
-        }
-
-        setupClickListener('changetype-all', []);
-        setupClickListener('changetype-address', ['address']);
-        setupClickListener('changetype-establishment', ['establishment']);
-        setupClickListener('changetype-geocode', ['geocode']);
-
-        document.getElementById('use-strict-bounds')
-            .addEventListener('click', function() {
-              console.log('Checkbox clicked! New state=' + this.checked);
-              autocomplete.setOptions({strictBounds: this.checked});
-            });
-        }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyByTWPwUTPmcOh6FGaHCo0HUAiFxFSsAyE&libraries=places&callback=initMap"
-        async defer></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type='text/javascript' src='/js/welcome-page/bootstrap.min.js'></script>
 </body>
 </html>
