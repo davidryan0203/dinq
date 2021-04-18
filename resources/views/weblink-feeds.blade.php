@@ -323,9 +323,9 @@ html body{
     <div class="container my-4">
 
     
-      <div class="d-flex justify-content-center align-items-center p-6" style="margin-top:5cm">
+      <div class="d-flex justify-content-center align-items-center p-6" style="margin-top:4cm">
 
-        <img src="{{$feed['media']}}" class="img-fluid" alt="">
+        <img src="{{$feed['media']}}" class="img-fluid" alt="" style="width:100%;">
 
       </div>
 
