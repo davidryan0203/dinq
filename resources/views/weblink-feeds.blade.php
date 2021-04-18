@@ -325,7 +325,7 @@ html body{
     
       <div class="d-flex justify-content-center align-items-center p-6" style="margin-top:2cm">
 
-        <img src="{{$feed['media']}}" class="img-fluid" alt="">
+        <img src="{{$feed['media']}}" class="img-fluid" alt="" style="width:90%;">
 
       </div>
 
