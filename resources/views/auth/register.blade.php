@@ -212,7 +212,7 @@
                                             </div>
                                         </div>
                                         <div id="pac-container">
-                                            <input id="pac-input" type="text" placeholder="Enter a location" name="address">
+                                            <input id="pac-input" type="text" required="" placeholder="Enter a location" name="address">
                                         </div>
                                     </div>
                                     <div id="map"></div>
