@@ -76,7 +76,14 @@ class OrdersController extends Controller
         $input = $request->all();
         $order = Orders::where('id',$input['id'])->update(['is_paid' => 1]);
         return 'success';
-        dd($input);
+    }
+
+    public function processPayOrderMultiple(Request $request){
+        $input = $request->all();
+        foreach ($input['selected'] as $key => $data) {
+            $order = Orders::where('id',$data)->update(['is_paid' => 1]);
+        }
+        return 'success';
     }
 
     public function redeemCoupon(Request $request){

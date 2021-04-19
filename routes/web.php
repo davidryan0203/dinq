@@ -79,6 +79,7 @@ Route::get('/get-exchange-rates/', 'HomeController@getExchangeRates');
 Route::post('/process-order', 'PaymentsController@processOrder');
 Route::get('/pay-order/', 'PaymentsController@payOrder');
 Route::post('/order/payout/process/', 'OrdersController@processPayOrder');
+Route::post('/order/payout/process-multiple/', 'OrdersController@processPayOrderMultiple');
 
 Route::post('/venue/edit-general/{id}', 'VenueController@editGeneral');
 Route::post('/venue/edit-data/{id}', 'VenueController@editData');

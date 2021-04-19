@@ -6,13 +6,17 @@
 	                <div class="card-header" style="padding:10px 0px;">
 	                	<div class="container-fluid row">
 		                	<span class="col-6 pull-left"><h3>Payouts</h3></span>
-		                	<span class="col-6">
+		                	<span class="col-6" v-if="selected.length != '0'">
+			                	<button class="btn btn-danger pull-right" @click.prevent="payMultipleOrders()">Mark as Paid Orders</button>
 			                </span>
 		                </div>
 	                </div>
-
 	                <div class="card-body">
-					<v-client-table v-if="orders" :data="orders" :columns="['id','sender','receiver', 'order_type','status','payment_status','order_total','venue_total','date_created','order_expiry','actions']" :options="options">
+					<v-client-table v-if="orders" :data="orders" :columns="['selected','id','sender','receiver', 'order_type','status','payment_status','order_total','venue_total','date_created','order_expiry','actions']" :options="options">
+						<template slot="selected" slot-scope="props">
+				            <input type='checkbox' id='checkbox' v-model='selected' :value="props.row.id" v-if="props.row.is_paid == 0">
+				            <input type="checkbox" v-else disabled="" name="">
+						</template>
 						<template slot="payment_status" slot-scope="props" >
                         	<span v-if="props.row.is_paid == '0'">Not Paid</span>
                         	<span v-if="props.row.is_paid == '1'">Paid</span>
@@ -202,7 +206,8 @@
            		currencyCode : {},
            		venues : [],
            		cardError : '',
-           		orderData: {}
+           		orderData: {},
+           		selected: []
 			}
 		},
 		mounted(){
@@ -444,6 +449,13 @@
 				this.orderData = data
 				axios.post('/order/payout/process',this.orderData).then((response) => {
 					this.$toastr.s('Order has been marked paid.');
+					this.getOrders()
+				})
+			},
+			payMultipleOrders(){
+				this.orderData.selected = this.selected
+				axios.post('/order/payout/process-multiple',this.orderData).then((response) => {
+					this.$toastr.s('Orders has been marked paid.');
 					this.getOrders()
 				})
 			}
