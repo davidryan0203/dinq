@@ -277,7 +277,7 @@ class PaymentsController extends Controller
                         'id' => $order['sender']['id'],
                         'name' => $order['sender']['name']
                     ]),
-                    'action' => 'send-order'
+                    'action' => 'alert'
                 ],
 
             ];
