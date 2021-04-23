@@ -12,6 +12,8 @@ use Carbon\Carbon;
 use App\Activities;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Kreait\Firebase\Database;
+use Kreait\Firebase\Factory;
 
 class PaymentsController extends Controller
 {
@@ -258,6 +260,36 @@ class PaymentsController extends Controller
 	        $venue = '';
 	        
 	        $venue = Venue::with('user')->where('id', $input['orderItems'][0]['venue']['id'])->first();
+
+	        $order = Orders::with('venue.user','sender','receiver')->where('coupon_code', $order['coupon_code'])->first();
+
+	    	$postData = [
+                'notification' => [
+                    'title' => 'Dinq notification',
+                    'body' => $order['sender']['name'].' has Dinq\'d you!'
+                ],
+                'data' => [
+                    'sender' => json_encode([
+                        'id' => $order['recepient_id'],
+                        'name' => $order['receiver']['name']
+                    ]),
+                    'receiver' => json_encode([
+                        'id' => $order['sender']['id'],
+                        'name' => $order['sender']['name']
+                    ]),
+                    'action' => 'send-order'
+                ],
+
+            ];
+            
+            $factory = (new Factory)
+            ->withServiceAccount('dinq2-d7c4e-firebase-adminsdk.json')
+            ->withDatabaseUri('https://dinq2-d7c4e-default-rtdb.firebaseio.com');
+            $auth = $factory->createAuth();
+            //$reference = $database->getReference('path/to/child/location');
+            $database   = $factory->createDatabase();
+            //$reference = $database->getReference('alerts');
+            $postRef = $database->getReference('alerts')->push($postData);
 	        
 	        $notif = [
 	            'id' => $notification->id,
