@@ -328,6 +328,14 @@
                                 </div>
 
                                 <div class="form-group row">
+                                    <label for="bank_account_holder_name" class="col-md-5 pull-left col-form-label">{{ __('Bank Account Number') }}</label>
+
+                                    <div class="col-md-12">
+                                        <input id="bank_account_number" type="text" class="form-control" name="bank_account_number" value="{{ $info['bank_account_number'] }}">
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
                                     <label for="bank_sort_code" class="col-md-5 pull-left col-form-label">{{ __('Bank Sort Code') }}</label>
 
                                     <div class="col-md-12">
