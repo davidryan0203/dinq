@@ -266,7 +266,7 @@ class PaymentsController extends Controller
 	    	$postData = [
                 'notification' => [
                     'title' => 'Dinq notification',
-                    'body' => $order['sender']['name'].' has Dinq\'d you!'
+                    'body' => $notifMessage
                 ],
                 'data' => [
                     'receiver' => json_encode([
