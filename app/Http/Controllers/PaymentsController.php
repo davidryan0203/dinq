@@ -269,11 +269,11 @@ class PaymentsController extends Controller
                     'body' => $order['sender']['name'].' has Dinq\'d you!'
                 ],
                 'data' => [
-                    'sender' => json_encode([
+                    'receiver' => json_encode([
                         'id' => $order['recepient_id'],
                         'name' => $order['receiver']['name']
                     ]),
-                    'receiver' => json_encode([
+                    'sender' => json_encode([
                         'id' => $order['sender']['id'],
                         'name' => $order['sender']['name']
                     ]),
