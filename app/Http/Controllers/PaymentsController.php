@@ -266,7 +266,7 @@ class PaymentsController extends Controller
 	    	$postData = [
                 'notification' => [
                     'title' => 'Dinq notification',
-                    'body' => $notifMessage
+                    'body' => $input['comments']
                 ],
                 'data' => [
                     'receiver' => json_encode([
@@ -277,7 +277,7 @@ class PaymentsController extends Controller
                         'id' => $order['sender']['id'],
                         'name' => $order['sender']['name']
                     ]),
-                    'action' => 'alert'
+                    'action' => ($input['isCredit'] == 0) ? 'receive-dinq' : 'credit'
                 ],
 
             ];

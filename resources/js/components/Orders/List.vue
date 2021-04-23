@@ -119,10 +119,10 @@
 								            <tab-content title="Items" :before-change="beforeTabSwitch">
 								            	<div class="form-group">
 									            	<label class="radio-inline">
-												      	<input type="radio" name="optradio1" :checked="form.isCredit == '0'" value="0" v-model="form.isCredit">Dinq
+												      	<input @click="selectType(form.isCredit)" type="radio" name="optradio1" :checked="form.isCredit == '0'" value="0" v-model="form.isCredit">Dinq
 												    </label>
 												    <label class="radio-inline">
-												      	<input type="radio" name="optradio2" value="1" v-model="form.isCredit">Credit
+												      	<input @click="selectType(form.isCredit)" type="radio" name="optradio2" value="1" v-model="form.isCredit">Credit
 												    </label>
 												</div>
 
@@ -280,7 +280,7 @@
 						                       	</div>
 
 								            </tab-content>
-								            <tab-content title="Order Details">
+								            <tab-content title="Order Details" :before-change="beforeTabSwitchCustomer">
 								            	<h3>Order Comments</h3>
 								            	<textarea class="form-control" v-model="form.comments">Enter comment here</textarea>
 								            	<h3>Customer Details</h3>
@@ -600,7 +600,9 @@
 			getUserDetail(){
 				axios.get('/get-user-details').then((response) => {
 					this.userDetails = response.data
-					this.form.comments = this.userDetails.name+' has Dinq\'d you.'
+
+					this.form.comments = this.userDetails.name+' has Dinq\'d you. Claim it now'
+					//this.form.comments = this.userDetails.name+' has Dinq\'d you.'
 					if(this.userDetails.user_type == 1){
 						this.taxRate = this.userDetails.venue.tax_rate
 					}
@@ -684,6 +686,13 @@
 			},
 			getExchangeRates(){
 				
+			},
+			selectType(type){
+				if(type){
+					this.form.comments = this.userDetails.name+' has Dinq\'d you. Claim it now'
+				}else{
+					this.form.comments = this.userDetails.name+' has sent you a credit. Send it to a friend'
+				}
 			}
 		}
 	}
