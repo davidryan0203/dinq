@@ -340,6 +340,16 @@
 								            		</tbody>
 								            	</table>
 								            </tab-content>
+								            <template slot="footer" slot-scope="props">
+											       <div class="wizard-footer-left">
+											           <wizard-button  @click.native="props.prevTab()" :style="props.fillButtonStyle" v-show="props.activeTabIndex > 0  && isDisabled == false">Previous</wizard-button>
+											        </div>
+											        <div class="wizard-footer-right">
+											          <wizard-button v-if="!props.isLastStep"@click.native="props.nextTab()" class="wizard-footer-right" :style="props.fillButtonStyle">Next</wizard-button>
+											          
+											          <wizard-button v-else @click.native="onComplete()" v-show="isDisabled == false" class="wizard-footer-right finish-button" :style="props.fillButtonStyle">  {{props.isLastStep ? 'Done' : 'Next'}}</wizard-button>
+											        </div>
+											</template>
 								        </form-wizard>
 							     	</div>
 						      	</form>
@@ -406,6 +416,7 @@
 		},
 		data(){
 			return{
+				isDisabled: false,
         		form: {
            			venue: '',
            			isCredit: 0,
@@ -537,6 +548,7 @@
 				})
 			},
          	onComplete: function(){
+         		this.isDisabled = true
          		this.form.orderTotal = this.orderTotal
          		this.form.venueTotal = this.venueTotal
          		this.form.orderTax = this.orderTax
@@ -565,6 +577,7 @@
 		    		}
 		    		this.menuItems = []
 		    		this.menuItems = menus
+		    		this.isDisabled = false
 		    	})
 		   	},
 		   	beforeTabSwitch: function(){

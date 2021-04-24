@@ -286,9 +286,7 @@ class PaymentsController extends Controller
             ->withServiceAccount('dinq2-d7c4e-firebase-adminsdk.json')
             ->withDatabaseUri('https://dinq2-d7c4e-default-rtdb.firebaseio.com');
             $auth = $factory->createAuth();
-            //$reference = $database->getReference('path/to/child/location');
             $database   = $factory->createDatabase();
-            //$reference = $database->getReference('alerts');
             $postRef = $database->getReference('alerts')->push($postData);
 	        
 	        $notif = [
