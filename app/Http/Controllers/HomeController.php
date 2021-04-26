@@ -98,13 +98,43 @@ class HomeController extends Controller
             //dd($array);
             $countryIds = Country::whereIn('iso', array_merge($countriesArray,$countryIDResults))->get()->pluck('id');
             //dd($countryIds);
-            $users = User::with('country')->where(['user_type' => 3, 'is_active' => 1])->whereIn('country_id', $countryIds)->get();
+            $usersResults = User::with('country')->where(['user_type' => 3, 'is_active' => 1])->whereIn('country_id', $countryIds)->get();
+
+            foreach ($usersResults as $key => $data) {
+                $data['email'] = $this->mask_email($data['email']);
+                $users[] = $data;
+            }
+
             //dd($users);
         }else{
-            $users = User::with('country','receiver_activity','sender_activity')->where(['user_type' => 3])->get();
-            //dd($users);
+            if(Auth::user()->user_type != 0){
+                $usersResults = User::with('country','receiver_activity','sender_activity')->where(['user_type' => 3])->get();
+                foreach ($usersResults as $key => $data) {
+                    $data['email'] = $this->mask_email($data['email']);
+                    $users[] = $data;
+                }
+            }else{
+                $users = User::with('country','receiver_activity','sender_activity')->where(['user_type' => 3])->get();
+            }
         }
         return collect($users)->isNotEmpty() ? $users : [];
+    }
+
+    public function mask($str, $first, $last) {
+        $len = strlen($str);
+        $toShow = $first + $last;
+        return substr($str, 0, $len <= $toShow ? 0 : $first).str_repeat("*", $len - ($len <= $toShow ? 0 : $toShow)).substr($str, $len - $last, $len <= $toShow ? 0 : $last);
+    }
+
+    public function mask_email($email) {
+        $mail_parts = explode("@", $email);
+        $domain_parts = explode('.', $mail_parts[1]);
+
+        $mail_parts[0] = $this->mask($mail_parts[0], 2, 1); // show first 2 letters and last 1 letter
+        $domain_parts[0] = $this->mask($domain_parts[0], 2, 1); // same here
+        $mail_parts[1] = implode('.', $domain_parts);
+
+        return implode("@", $mail_parts);
     }
 
     public function getExchangeRates(){
