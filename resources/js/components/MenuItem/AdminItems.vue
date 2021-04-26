@@ -89,27 +89,66 @@
 								    		</div>
 
 					                       	<div class="form-group row">
-								    			<label for="access_roles" class="col-md-4 col-form-label">Choose Category</label>
-								    			<div class="col-md-12">
-								    				<div class="row">
-								    					<div class="col-md-8">
-						                                    <multiselect v-model="form.categories" :options="menuItemCategories" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id">
-															    <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
-															</multiselect>
-														</div>
-														<div class="col-md-4">
-															<button class="btn btn-primary"  @click.prevent="addNewCategory()">Add Category</button>
-														</div>
+								    			<label for="access_roles" class="col-md-4 col-form-label" v-if="addCategory == '0'">Choose Category</label>
+							    				<label for="access_roles" class="col-md-4 col-form-label" v-if="addCategory == '1'">Add Category</label>
+							    			<div class="col-md-12">
+							    				<div class="row" v-if="addCategory == '0'">
+							    					<div class="col-md-8">
+					                                    <multiselect v-model="form.categories" :options="menuItemCategories" :multiple="true" :close-on-select="false" :clear-on-select="false" :preserve-search="true" placeholder="Pick some" label="name" track-by="id">
+														    <template slot="selection" slot-scope="{ values, search, isOpen }"><span class="multiselect__single" v-if="values.length &amp;&amp; !isOpen">{{ values.length }} options selected</span></template>
+														</multiselect>
 													</div>
+													<div class="col-md-4">
+														<button class="btn btn-primary"  @click.prevent="addNewCategory()">Add Category</button>
+													</div>
+												</div>
+												<div class="col-md-12" v-else>
+													<form class="form">
+											            <div :class="['form-group row', allerros.name ? 'has-error' : '']" >
+							                              	<label for="description" class="col-md-4 col-form-label">Name</label>
+								                            <div class="col-sm-12">
+								                                <input id="name" name="name" value="" :class="allerros.name ? 'is-invalid' : ''" autofocus="autofocus" class="form-control" type="text" v-model="category.name">
+								                                <span v-if="allerros.name" :class="['label label-danger']">{{ allerros.name[0] }}</span>
+								                            </div>
+							                           </div>
 
-													<div style="background-color:rgb(246, 246, 246)">
-														<ul>
-															<li v-for="item in form.categories">
-																{{item.name}}
-															</li>
-														</ul>
-													</div>
-					                            </div>
+							                            <div class="form-group row">
+							                                <label for="description" class="col-md-4 col-form-label">Description</label>
+
+							                                <div class="col-md-12">
+							                                    <textarea class="form-control" :class="allerros.description ? 'is-invalid' : ''" v-model="category.description" required=""></textarea>
+							                                    <span v-if="allerros.description" :class="['label label-danger']">{{ allerros.description[0] }}</span>
+							                                </div>
+							                            </div>
+
+							                            <div slot="modal-footer"></div>
+								                        <slot name="modal-footer">
+														    <div class="modal-footer">
+														        <button
+														                type="button"
+														                @click.prevent="saveMenuItemCategory()"
+														                class="btn btn-primary"
+														        >Save
+														        </button>
+														        <button
+														                type="button"
+														                class="btn btn-secondary"
+														                @click.prevent="addCategory=0"
+														        >Cancel
+														        </button>
+														    </div>
+														</slot>
+							                        </form>
+												</div>
+
+												<div style="background-color:rgb(246, 246, 246)">
+													<ul>
+														<li v-for="item in form.categories">
+															{{item.name}}
+														</li>
+													</ul>
+												</div>
+				                            </div>
 								    		</div>
 
 								    		<div class="form-group row" v-if="venue">
@@ -218,7 +257,7 @@
 						  	</div>
 						</div>
 					</div>
-				    <div class="modal" id="menuCategoryModal" data-backdrop="static">
+				    <!-- <div class="modal" id="menuCategoryModal" data-backdrop="static">
 			            <div class="modal-dialog modal-lg">
 			                <div class="modal-content">
 			                    <div class="modal-header">
@@ -266,7 +305,7 @@
 				                </div>
 			            	</div>
 			            </div>
-			        </div>
+			        </div> -->
 
 					<v-client-table v-if="allMenuItems" :data="allMenuItems" :columns="['name','venue_name',,'description','date_created','actions']" :options="options">
 						<template slot="actions" slot-scope="props" >
@@ -371,7 +410,8 @@
 			    userDetails : {},
 			    suppliers: [],
 			    venue: {},
-			    venues: []
+			    venues: [],
+			    addCategory: 0
 			}
 		},
 		mounted(){
@@ -423,7 +463,8 @@
 			},
 			addNewCategory(){
 				//this.show = true
-				$('#menuCategoryModal').modal('show')
+				//$('#menuCategoryModal').modal('show')
+				this.addCategory = 1
 			},
 			addNewItem(){
 				this.form.id = ''
@@ -482,6 +523,7 @@
 					this.category.description = ''
 					this.allerros = []
 					this.show_second = false
+					this.addCategory = 0
 				}).catch((error) => {
                     this.allerros = error.response.data.errors;
                     this.success = false;
