@@ -10,6 +10,7 @@ use App\Orders;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;   
+use Carbon\Carbon;
 
 class OrdersController extends Controller
 {
@@ -101,5 +102,40 @@ class OrdersController extends Controller
         }else{
             return 'coupon not found.';
         }
+    }
+
+    public function filter(Request $request){
+        $input = $request->all();
+        $records = [];
+        if($input['name'] != ''){
+            $records = User::where(['user_type' => 3])->where('name','like','%' . $input['name'] . '%')->get();
+        }
+
+        if($input['gender'] != ''){
+            if($input['gender'] == 'Male'){
+                $records = User::where(['user_type' => 3])->where('gender','=','Male')->get();
+            }
+
+            if($input['gender'] == 'Female'){
+                $records = User::where(['user_type' => 3])->where('gender','=','female')->get();
+            }
+
+            if($input['gender'] == 'Others'){
+                $records = User::where(['user_type' => 3])->where('gender','=','Others')->get();
+            }
+            
+        }
+
+        if($input['ageFrom'] != 0){
+            $recordsResults = [];
+            $userRecords = User::where(['user_type' => 3])->get();
+            foreach ($userRecords as $key => $data) {
+                $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->age;
+                $recordsResults[] = $data; 
+            }
+            $records = collect($recordsResults)->whereBetween('date_of_birth', [$input['ageFrom'],$input['ageTo']])->sortBy('date_of_birth')->values()->toArray();
+        }
+        return $records;
+        dd($input);
     }
 }

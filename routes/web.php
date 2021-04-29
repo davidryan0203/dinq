@@ -126,6 +126,7 @@ Route::get('/influencers', 'InfluencersController@influencers');
 Route::get('/get-influencer-coupons', 'InfluencersController@getInfluencerCoupons');
 Route::get('/get-influencers', 'InfluencersController@getInfluencers');
 Route::get('/feed/{id}', 'FeedsController@getFeed');
+Route::post('/filter', 'OrdersController@filter');
 
 Route::get('simple-qr-code', function () {
      return QrCode::size(200)->generate('W3Adda Laravel Tutorialsfdafafdafdagsssafa');

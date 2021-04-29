@@ -176,16 +176,74 @@
 								            </tab-content>
 								            <tab-content title="Customer Details" :before-change="beforeTabSwitchCustomer">
 								             	<h2>Add Customer</h2>
-								             	<v-client-table v-if="customers" :data="customers" :columns="['name','age','gender','select']" :options="options">
-								             		<template slot="age" slot-scope="props">
-								             			{{props.row.date_of_birth | getAge}}
-								             		</template>
+						                       	<hr/>
+								             	<div class="row" >
+								             		<form class="section form-inline container"  @submit.prevent="filterCustomers()">
+								                       	<div class="form-inline col-2">
+								                       		<label class="col-md-12 col-form-label">Filter By</label>
+								                       		<select class="form-control" v-model="filterBy" style="width:100%;">
+								                       			<option>Name</option>
+								                       			<option>Age</option>
+								                       			<option>Gender</option>
+								                       		</select>
+								                       	</div>
+									             		<div class="form-inline col-3" v-if="filterBy == 'Name'">
+								                            <div class="col-sm-12 row">
+								                          	<label for="description" class="col-md-12 col-form-label">Name</label>
+										             			<input required="" type="text" class="form-control" v-model="filter.name" style="width:100%">
+								                            </div>
+								                        </div>
+
+								                        <div class="form-inline col-6" v-if="filterBy == 'Age'">
+								                          	
+								                            <div class="col-sm-6">
+								                            	<label for="description" class="col-md-7 col-form-label">Age From</label>
+										             			<input required="" type="number" min="1" max="100" class="form-control" v-model="filter.ageFrom">
+								                            </div>
+								                          	
+								                            <div class="col-sm-6">
+								                            	<label for="description" class="col-md-7 col-form-label">Age To</label>
+										             			<input required="" type="number" min="1" max="100" class="form-control" v-model="filter.ageTo">
+								                            </div>
+								                        </div>
+								                        <div class="form-inline col-3" v-if="filterBy == 'Gender'">
+								                            <div class="col-sm-12 row">
+								                          	<label for="description" class="col-md-12 col-form-label">Gender</label>
+										             			<select class="form-control" style="width:100%" v-model="filter.gender">
+										             				<option>Male</option>
+										             				<option>Female</option>
+										             				<option>Others</option>
+										             			</select>
+								                            </div>
+								                        </div>
+
+								                        <div class="form-inline col-2">
+								                            <div class="col-sm-12">
+								                          	<label for="description" class="col-md-12 col-form-label">&nbsp;</label>
+								                          	<button type="submit" class="btn btn-primary">Submit</button>
+								                            </div>
+								                        </div>
+
+								                        
+								                        <div class="form-inline col-2">
+								                            <div class="col-sm-12">
+								                          	<label for="description" class="col-md-12 col-form-label">&nbsp;</label>
+								                          	<button type="button" class="btn btn-info" @click.prevent="selectAll()">Select All</button>
+								                            </div>
+								                        </div>
+								                    </form>
+						                       	</div>
+						                       	<hr/>
+								             	<v-client-table ref="customers" v-if="customers" :data="customers" :columns="['name','date_of_birth','gender','select']" :options="options">
 								             		<template slot="select" slot-scope="props">
-								             			<input type="checkbox" :value="props.row" v-model="form.customers">
+								             			<!-- <span v-for="data in selectedValues" v-if="selectedValues.length != 0">
+								             				<input type="checkbox" :value="props.row" v-model="form.customers" v-if="props.row.id == data.id" :checked="props.row.id == data.id">
+								             				
+								             			</span> -->
+								             				<input type="checkbox" :value="props.row" v-model="form.customers">
 								             		</template>
 											    </v-client-table>
 								            </tab-content>
-
 								            <tab-content title="Payment Details">
 								            	<div class="form-group" style="font-size:18px;">
 								            		<h4 for="description" class="col-md-4 col-form-label">Select Order Expiry</h4>
@@ -294,8 +352,8 @@
 								            		<tbody>
 								            			<tr v-for="customer in form.customers">
 								            				<td>{{customer.name}}</td>
-								            				<td>{{customer.country.name}}</td>
-								            				<td>{{customer.date_of_birth | getAge}}</td>
+								            				<td>{{(customer.country) ? customer.country.name : 'N/A'}}</td>
+								            				<td>{{customer.date_of_birth}}</td>
 								            				<td>{{customer.gender}}</td>
 								            			</tr>
 								            		</tbody>
@@ -416,6 +474,13 @@
 		},
 		data(){
 			return{
+				filterBy : 'Name',
+				filter:{
+					name: '',
+					ageFrom : 1,
+					ageTo: 1,
+					gender: 'Male'
+				},
 				isDisabled: false,
         		form: {
            			venue: '',
@@ -439,6 +504,7 @@
 				    	'venue.user.name':'Venue Name',
 				    	'mixer' : 'Add-ons',
 				    	'order_total' : 'Dinq Order Total',
+				    	'date_of_birth' : 'Age'
 				    }
                 },
                	allerros: [],
@@ -458,7 +524,8 @@
            		mixerItems: [],
            		currencyCode : {},
            		venues : [],
-           		cardError : ''
+           		cardError : '',
+           		selectedValues: []
 			}
 		},
 		mounted(){
@@ -706,6 +773,25 @@
 				}else{
 					this.form.comments = this.userDetails.name+' has sent you a credit. Send it to a friend'
 				}
+			},
+			selectAll(){
+				var self = this
+				this.form.customers = []
+				for(let customer in this.$refs.customers.allFilteredData){
+					if(self.$refs.customers.allFilteredData[customer].id){
+						console.log(self.$refs.customers.allFilteredData[customer])
+						self.form.customers.push(self.$refs.customers.allFilteredData[customer])
+					}
+				}
+			},
+			filterCustomers(){
+				axios.post('/filter', this.filter).then((response) => {
+					this.customers = response.data
+					this.filter.name = ''
+					this.filter.ageFrom = 0
+					this.filter.ageTo = 0
+					this.filter.gender = 'Male'
+				})
 			}
 		}
 	}

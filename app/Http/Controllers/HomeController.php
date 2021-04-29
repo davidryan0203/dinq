@@ -101,6 +101,7 @@ class HomeController extends Controller
             $usersResults = User::with('country')->where(['user_type' => 3, 'is_active' => 1])->whereIn('country_id', $countryIds)->get();
 
             foreach ($usersResults as $key => $data) {
+                $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->age;
                 $data['email'] = $this->mask_email($data['email']);
                 $users[] = $data;
             }
@@ -110,11 +111,16 @@ class HomeController extends Controller
             if(Auth::user()->user_type != 0){
                 $usersResults = User::with('country','receiver_activity','sender_activity')->where(['user_type' => 3])->get();
                 foreach ($usersResults as $key => $data) {
+                    $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->age;
                     $data['email'] = $this->mask_email($data['email']);
                     $users[] = $data;
                 }
             }else{
-                $users = User::with('country','receiver_activity','sender_activity')->where(['user_type' => 3])->get();
+                $usersResults = User::with('country','receiver_activity','sender_activity')->where(['user_type' => 3])->get();
+                foreach ($usersResults as $key => $data) {
+                    $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->age;
+                    $users[] = $data;
+                }
             }
         }
         return collect($users)->isNotEmpty() ? $users : [];
