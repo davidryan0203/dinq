@@ -224,7 +224,7 @@
 								                            </div>
 								                        </div>
 
-								                        
+
 								                        <div class="form-inline col-2">
 								                            <div class="col-sm-12">
 								                          	<label for="description" class="col-md-12 col-form-label">&nbsp;</label>
@@ -477,9 +477,9 @@
 				filterBy : 'Name',
 				filter:{
 					name: '',
-					ageFrom : 1,
-					ageTo: 1,
-					gender: 'Male'
+					ageFrom : 0,
+					ageTo: 0,
+					gender: ''
 				},
 				isDisabled: false,
         		form: {
@@ -790,7 +790,7 @@
 					this.filter.name = ''
 					this.filter.ageFrom = 0
 					this.filter.ageTo = 0
-					this.filter.gender = 'Male'
+					this.filter.gender = ''
 				})
 			}
 		}

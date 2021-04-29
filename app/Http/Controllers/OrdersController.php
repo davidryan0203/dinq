@@ -106,11 +106,11 @@ class OrdersController extends Controller
 
     public function filter(Request $request){
         $input = $request->all();
+        //dd($input);
         $records = [];
         if($input['name'] != ''){
             $records = User::where(['user_type' => 3])->where('name','like','%' . $input['name'] . '%')->get();
         }
-
         if($input['gender'] != ''){
             if($input['gender'] == 'Male'){
                 $records = User::where(['user_type' => 3])->where('gender','=','Male')->get();
@@ -136,6 +136,5 @@ class OrdersController extends Controller
             $records = collect($recordsResults)->whereBetween('date_of_birth', [$input['ageFrom'],$input['ageTo']])->sortBy('date_of_birth')->values()->toArray();
         }
         return $records;
-        dd($input);
     }
 }

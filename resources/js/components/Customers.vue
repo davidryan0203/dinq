@@ -13,6 +13,63 @@
 	                </div>
 
 	                <div class="card-body" v-if="userDetails.user_type == '0'">
+	                   	<hr/>
+		             	<div class="row" >
+		             		<form class="section form-inline container"  @submit.prevent="filterCustomers()">
+		                       	<div class="form-inline col-2">
+		                       		<label class="col-md-12 col-form-label">Filter By</label>
+		                       		<select class="form-control" v-model="filterBy" style="width:100%;">
+		                       			<option>Name</option>
+		                       			<option>Age</option>
+		                       			<option>Gender</option>
+		                       		</select>
+		                       	</div>
+			             		<div class="form-inline col-3" v-if="filterBy == 'Name'">
+		                            <div class="col-sm-12 row">
+		                          	<label for="description" class="col-md-12 col-form-label">Name</label>
+				             			<input required="" type="text" class="form-control" v-model="filter.name" style="width:100%">
+		                            </div>
+		                        </div>
+
+		                        <div class="form-inline col-6" v-if="filterBy == 'Age'">
+		                          	
+		                            <div class="col-sm-6">
+		                            	<label for="description" class="col-md-7 col-form-label">Age From</label>
+				             			<input required="" type="number" min="1" max="100" class="form-control" v-model="filter.ageFrom">
+		                            </div>
+		                          	
+		                            <div class="col-sm-6">
+		                            	<label for="description" class="col-md-7 col-form-label">Age To</label>
+				             			<input required="" type="number" min="1" max="100" class="form-control" v-model="filter.ageTo">
+		                            </div>
+		                        </div>
+		                        <div class="form-inline col-3" v-if="filterBy == 'Gender'">
+		                            <div class="col-sm-12 row">
+		                          	<label for="description" class="col-md-12 col-form-label">Gender</label>
+				             			<select class="form-control" style="width:100%" v-model="filter.gender">
+				             				<option>Male</option>
+				             				<option>Female</option>
+				             				<option>Others</option>
+				             			</select>
+		                            </div>
+		                        </div>
+
+		                        <div class="form-inline col-2">
+		                            <div class="col-sm-12">
+		                          	<label for="description" class="col-md-12 col-form-label">&nbsp;</label>
+		                          	<button type="submit" class="btn btn-primary">Submit</button>
+		                            </div>
+		                        </div>
+
+		                        
+		                        <div class="form-inline col-2">
+		                            <div class="col-sm-12">
+		                          	<label for="description" class="col-md-12 col-form-label">&nbsp;</label>
+		                            </div>
+		                        </div>
+		                    </form>
+	                   	</div>
+	                   	<hr/>
 						<v-client-table v-if="customers" :data="customers" :columns="['id','name','email','age','gender','country.name','activity_count','actions']" :options="options">
 							<template slot="age" slot-scope="props">
 		             			{{props.row.date_of_birth | getAge}}
@@ -32,6 +89,63 @@
 					</div>
 
 					<div class="card-body" v-if="userDetails.user_type != '0'">
+						<hr/>
+		             	<div class="row" >
+		             		<form class="section form-inline container"  @submit.prevent="filterCustomers()">
+		                       	<div class="form-inline col-2">
+		                       		<label class="col-md-12 col-form-label">Filter By</label>
+		                       		<select class="form-control" v-model="filterBy" style="width:100%;">
+		                       			<option>Name</option>
+		                       			<option>Age</option>
+		                       			<option>Gender</option>
+		                       		</select>
+		                       	</div>
+			             		<div class="form-inline col-3" v-if="filterBy == 'Name'">
+		                            <div class="col-sm-12 row">
+		                          	<label for="description" class="col-md-12 col-form-label">Name</label>
+				             			<input required="" type="text" class="form-control" v-model="filter.name" style="width:100%">
+		                            </div>
+		                        </div>
+
+		                        <div class="form-inline col-6" v-if="filterBy == 'Age'">
+		                          	
+		                            <div class="col-sm-6">
+		                            	<label for="description" class="col-md-7 col-form-label">Age From</label>
+				             			<input required="" type="number" min="1" max="100" class="form-control" v-model="filter.ageFrom">
+		                            </div>
+		                          	
+		                            <div class="col-sm-6">
+		                            	<label for="description" class="col-md-7 col-form-label">Age To</label>
+				             			<input required="" type="number" min="1" max="100" class="form-control" v-model="filter.ageTo">
+		                            </div>
+		                        </div>
+		                        <div class="form-inline col-3" v-if="filterBy == 'Gender'">
+		                            <div class="col-sm-12 row">
+		                          	<label for="description" class="col-md-12 col-form-label">Gender</label>
+				             			<select class="form-control" style="width:100%" v-model="filter.gender">
+				             				<option>Male</option>
+				             				<option>Female</option>
+				             				<option>Others</option>
+				             			</select>
+		                            </div>
+		                        </div>
+
+		                        <div class="form-inline col-2">
+		                            <div class="col-sm-12">
+		                          	<label for="description" class="col-md-12 col-form-label">&nbsp;</label>
+		                          	<button type="submit" class="btn btn-primary">Submit</button>
+		                            </div>
+		                        </div>
+
+		                        
+		                        <div class="form-inline col-2">
+		                            <div class="col-sm-12">
+		                          	<label for="description" class="col-md-12 col-form-label">&nbsp;</label>
+		                            </div>
+		                        </div>
+		                    </form>
+	                   	</div>
+	                   	<hr/>
 						<v-client-table v-if="customers" :data="customers" :columns="['id','name','email','age','gender','country.name','activity_count']" :options="options">
 							<template slot="age" slot-scope="props">
 		             			{{props.row.date_of_birth | getAge}}
@@ -88,6 +202,13 @@
 		},
 		data(){
 			return{
+				filterBy : 'Name',
+				filter:{
+					name: '',
+					ageFrom : 0,
+					ageTo: 0,
+					gender: ''
+				},
         		form: {
            			venue: '',
            			isCredit: 0,
@@ -180,6 +301,15 @@
 						})
 					}			
 				});
+			},
+			filterCustomers(){
+				axios.post('/filter', this.filter).then((response) => {
+					this.customers = response.data
+					this.filter.name = ''
+					this.filter.ageFrom = 0
+					this.filter.ageTo = 0
+					this.filter.gender = ''
+				})
 			}
 		}
 	}
