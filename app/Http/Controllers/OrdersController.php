@@ -109,21 +109,34 @@ class OrdersController extends Controller
         //dd($input);
         $records = [];
         if($input['name'] != ''){
-            $records = User::where(['user_type' => 3])->where('name','like','%' . $input['name'] . '%')->get();
+            $userRecords = User::where(['user_type' => 3])->where('name','like','%' . $input['name'] . '%')->get();
+
+            foreach ($userRecords as $key => $data) {
+                $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->age;
+                $recordsResults[] = $data; 
+            }
+            $records = collect($recordsResults)->values()->toArray();
         }
         if($input['gender'] != ''){
             if($input['gender'] == 'Male'){
-                $records = User::where(['user_type' => 3])->where('gender','=','Male')->get();
+                $userRecords = User::where(['user_type' => 3])->where('gender','=','Male')->get();
             }
 
             if($input['gender'] == 'Female'){
-                $records = User::where(['user_type' => 3])->where('gender','=','female')->get();
+                $userRecords = User::where(['user_type' => 3])->where('gender','=','female')->get();
             }
 
             if($input['gender'] == 'Others'){
-                $records = User::where(['user_type' => 3])->where('gender','=','Others')->get();
+                $userRecords = User::where(['user_type' => 3])->where('gender','=','Others')->get();
+            }
+
+
+            foreach ($userRecords as $key => $data) {
+                $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->age;
+                $recordsResults[] = $data; 
             }
             
+            $records = collect($recordsResults)->values()->toArray();
         }
 
         if($input['ageFrom'] != 0){
