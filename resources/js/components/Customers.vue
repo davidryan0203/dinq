@@ -148,7 +148,7 @@
 	                   	<hr/>
 						<v-client-table v-if="customers" :data="customers" :columns="['id','name','email','age','gender','country.name','activity_count']" :options="options">
 							<template slot="age" slot-scope="props">
-		             			{{props.row.date_of_birth | getAge}}
+		             			{{props.row.date_of_birth}}
 		             		</template>
 		             		<template slot="activity_count" slot-scope="props">
 		             			{{props.row.receiver_activity.length + props.row.sender_activity.length}}
