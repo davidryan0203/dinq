@@ -109,7 +109,7 @@ class OrdersController extends Controller
         //dd($input);
         $records = [];
         if($input['name'] != ''){
-            $userRecords = User::where(['user_type' => 3])->where('name','like','%' . $input['name'] . '%')->get();
+            $userRecords = User::with('country')->where(['user_type' => 3])->where('name','like','%' . $input['name'] . '%')->get();
 
             foreach ($userRecords as $key => $data) {
                 $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->age;
@@ -119,15 +119,15 @@ class OrdersController extends Controller
         }
         if($input['gender'] != ''){
             if($input['gender'] == 'Male'){
-                $userRecords = User::where(['user_type' => 3])->where('gender','=','Male')->get();
+                $userRecords = User::with('country')->where(['user_type' => 3])->where('gender','=','Male')->get();
             }
 
             if($input['gender'] == 'Female'){
-                $userRecords = User::where(['user_type' => 3])->where('gender','=','female')->get();
+                $userRecords = User::with('country')->where(['user_type' => 3])->where('gender','=','female')->get();
             }
 
             if($input['gender'] == 'Others'){
-                $userRecords = User::where(['user_type' => 3])->where('gender','=','Others')->get();
+                $userRecords = User::with('country')->where(['user_type' => 3])->where('gender','=','Others')->get();
             }
 
 
@@ -141,7 +141,7 @@ class OrdersController extends Controller
 
         if($input['ageFrom'] != 0){
             $recordsResults = [];
-            $userRecords = User::where(['user_type' => 3])->get();
+            $userRecords = User::with('country')->where(['user_type' => 3])->get();
             foreach ($userRecords as $key => $data) {
                 $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->age;
                 $recordsResults[] = $data; 
