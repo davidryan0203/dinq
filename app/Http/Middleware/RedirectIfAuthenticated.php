@@ -35,7 +35,7 @@ class RedirectIfAuthenticated
             break;
 
           default:
-             return redirect('/dasboard'); 
+             return redirect('/dashboard'); 
              break;
         }
       }
