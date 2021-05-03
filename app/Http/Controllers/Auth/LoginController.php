@@ -26,7 +26,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/dashboard';
+    //protected $redirectTo = '/dashboard';
  
     /**
      * Login username to be used by the controller.
@@ -77,5 +77,17 @@ class LoginController extends Controller
         $credentials['is_active'] = 1;
 
         return $credentials;
+    }
+
+    public function redirectTo() {
+      $role =\Auth::user()->user_type; 
+      switch ($role) {
+        case '4':
+          \Auth::logout();
+          break;
+        default:
+          return '/dashboard'; 
+        break;
+      }
     }
 }
