@@ -33,8 +33,15 @@ class WaiterController extends Controller
     public function getWaiter()
     {
         //$waiters = Waiter::where('venue_id', Auth::user()->id)->get();
-        $waiters = Waiter::where('venue_id', Auth::user()->venue->id)->get();
-        return $waiters;
+        //$waiters = Waiter::where('venue_id', Auth::user()->venue->id)->get();
+        $waiters = Waiter::all();
+        $waitersList = [];
+        foreach ($waiters as $key => $data) {
+            if(in_array(Auth::user()->venue->id, json_decode($data['venue_access']))){
+                $waitersList[] = $data;
+            }
+        }
+        return $waitersList;
     }
 
     public function waiterUpload(Request $request){
