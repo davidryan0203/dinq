@@ -57,7 +57,7 @@ html[xmlns] .slides { display: block }
 .flex-caption { overflow: hidden; background: rgba(255, 255, 255, 0); width: 40%; margin: 80px 0 0; padding: 0 2.2%; float: left; }
 .slidertitle { float: none; font-size: 30px; margin-bottom: 32px; text-transform: uppercase; letter-spacing: 1px; }
 .widget .slidertitle { font-size: 14px; margin: 0; color: #fff; }
-.slidertext { margin-bottom: 52px; /* padding: 0 2%; */ letter-spacing: 1px; font-size: 14px; line-height: 1.94; color: #fff; }
+.slidertext { margin-bottom: 52px; /* padding: 0 2%; */ letter-spacing: 1px; font-size: 17px; line-height: 1.94; color: #fff; }
 #screenslider { margin: 0 auto; max-width: 320px; padding: 0 0; position: relative; }
 .ss-image { margin: 0 }
 .ss-image img { float: left }

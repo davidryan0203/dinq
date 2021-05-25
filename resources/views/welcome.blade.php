@@ -7,7 +7,7 @@
         <meta name="author" content="" />
         <title>Dinq</title>
         <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
+        <link rel="icon" type="image/x-icon" href="img/favicon.png" />
         <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v5.13.0/js/all.js" crossorigin="anonymous"></script>
         <!-- Google fonts-->
@@ -27,7 +27,7 @@
         <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
             <div class="container">
                 <!-- <a class="navbar-brand js-scroll-trigger" href="#page-top">Dinq</a> -->
-                <h1 class="site-title"><a href="#" title="// Parallel" rel="home"><img style="height: 62px;" src="/img/welcome-page/logo-3.png"> </a></h1>
+                <h1 class="site-title"><a href="#" title="// Parallel" rel="home"><img style="height: 62px;" src="/img/dinq_logo.png"> </a></h1>
                 <button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                     Menu
                     <i class="fas fa-bars"></i>
@@ -35,8 +35,6 @@
                 <div class="collapse navbar-collapse" id="navbarResponsive">
                     <ul class="navbar-nav ml-auto pull-right">
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#how-it-works">How It Works</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About Us</a></li>
-                        <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#giving-back">Giving Back</a></li>
                         <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#contact">Contact</a></li>
                         <li class="nav-item mx-0 mx-lg-1">
                             <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{{ route('register') }}">Sign Up</a>
@@ -54,9 +52,8 @@
             <div class="container">
                 <div class="row">
                     <div class="col-6 text-justify">
-                        <h2 class="slidertitle">Dinq someone today</h2>
-                        <p class="slidertext">Dinq gives you the ability to share a moment with<br/>someone by buying them a drink when you can’t be in<br/>the same place.
-                        <a class="ajax-popup-link text-white" href="terms.html"> <strong> Terms & Conditions  </strong> </a></p>
+                        <p class="slidertext">Ever wanted to send a friend drink from anywhere?<br/>Think your friends might want to buy you a drink?<br/>We’ve got just the app for you!<br/><br/>
+                        
                         <a id="upload" href="#"><span class="button-home"><i class="fa fa-apple-alt"></i> App Store</span></a>
 
                         <a id="upload" href="#"><span class="button-home"><i class="fa fa-play"></i> Play Store</span></a>
@@ -72,15 +69,13 @@
         <section class="page-section portfolio" id="how-it-works">
             <div class="container">
                 <!-- Portfolio Section Heading-->
-                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">How it works</h2>
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">How Dinq works</h2>
                 <!-- Icon Divider-->
                 <div class="divider-custom">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
-                <p class="subtitle text-center">The Dinq platform lets you replicate the age-old tradition of buying someone a drink - when you can’t be in the same place!
-                </p>
                 <!-- Portfolio Grid Items-->
                 <div class="row">
                     <!-- Portfolio Item 1-->
@@ -97,23 +92,22 @@
                     <!-- Portfolio Item 2-->
                     <div class="col-md-6 col-lg-4 mb-5">
                         <div class="portfolio-item mx-auto" data-toggle="modal" data-target="#portfolioModal2">
-                            <h3 class="widget-title" style="text-align:center"><strong>How Dinq works</strong></h3>
                             <div class="details">
                                     <p>
                                         Choose: 
                                         <span>
-                                            a friend you would like to Dinq a drink to – from within the app, from your Facebook friends or from your phone contacts
+                                             a friend who you would like to Dinq.
                                         </span>
                                     </p>
                                     <p>Select: 
                                         <span>
-                                            the venue you want to Dinq from.
+                                            the Venue.
                                         </span>
                                     </p>
                                     <p>
                                         Pick: 
                                         <span>
-                                            from the list of drinks and <strong>Voila!</strong> Your friend receives a notification and Dinq QR code and the bartender hands over their drink!
+                                             the drink from the menu.<strong>Voila!</strong>  You have a very happy friend.
                                         </span>
                                     </p>
                                     <p><a class="ajax-popup-link" href="faq-QA.html">FAQs &#8594;</a></p>
@@ -131,17 +125,14 @@
 
         </section>
         <!-- About Section-->
-        <section class="page-section bg-primary text-white mb-0" id="about">
+        <!-- <section class="page-section bg-primary text-white mb-0" id="about">
             <div class="container">
-                <!-- About Section Heading-->
                 <h2 class="page-section-heading text-center text-uppercase text-white">About Us</h2>
-                <!-- Icon Divider-->
                 <div class="divider-custom divider-light">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
-                <!-- About Section Content-->
                 <div class="row">
                     <div class="col-lg-6 ml-auto"><p class="lead">The Dinq team is made up of a group of friends who live in different cities around the world and probably like many others, found it impossible to buy a friend a drink because they were not in the same place.</p></div>
                     <div class="col-lg-6 mr-auto"><p class="lead">Dinq uses technology to support the age-old tradition of buying someone a drink, when not in the same place. Allowing anyone, anywhere, anytime to buy a drink for a friend from carefully curated establishments.</p></div>
@@ -152,20 +143,17 @@
                 </div>
                
             </div>
-        </section>
+        </section> -->
         <!-- Giving Back Section-->
-        <section class="page-section bg-secondary text-white mb-0" id="giving-back">
+        <!-- <section class="page-section bg-secondary text-white mb-0" id="giving-back">
             <div class="container">
-                <!-- About Section Heading-->
                 <h2 class="page-section-heading text-center text-uppercase text-white">Giving Back</h2>
-                <!-- Icon Divider-->
                 <div class="divider-custom divider-light">
                     <div class="divider-custom-line"></div>
                     <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
                     <div class="divider-custom-line"></div>
                 </div>
                 <p class="lead text-center">Everyone can make a difference. However small, it all adds up. With Dinq, <strong> YOU </strong> are making a difference!</p>
-                <!-- About Section Content-->
                 <div class="row">
                     <div class="col-lg-6 ml-auto">
                         <p class="lead">
@@ -183,7 +171,7 @@
                 </div>
                
             </div>
-        </section>
+        </section> -->
         <!-- Contact Section-->
         <section class="page-section" id="contact">
             <div class="container">
