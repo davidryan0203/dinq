@@ -7,7 +7,7 @@
 
     <nav class="navbar navbar-light bg-light">
       <a class="navbar-brand" href="#" style="color:#eb5a54">
-        <img src="/img/welcome-page/logo-4.png" width="30" height="30" alt=""> Dinq
+        <img src="/img/dinq_logo.png" width="100" height="50" alt="">
       </a>
     </nav>
     <h2 style="text-align:center">Image Gallery</h2>

@@ -81,7 +81,8 @@
             <nav class="topnav navbar navbar-expand shadow navbar-light bg-white" id="sidenavAccordion">
                 <a class="navbar-brand d-none d-sm-block container" href="/">
                     <div class="row">
-                        <img class="col-sm-4 row" src="/img/welcome-page/logo-4.png" style="height: 3.8rem"><h1 class="col-sm-6 row" style="padding-top:2.5%;color:#eb5a54">dinq</h1>
+                        <!-- <img class="col-sm-4 row" src="/img/dinq_logo.png" style="height: 3.8rem"><h1 class="col-sm-6 row" style="padding-top:2.5%;color:#eb5a54">dinq</h1> -->
+                        <img class="col-6" src="/img/dinq_logo.png" style="height: 50px"><h1 class="col-sm-6 row" style="padding-top:1%;color:#eb5a54">
                     </div>
                 </a>
 

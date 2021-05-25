@@ -279,7 +279,7 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{-- config('app.name', 'Laravel') --}}
                     <div class="row d-none d-sm-block">
-                        <img class="row" src="/img/welcome-page/logo-4.png" style="height: 70px"><h1 class="col-sm-6 row" style="padding-top:1%;color:#eb5a54"></h1>
+                        <img class="row" src="/img/dinq_logo.png" style="height: 50px"><h1 class="col-sm-6 row" style="padding-top:1%;color:#eb5a54"></h1>
                     </div>
                     <div class="row d-block d-sm-none">
                         <img src="/img/welcome-page/logo-4.png" style="height: 50px"><h1 class="col-sm-6 row" style="padding-top:1%;color:#eb5a54"></h1>
