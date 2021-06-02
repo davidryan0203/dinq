@@ -169,47 +169,51 @@ class MenuItemController extends Controller
         $results = [];
         $mixerStocks = [];
         if($user->user_type == 0){
-            $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where(['is_active' => 1])->get();
+            $menuItems = MenuItem::with('venue.user','venue.currency','taxRate')->where('stock_quantity', '!=', 0)->where(['is_active' => 1])->get();
             foreach ($menuItems as $key => $item) {
                 $item['orderQuantity'] = 0;
-                if(collect($item['mixers'])->isNotEmpty()){
-                    //dd($item['mixers']);
-                    $mixers = collect($item['mixers'])->toArray();
-                    //dd($mixers);
-                   //  foreach($mixers as $key => $mixer) {
-                   //      //dd($mixer->id);
-                   //      $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
-                   //  }
-                   // $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
-                }
-                $item['sling_item_price'] = $item['sling_price'];
-                $item['mixerStocks'] = $item['mixers'];
-                // unset($item['mixers']);
-                if($item['venue']['user']['is_active'] == 1){
-                    $results[] = $item;
+                if(in_array('admin',$item['access_roles'])){
+                    if(collect($item['mixers'])->isNotEmpty()){
+                        //dd($item['mixers']);
+                        $mixers = collect($item['mixers'])->toArray();
+                        //dd($mixers);
+                       //  foreach($mixers as $key => $mixer) {
+                       //      //dd($mixer->id);
+                       //      $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
+                       //  }
+                       // $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
+                    }
+                    $item['sling_item_price'] = $item['sling_price'];
+                    $item['mixerStocks'] = $item['mixers'];
+                    // unset($item['mixers']);
+                    if($item['venue']['user']['is_active'] == 1){
+                        $results[] = $item;
+                    }
                 }
             }
             return $results;
         }
 
         if($user->user_type == 1){
-            $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where(['venue_id' => $user->venues->first()->id, 'is_active' => 1])->get();
+            $menuItems = MenuItem::with('venue.user','venue.currency','taxRate')->where('stock_quantity', '!=', 0)->where(['venue_id' => $user->venues->first()->id, 'is_active' => 1])->get();
             foreach ($menuItems as $key => $item) {
-                $item['orderQuantity'] = 0;
-                if($item['mixers']){
-                    //dd($item['mixers']);
-                    $mixers = collect($item['mixers'])->toArray();
-                    //dd($mixers);
-                    foreach($mixers as $key => $mixer) {
-                        //dd($mixer->id);
-                        $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
+                if(in_array('venue',$item['access_roles']) || in_array('public',$item['access_roles'])){
+                    $item['orderQuantity'] = 0;
+                    if($item['mixers']){
+                        //dd($item['mixers']);
+                        $mixers = collect($item['mixers'])->toArray();
+                        //dd($mixers);
+                        foreach($mixers as $key => $mixer) {
+                            //dd($mixer->id);
+                            $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
+                        }
+                       $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
                     }
-                   $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
+                    $item['sling_item_price'] = $item['sling_price'];
+                    $item['mixerStocks'] = $item['mixers'];
+                    // unset($item['mixers']);
+                    $results[] = $item;
                 }
-                $item['sling_item_price'] = $item['sling_price'];
-                $item['mixerStocks'] = $item['mixers'];
-                // unset($item['mixers']);
-                $results[] = $item;
             }
             return $results;
         }
@@ -217,23 +221,25 @@ class MenuItemController extends Controller
         if($user->user_type == 2){
             $supplier = Supplier::where('user_id', '=', Auth::user()->id)->first();
             //dd($supplier['id']);
-            $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where('supplier_id', '=', Auth::user()->id)->get();
+            $menuItems = MenuItem::with('venue.user','venue.currency','taxRate')->where('stock_quantity', '!=', 0)->where('supplier_id', '=', Auth::user()->id)->get();
             foreach ($menuItems as $key => $item) {
-                $item['orderQuantity'] = 0;
-                if($item['mixers']){
-                    //dd($item['mixers']);
-                    $mixers = collect($item['mixers'])->toArray();
-                    //dd($mixers);
-                    foreach($mixers as $key => $mixer) {
-                        //dd($mixer->id);
-                        $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
+                if(in_array('supplier',$item['access_roles'])){
+                    $item['orderQuantity'] = 0;
+                    if($item['mixers']){
+                        //dd($item['mixers']);
+                        $mixers = collect($item['mixers'])->toArray();
+                        //dd($mixers);
+                        foreach($mixers as $key => $mixer) {
+                            //dd($mixer->id);
+                            $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
+                        }
+                       $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
                     }
-                   $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
+                    $item['sling_item_price'] = $item['sling_price'];
+                    $item['mixerStocks'] = $item['mixers'];
+                    // unset($item['mixers']);
+                    $results[] = $item;
                 }
-                $item['sling_item_price'] = $item['sling_price'];
-                $item['mixerStocks'] = $item['mixers'];
-                // unset($item['mixers']);
-                $results[] = $item;
             }
             //dd(collect($results)->toArray());
             return $results;

@@ -146,7 +146,7 @@
 						                            </div>
 					                           	</div>												    
 
-											    <v-client-table v-if="menuItems" :data="menuItems" :columns="['id','name','venue.user.name','sling_price','stock_quantity','mixer','order_quantity']" :options="options">
+											    <v-client-table v-if="menuItems" :data="menuItems" :columns="['id','name','venue.user.name','sling_price','venue.currency.code','stock_quantity','mixer','order_quantity']" :options="options">
 											    	<template slot="stock_quantity" slot-scope="props">
 											    		<span v-if="props.row.is_unlimited == '1'">
 											    			Unlimited
@@ -185,12 +185,21 @@
 								                       			<option>Name</option>
 								                       			<option>Age</option>
 								                       			<option>Gender</option>
+								                       			<option>Country</option>
 								                       		</select>
 								                       	</div>
 									             		<div class="form-inline col-3" v-if="filterBy == 'Name'">
 								                            <div class="col-sm-12 row">
 								                          	<label for="description" class="col-md-12 col-form-label">Name</label>
 										             			<input required="" type="text" class="form-control" v-model="filter.name" style="width:100%">
+								                            </div>
+								                        </div>
+
+
+									             		<div class="form-inline col-3" v-if="filterBy == 'Country'">
+								                            <div class="col-sm-12 row">
+								                          	<label for="description" class="col-md-12 col-form-label">Country</label>
+										             			<input required="" type="text" class="form-control" v-model="filter.country" style="width:100%">
 								                            </div>
 								                        </div>
 
@@ -234,15 +243,13 @@
 								                    </form>
 						                       	</div>
 						                       	<hr/>
-								             	<v-client-table ref="customers" v-if="customers" :data="customers" :columns="['name','date_of_birth','gender','select']" :options="options">
-								             		<template slot="select" slot-scope="props">
-								             			<!-- <span v-for="data in selectedValues" v-if="selectedValues.length != 0">
-								             				<input type="checkbox" :value="props.row" v-model="form.customers" v-if="props.row.id == data.id" :checked="props.row.id == data.id">
-								             				
-								             			</span> -->
-								             				<input type="checkbox" :value="props.row" v-model="form.customers">
-								             		</template>
-											    </v-client-table>
+						                       	<div id="customers">
+									             	<v-client-table ref="customers" v-if="customers" :data="customers" :columns="['select','name','date_of_birth','gender','country.name']" :options="options">
+									             		<template slot="select" slot-scope="props">
+									             				<input type="checkbox" :value="props.row" v-model="form.customers">
+									             		</template>
+												    </v-client-table>
+						                       	</div>
 								            </tab-content>
 								            <tab-content title="Payment Details">
 								            	<div class="form-group" style="font-size:18px;">
@@ -504,7 +511,9 @@
 				    	'venue.user.name':'Venue Name',
 				    	'mixer' : 'Add-ons',
 				    	'order_total' : 'Dinq Order Total',
-				    	'date_of_birth' : 'Age'
+				    	'date_of_birth' : 'Age',
+				    	'country.name': 'Country',
+				    	'venue.currency.code': 'Currency'
 				    }
                 },
                	allerros: [],
@@ -788,6 +797,7 @@
 				axios.post('/filter', this.filter).then((response) => {
 					this.customers = response.data
 					this.filter.name = ''
+					this.filter.country = ''
 					this.filter.ageFrom = 0
 					this.filter.ageTo = 0
 					this.filter.gender = ''
@@ -872,5 +882,9 @@
 
 	.multiselect__content-wrapper{
 		position: relative;
+	}
+
+    #customers > .VueTables > .row > .col-md-12  > .VueTables__search{
+		display: none !important;
 	}
 </style>

@@ -7,6 +7,7 @@ use Auth;
 use App\Venue;
 use App\User;
 use App\Orders;
+use App\Country;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;   
@@ -106,7 +107,7 @@ class OrdersController extends Controller
 
     public function filter(Request $request){
         $input = $request->all();
-        //dd($input);
+        
         $records = [];
         if($input['name'] != ''){
             $userRecords = User::with('country')->where(['user_type' => 3])->where('name','like','%' . $input['name'] . '%')->get();
@@ -116,6 +117,21 @@ class OrdersController extends Controller
                 $recordsResults[] = $data; 
             }
             $records = collect($recordsResults)->values()->toArray();
+        }
+
+        if($input['country'] != ''){
+            $countries = Country::where('name','like','%' . $input['country'] . '%')->pluck('id');
+            
+
+            $userRecords = User::with('country')->where(['user_type' => 3])->whereIn('country_id',$countries)->get();
+
+            foreach ($userRecords as $key => $data) {
+                $data['date_of_birth'] = Carbon::parse($data['date_of_birth'])->age;
+                $recordsResults[] = $data; 
+            }
+            
+            $records = collect($recordsResults)->values()->toArray();
+
         }
         if($input['gender'] != ''){
             if($input['gender'] == 'Male'){
