@@ -55,7 +55,8 @@ class VenueController extends Controller
     }
 
     public function getSupplierVenues(){
-        $info = MenuItem::where('supplier_id','=',Auth::user()->supplier->id)->get();
+        $info = MenuItem::where('supplier_id','=',Auth::user()->supplier->user_id)->get();
+        
         $menu = collect($info)->unique('venue_id')->toArray();
         $venues = [];
         foreach($menu as $key => $item){
