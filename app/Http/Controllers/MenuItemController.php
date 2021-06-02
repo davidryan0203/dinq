@@ -131,9 +131,9 @@ class MenuItemController extends Controller
         $input = $request->all();
         if(Auth::user()->user_type == 2){
             if(($input['venue']) == 0){
-                $menuItems = MenuItem::with('venue.user','taxRate')->where('supplier_id' , '!=', 0)->where('stock_quantity', '!=', 0)->where(['is_active' => 1])->get();
+                $menuItems = MenuItem::with('venue.user','taxRate')->where('supplier_id','=',Auth::user()->supplier->user_id)->where('supplier_id' , '!=', 0)->where('stock_quantity', '!=', 0)->where(['is_active' => 1])->get();
             }else{            
-                $menuItems = MenuItem::with('venue.user','taxRate')->where('stock_quantity', '!=', 0)->where(['venue_id' => $input['venue']['id'],'is_active' => 1])->where('supplier_id' , '!=', 0)->get();                
+                $menuItems = MenuItem::with('venue.user','taxRate')->where('supplier_id','=',Auth::user()->supplier->user_id)->where('stock_quantity', '!=', 0)->where(['venue_id' => $input['venue']['id'],'is_active' => 1])->where('supplier_id' , '!=', 0)->get();                
             }
         }else{
             if(isset($input['venue']['venue'])){            
