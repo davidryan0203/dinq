@@ -144,21 +144,41 @@ class MenuItemController extends Controller
         }
         
         foreach ($menuItems as $key => $item) {
-            $item['orderQuantity'] = 0;
-            if(collect($item['mixers'])->isNotEmpty()){
-                //dd($item['mixers']);
-                $mixers = collect($item['mixers'])->toArray();
-                //dd($mixers);
-               //  foreach($mixers as $key => $mixer) {
-               //      //dd($mixer->id);
-               //      $mixerData[] = Mixer::where('stock_quantity' , '!=',0)->where(['id' => $mixer->id, 'is_active' => 1])->first();
-               //  }
-               // $mixerStocks = collect($mixerData)->unique()->filter()->toArray();
+            if(Auth::user()->user_type == 2 && in_array('supplier',$item['access_roles'])){
+                $item['orderQuantity'] = 0;
+                if(collect($item['mixers'])->isNotEmpty()){
+                    //dd($item['mixers']);
+                    $mixers = collect($item['mixers'])->toArray();
+                }
+                $item['sling_item_price'] = $item['sling_price'];
+                $item['mixerStocks'] = $item['mixers'];
+                // unset($item['mixers']);
+                $results[] = $item;
             }
-            $item['sling_item_price'] = $item['sling_price'];
-            $item['mixerStocks'] = $item['mixers'];
-            // unset($item['mixers']);
-            $results[] = $item;
+
+            if(Auth::user()->user_type == 1 && in_array('venue',$item['access_roles'])){
+                $item['orderQuantity'] = 0;
+                if(collect($item['mixers'])->isNotEmpty()){
+                    //dd($item['mixers']);
+                    $mixers = collect($item['mixers'])->toArray();
+                }
+                $item['sling_item_price'] = $item['sling_price'];
+                $item['mixerStocks'] = $item['mixers'];
+                // unset($item['mixers']);
+                $results[] = $item;
+            }
+
+            if(Auth::user()->user_type == 0 && in_array('admin',$item['access_roles'])){
+                $item['orderQuantity'] = 0;
+                if(collect($item['mixers'])->isNotEmpty()){
+                    //dd($item['mixers']);
+                    $mixers = collect($item['mixers'])->toArray();
+                }
+                $item['sling_item_price'] = $item['sling_price'];
+                $item['mixerStocks'] = $item['mixers'];
+                // unset($item['mixers']);
+                $results[] = $item;
+            }
         }
         return $results;
     }
